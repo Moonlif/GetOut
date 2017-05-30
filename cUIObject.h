@@ -14,7 +14,7 @@ protected:
 	SYNTHESIZE(cUIObject*,		m_pParent, Parent);
 	SYNTHESIZE(ST_SIZEN,		m_stSize, Size);
 	SYNTHESIZE(RECT,			m_rc, rc);
-	bool						m_isHidden;
+	SYNTHESIZE(bool,			m_isHidden, IsHidden);
 
 	//tag
 	SYNTHESIZE(int,				m_nTag, Tag);

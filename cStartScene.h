@@ -2,6 +2,7 @@
 
 class cUIObject;
 class cUITextView;
+class cUIImageView;
 
 class cStartScene
 {
@@ -9,7 +10,8 @@ public:
 	cStartScene();
 	~cStartScene();
 private:
-	cUIObject*				m_pStartScene;
+	cUIObject*				m_pStartSceneRoot;
+	cUIImageView*			m_pStartSceneImage;
 	LPD3DXSPRITE			m_pSprite;
 
 	cUITextView*			m_pStartText;
@@ -19,5 +21,8 @@ public:
 	void Setup();
 	void Update();
 	void Render();
+
+
+	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
 

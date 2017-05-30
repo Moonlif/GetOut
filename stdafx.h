@@ -184,7 +184,16 @@ struct ST_ASTAR
 #include "cFontManager.h"
 #include "cTimeManager.h"
 #include "cUI_globalVarius.h"
+#include "cLightManager.h"
 #include "cRandom.h"
 
 
 //--
+enum eLIGHT
+{
+	//s = Spot, d = Direction, p = Point
+
+
+	E_sCHASLECT_LIGHT1 = 10000,
+	E_sCHASLECT_LIGHT2,
+};
