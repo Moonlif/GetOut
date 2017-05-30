@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-
 #include "cCamera.h"
 #include "cTotalUIRender.h"
+
+#include "cObjLoader.h"
+#include "cGroup.h"
 
 //map
 
@@ -17,8 +19,26 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
+<<<<<<< HEAD
 	SAFE_DELETE(m_pTotalUIRender);
 	
+=======
+
+	//코드 추가
+	{
+		//map
+		//17.05.30 최진호
+		for each(auto p in m_vecGroup)
+		{
+			SAFE_DELETE(p);
+		}
+
+
+		//character
+	}
+
+	g_pFontManager->Destroy();
+>>>>>>> origin/master
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
 }
@@ -28,6 +48,7 @@ void cMainGame::Setup()
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
+<<<<<<< HEAD
 
 	m_pTotalUIRender = new cTotalUIRender;
 	m_pTotalUIRender->Setup();
@@ -35,6 +56,21 @@ void cMainGame::Setup()
 	m_pCamera->ReTarget(NULL);
 
 	Set_Light();
+=======
+	//light
+	Set_Light();
+
+	//코드 추가
+	{
+		//map
+		Setup_Obj(); //<<17.05.30 최진호 맵 오브젝트 로더
+		//character
+	}
+
+	m_pCamera->ReTarget(NULL);
+
+	
+>>>>>>> origin/master
 }
 
 void cMainGame::Update()
@@ -46,11 +82,22 @@ void cMainGame::Update()
 
 void cMainGame::Render()
 {
-	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(100, 100, 100), 1.0f, 0);
+	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
+<<<<<<< HEAD
 	///---------------------------------------------------
 	if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	///----------------------------------------------------
+=======
+
+	//코드 추가
+	{
+		//map
+		Render_Obj(); //17.05.30 최진호 
+		//character
+	}
+
+>>>>>>> origin/master
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
@@ -71,6 +118,36 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_ptMouse.x = LOWORD(lParam);
 		g_ptMouse.y = HIWORD(lParam);
 		break;
+	}
+}
+/*
+	맵 오브젝트 로더 
+	작성자: 최진호
+	작성일: 17_05_30
+*/
+void cMainGame::Setup_Obj()
+{
+	cObjLoader loadMesh;
+	loadMesh.Load(m_vecGroup, "obj", "cs_office.obj", true);
+}
+
+/*
+	맵 오브젝트 렌더
+	작성자: 최진호
+	작성일: 17_05_30
+*/
+void cMainGame::Render_Obj()
+{
+	D3DXMATRIXA16 matWorld, matS, matR, matT;
+	D3DXMatrixScaling(&matS, 0.1f, 0.1f, 0.1f);
+	//D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0F); 
+	D3DXMatrixTranslation(&matT, 0, 0, 0);
+	matWorld = matS * matT;
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+
+	for each(auto p in m_vecGroup)
+	{
+		p->Render();
 	}
 }
 
