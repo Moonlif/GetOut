@@ -22,7 +22,6 @@ private:
 public:
 	void Setup();
 	void SendData();			/// g_pDataManager에서 좌표값, 등등을 조합해서 Send한다.
-	void ReceiveData();
 	void Update();
 	void Close_Socket();
 };

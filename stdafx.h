@@ -175,24 +175,6 @@ struct ST_ASTAR
 	POINT parent;
 };
 
-#include "cObject.h"
-#include "iMap.h"
-//singletone
-#include "cDeviceManager.h"
-#include "cTextureManager.h"
-#include "cObjectManager.h"
-#include "cFontManager.h"
-#include "cTimeManager.h"
-<<<<<<< HEAD
-#include "cRandom.h"
-#include "cSocketManager.h"
-=======
-#include "cUI_globalVarius.h"
-#include "cLightManager.h"
-#include "cRandom.h"
-
-
-//--
 enum eLIGHT
 {
 	//s = Spot, d = Direction, p = Point
@@ -201,4 +183,17 @@ enum eLIGHT
 	E_sCHASLECT_LIGHT1 = 10000,
 	E_sCHASLECT_LIGHT2,
 };
->>>>>>> d063dae2dc0284a3756ae38d689ca1761e8a2127
+
+#include "cObject.h"
+#include "iMap.h"
+//singletone
+#include "cDeviceManager.h"
+#include "cTextureManager.h"
+#include "cObjectManager.h"
+#include "cFontManager.h"
+#include "cTimeManager.h"
+#include "cRandom.h"
+#include "cSocketManager.h"
+#include "cUI_globalVarius.h"
+#include "cLightManager.h"
+

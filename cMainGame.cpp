@@ -21,7 +21,6 @@ cMainGame::~cMainGame()
 	
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
-	g_pSocketmanager->m_vPostion
 }
 
 void cMainGame::Setup()

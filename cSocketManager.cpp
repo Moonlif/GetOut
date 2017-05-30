@@ -1,6 +1,5 @@
 #include "cSocketManager.h"
-
-
+#include "stdafx.h"
 
 cSocketManager::cSocketManager()
 	: dwSendTick(GetTickCount())
@@ -32,7 +31,7 @@ void cSocketManager::Setup()
 
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;						/// IPv4 사용
-	servAddr.sin_addr.s_addr = inet_addr(HOSTIP);		/// 호스트 IP주소
+//	servAddr.sin_addr.s_addr = inet_addr("127.0.0.1");		/// 호스트 IP주소
 	servAddr.sin_port = PORTNUM;						/// 접속할 포트 번호
 
 	/* 소켓 기반 연결요청 */
@@ -62,7 +61,6 @@ void cSocketManager::SendData()
 	if (GetTickCount() + RECEIVETICK > dwReceiveTick)
 	{
 		dwReceiveTick = GetTickCount();
-		ReceiveData();
 	}
 }
 
