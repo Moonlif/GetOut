@@ -176,3 +176,4 @@ struct ST_ASTAR
 #include "cFontManager.h"
 #include "cTimeManager.h"
 #include "cRandom.h"
+#include "cSocketManager.h"
