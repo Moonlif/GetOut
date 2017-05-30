@@ -5,6 +5,7 @@
 
 cMapObject::cMapObject()
 {
+	m_vecGroup.clear();
 }
 
 
