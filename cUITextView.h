@@ -7,6 +7,8 @@ class cUITextView : public cUIObject
 {
 public:
 	cUITextView();
+	cUITextView(string str, D3DXVECTOR3 pos, D3DCOLOR color, ST_SIZEN size,
+		int wordWidth, int wordHeight, UINT wordWeight, char* fontName);
 	virtual ~cUITextView();
 
 protected:
@@ -19,8 +21,6 @@ protected:
 	
 public:
 	virtual void Render(LPD3DXSPRITE pSprite) override;
-	
-	void SetFontStyle(string str, D3DXVECTOR3 pos, D3DCOLOR color, ST_SIZEN size,
-		int wordWidth, int wordHeight, UINT wordWeight, char* fontName);
+
 };
 

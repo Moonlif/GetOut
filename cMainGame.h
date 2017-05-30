@@ -1,6 +1,6 @@
 #pragma once
 class cCamera;
-class cStartScene;
+class cTotalUIRender;
 
 class cMainGame
 {
@@ -9,8 +9,8 @@ public:
 	~cMainGame();
 
 private:
-	cCamera*		m_pCamera;
-	cStartScene*	m_pStartScene;
+	cCamera*			m_pCamera;
+	cTotalUIRender*		m_pTotalUIRender;
 
 public:
 	void Setup();

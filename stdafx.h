@@ -25,6 +25,14 @@
 #define WINSIZEY 720
 #define WINSTYLE WS_CAPTION | WS_SYSMENU | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 
+//콘솔 디버깅
+using namespace std;
+#include <iostream>
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+
+//엘립스
+#define EPSILON			(0.001f)
+
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 #include <vector>
 #include <map>
@@ -175,4 +183,8 @@ struct ST_ASTAR
 #include "cObjectManager.h"
 #include "cFontManager.h"
 #include "cTimeManager.h"
+#include "cUI_globalVarius.h"
 #include "cRandom.h"
+
+
+//--

@@ -2,7 +2,7 @@
 #include "cMainGame.h"
 
 #include "cCamera.h"
-#include "cStartScene.h"
+#include "cTotalUIRender.h"
 
 //map
 
@@ -17,7 +17,7 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
-	SAFE_DELETE(m_pStartScene);
+	SAFE_DELETE(m_pTotalUIRender);
 	
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
@@ -29,8 +29,8 @@ void cMainGame::Setup()
 	m_pCamera->Setup(NULL);
 
 
-	m_pStartScene = new cStartScene;
-	m_pStartScene->Setup();
+	m_pTotalUIRender = new cTotalUIRender;
+	m_pTotalUIRender->Setup();
 
 	m_pCamera->ReTarget(NULL);
 
@@ -41,7 +41,7 @@ void cMainGame::Update()
 {
 	g_pTimeManager->Update();
 	if (m_pCamera) m_pCamera->Update();
-	if (m_pStartScene) m_pStartScene->Update();
+	if (m_pTotalUIRender) m_pTotalUIRender->Update();
 }
 
 void cMainGame::Render()
@@ -49,7 +49,7 @@ void cMainGame::Render()
 	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(100, 100, 100), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	///---------------------------------------------------
-	if (m_pStartScene) m_pStartScene->Render();
+	if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	///----------------------------------------------------
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
