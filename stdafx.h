@@ -25,6 +25,14 @@
 #define WINSIZEY 720
 #define WINSTYLE WS_CAPTION | WS_SYSMENU | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 
+//콘솔 디버깅
+using namespace std;
+#include <iostream>
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+
+//엘립스
+#define EPSILON			(0.001f)
+
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 #include <vector>
 #include <map>
@@ -175,5 +183,22 @@ struct ST_ASTAR
 #include "cObjectManager.h"
 #include "cFontManager.h"
 #include "cTimeManager.h"
+<<<<<<< HEAD
 #include "cRandom.h"
 #include "cSocketManager.h"
+=======
+#include "cUI_globalVarius.h"
+#include "cLightManager.h"
+#include "cRandom.h"
+
+
+//--
+enum eLIGHT
+{
+	//s = Spot, d = Direction, p = Point
+
+
+	E_sCHASLECT_LIGHT1 = 10000,
+	E_sCHASLECT_LIGHT2,
+};
+>>>>>>> d063dae2dc0284a3756ae38d689ca1761e8a2127

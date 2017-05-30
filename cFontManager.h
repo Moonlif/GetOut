@@ -4,19 +4,17 @@
 class cFontManager
 {
 public:
-	enum eFontType
-	{
-		E_DEFAULT,
-		E_QUEST,
-	};
 
 private:
 	SINGLETONE(cFontManager);
-	std::map<eFontType, LPD3DXFONT> m_mapFont;
 
 public:
-	LPD3DXFONT GetFont(eFontType e);
-	void Destroy();
 
+	void CreateFont2D(OUT LPD3DXFONT& font, IN int width, IN int height, IN UINT weight, IN char* fontName);
+	void CreateFont3D(OUT ID3DXMesh*& font, IN string str, IN int width, IN int height, IN UINT weight,
+		IN char* fontName);
+
+	void TextOut3D(IN ID3DXMesh* font, IN D3DXVECTOR3 scailing, IN D3DXVECTOR3 rotation, IN D3DXVECTOR3 position);
+	UINT CarcWeight(UINT weight);
 };
 

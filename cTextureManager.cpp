@@ -32,6 +32,7 @@ void cTextureManager::Destroy()
 		SAFE_RELEASE(it.second);
 	}
 	m_mapTexture.clear();
+	m_mapImageInfo.clear();
 }
 
 LPDIRECT3DTEXTURE9 cTextureManager::GetTexture(char * szFullPath, D3DXIMAGE_INFO * pImageInfo)
@@ -43,6 +44,13 @@ LPDIRECT3DTEXTURE9 cTextureManager::GetTexture(char * szFullPath, D3DXIMAGE_INFO
 		D3DXCreateTextureFromFileEx(g_pD3DDevice, szFullPath, D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT, 0, D3DFMT_UNKNOWN,
 			D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_DEFAULT, 0, &m_mapImageInfo[szFullPath], NULL, &m_mapTexture[szFullPath]);
 	}
+
+	//윈도우 화면보다 클 경우 보정해줌
+	RECT rc;
+	GetClientRect(g_hWnd, &rc);
+	
+	if (m_mapImageInfo[szFullPath].Width > rc.right - rc.left) m_mapImageInfo[szFullPath].Width = rc.right - rc.left;
+	if (m_mapImageInfo[szFullPath].Height > rc.bottom - rc.top) m_mapImageInfo[szFullPath].Height = rc.bottom - rc.top;
 
 	*pImageInfo = m_mapImageInfo[szFullPath];
 
