@@ -8,6 +8,7 @@ public:
 
 protected:
 	LPDIRECT3DTEXTURE9	m_pTexture;
+	int					m_nAlpha;
 
 public:
 	virtual void SetTexture(char* szFullPath);

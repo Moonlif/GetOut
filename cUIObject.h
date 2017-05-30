@@ -8,16 +8,16 @@ public:
 	virtual ~cUIObject();
 
 protected:
-	std::vector<cUIObject*> m_vecChild;
-	D3DXMATRIXA16 m_matWorld;
-	SYNTHESIZE(D3DXVECTOR3, m_vPosition, Position);
-	SYNTHESIZE(cUIObject*, m_pParent, Parent);
-	SYNTHESIZE(ST_SIZEN, m_stSize, Size);
-
-	bool m_isHidden;
+	std::vector<cUIObject*>		m_vecChild;
+	D3DXMATRIXA16				m_matWorld;
+	SYNTHESIZE(D3DXVECTOR3,		m_vPosition, Position);
+	SYNTHESIZE(cUIObject*,		m_pParent, Parent);
+	SYNTHESIZE(ST_SIZEN,		m_stSize, Size);
+	SYNTHESIZE(RECT,			m_rc, rc);
+	bool						m_isHidden;
 
 	//tag
-	SYNTHESIZE(int, m_nTag, Tag);
+	SYNTHESIZE(int,				m_nTag, Tag);
 
 public:
 	virtual void AddChild(cUIObject* pChild);
@@ -27,5 +27,7 @@ public:
 
 	//tag
 	virtual cUIObject* FindChildByTag(int nTag);
+
+	void SetupRect();
 };
 

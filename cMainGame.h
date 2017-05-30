@@ -1,5 +1,6 @@
 #pragma once
 class cCamera;
+class cStartScene;
 
 class cMainGame
 {
@@ -9,11 +10,7 @@ public:
 
 private:
 	cCamera*		m_pCamera;
-
-	//map
-
-	//character
-
+	cStartScene*	m_pStartScene;
 
 public:
 	void Setup();
