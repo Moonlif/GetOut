@@ -4,6 +4,8 @@ class cUIObject;
 class cUITextView;
 class cUIImageView;
 
+
+
 class cStartScene
 {
 public:
@@ -17,6 +19,8 @@ private:
 	cUITextView*			m_pStartText;
 
 	SYNTHESIZE(bool,		m_IsStartSceneOpen, IsStartSceneOpen);
+
+
 public:
 	void Setup();
 	void Update();

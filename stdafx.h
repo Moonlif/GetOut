@@ -181,8 +181,10 @@ enum eLIGHT
 	//s = Spot, d = Direction, p = Point
 
 
-	E_sCHASLECT_LIGHT1 = 10000,
-	E_sCHASLECT_LIGHT2,
+	E_sCHASLECT_RULIGHT = 10000,			//오른쪽 캐릭 위 라이트
+	E_sCHASLECT_RDIGHT,						//오른쪽 캐릭 아래 라이트
+	E_sCHASLECT_LULIGHT,					//왼쪽 캐릭 위 라이트
+	E_sCHASLECT_LDIGHT,						//왼쪽 캐릭 아래 라이트
 };
 
 #include "cObject.h"
