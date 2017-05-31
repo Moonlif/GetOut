@@ -29,7 +29,7 @@ void cCharacterSelectScene::Setup()
 		10.0f, D3DX_PI / 2, D3DX_PI / 4, D3DXVECTOR3(0, -1, 0));
 	g_pD3DDevice->LightEnable(eLIGHT::E_sCHASLECT_LIGHT1, true);
 
-	m_pBlackImage = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0), 200);
+	m_pBlackImage = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0), 0);
 	m_pRoot = m_pBlackImage;
 }
 

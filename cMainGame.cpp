@@ -11,9 +11,15 @@
 //ui
 #include "cTotalUIRender.h"
 
+//interact
+#include "cInteract.h"
+
 
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
+	, m_pMapObject(NULL)
+	, m_pTotalUIRender(NULL)
+	, m_pInteract(NULL)
 {	 
 }
 
@@ -21,7 +27,6 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
-	SAFE_DELETE(m_pTotalUIRender);
 
 	//코드 추가
 	{
@@ -31,8 +36,13 @@ cMainGame::~cMainGame()
 		//character
 
 		//ui
+		SAFE_DELETE(m_pTotalUIRender);
+
+		//interact
+		SAFE_DELETE(m_pInteract);
 	}
 
+	g_pData->Destroy();
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
 }
@@ -47,6 +57,8 @@ void cMainGame::Setup()
 
 	//코드 추가
 	{
+		g_pData->Setup();
+
 		//map
 		m_pMapObject = new cMapObject;
 		m_pMapObject->Setup();
@@ -56,6 +68,10 @@ void cMainGame::Setup()
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();
+
+		//interact
+		m_pInteract = new cInteract;
+		m_pInteract->Setup();
 	}
 
 	m_pCamera->ReTarget(NULL);
@@ -74,6 +90,9 @@ void cMainGame::Update()
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update();
+
+		//interact
+		if (m_pInteract) m_pInteract->Update();
 	}
 }
 
@@ -90,10 +109,15 @@ void cMainGame::Render()
 
 		//character
 
+		//interact stuff
+		if (m_pInteract) m_pInteract->Render();
+
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
-
 	}
+
+
+
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }

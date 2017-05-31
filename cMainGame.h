@@ -3,7 +3,7 @@ class cCamera;
 
 class cMapObject;
 class cTotalUIRender;
-
+class cInteract;
 
 class cMainGame
 {
@@ -21,6 +21,9 @@ private:
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;
+
+	//interact
+	cInteract* m_pInteract;
 
 public:
 	void Setup();
