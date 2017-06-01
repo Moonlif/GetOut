@@ -40,3 +40,17 @@ void cDataManager::Destroy()
 		}
 	}
 }
+
+void cDataManager::Chat(string Text)
+{
+}
+
+string cDataManager::GetText()
+{
+	if (m_listChat.empty())
+		return NULL;
+
+	string Text = m_listChat.front();
+	m_listChat.pop_front();
+	return Text;
+}

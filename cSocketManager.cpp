@@ -12,6 +12,7 @@ void cSocketManager::Setup()
 {
 }
 
+CRITICAL_SECTION cs;
 void cSocketManager::Setup_Chat()
 {
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)	/// 소켓 라이브러리 초기화
@@ -25,13 +26,16 @@ void cSocketManager::Setup_Chat()
 	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HOSTIP);
 	ServAdr_CHAT.sin_port = PORT_CHAT;
 
+
 	if (connect(hSockChat, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT)) == SOCKET_ERROR)
 		ErrorHandling("connect() error");
 
+	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
+
 	if (hSockChat != SOCKET_ERROR)		/// 소켓의 연결이 정상이라면
 	{
-		hSndThread = (HANDLE)_beginthreadex(NULL, 0, SendMsg, (void*)&hSockChat, 0, NULL);	// 메시지 발신 스레드 함수
-		hRcvThread = (HANDLE)_beginthreadex(NULL, 0, RecvMsg, (void*)&hSockChat, 0, NULL);	// 메시지 수신 스레드 함수
+		hSndThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall *) (void*))SendMsg, (void*)&hSockChat, 0, NULL);	// 메시지 발신 스레드 함수
+		hRcvThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall *) (void*))RecvMsg, (void*)&hSockChat, 0, NULL);	// 메시지 수신 스레드 함수
 	}
 
 	WaitForSingleObject(hSndThread, INFINITE);	/// 스레드 종료 대기
@@ -48,27 +52,28 @@ void cSocketManager::Destroy()
 	WSACleanup();
 }
 
-unsigned WINAPI cSocketManager::SendMsg(void * arg)
+
+unsigned WINAPI SendMsg(LPVOID lpParam)
 {
-	SOCKET hSock = *((SOCKET*)arg);
+	SOCKET hSock = *((SOCKET*)lpParam);
 	char nameMsg[NAME_SIZE + BUF_SIZE];
 	while (true)
 	{
-		fgets(msg, BUF_SIZE, stdin);	// << : g_pDataManager에서 데이터가 있을때 전송하도록 변경한다.
-		if (!strcmp(msg, "q\n") || !strcmp(msg, "Q\n"))	// << : 스레드 함수를 종료하는 기준, DataManager에서 게임이 끝났음을 알리는 변수가 필요하다.
-		{
-			closesocket(hSock);
-			exit(0);
-		}
-		sprintf(nameMsg, "%s %s", name, msg);		/// << : NAME + CHATDATA
-		send(hSock, nameMsg, strlen(nameMsg), 0);	/// << : Chat Data 전송
-	} /// << : while
+		EnterCriticalSection(&cs);	// << : Begin CRITICAL SECTION 
+		string sText = g_pData->GetText();
+		sText.resize(BUF_SIZE);
+		sprintf(nameMsg, "%s", sText.c_str());	
+		LeaveCriticalSection(&cs);	// << : End CRITICAL SECTION
+
+		if (sText.size() == 0) continue;
+		send(hSock, nameMsg, strlen(nameMsg), 0);
+	}
 	return 0;
 }
 
-unsigned cSocketManager::RecvMsg(void * arg)
+unsigned WINAPI RecvMsg(LPVOID lpParam)
 {
-	int hSock = *((SOCKET*)arg);
+	int hSock = *((SOCKET*)lpParam);
 	char nameMsg[NAME_SIZE + BUF_SIZE];
 	int strLen;
 	while (true)

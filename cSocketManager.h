@@ -36,6 +36,4 @@ public:
 	void Destroy();
 
 	void ErrorHandling(char * msg);
-	unsigned WINAPI SendMsg(void * arg); // << : 채팅 Send 스레드 함수
-	unsigned WINAPI RecvMsg(void * arg); // << : 채팅 Recv 스레드 함수
 };
