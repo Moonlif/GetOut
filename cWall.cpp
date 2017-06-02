@@ -1,0 +1,110 @@
+#include "stdafx.h"
+#include "cWall.h"
+
+
+cWall::cWall()
+	: m_pB1Up(NULL)
+	, m_pB1Left(NULL)
+	, m_pB1Down(NULL)
+	, m_pB1Right(NULL)
+	, m_pB1Down2(NULL)
+	, m_pFFUp(NULL)
+	, m_pFFLeft(NULL)
+	, m_pFFDown(NULL)
+	, m_pFFRight(NULL)
+	, m_pSFUp(NULL)
+	, m_pSFLeft(NULL)
+	, m_pSFDown(NULL)
+	, m_pSFRight(NULL)
+{
+
+}
+cWall::~cWall()
+{
+	//雖ж
+	SAFE_DELETE(m_pB1Up);
+	SAFE_DELETE(m_pB1Left);
+	SAFE_DELETE(m_pB1Down);
+	SAFE_DELETE(m_pB1Right);
+	SAFE_DELETE(m_pB1Down2);
+
+	//1類
+	SAFE_DELETE(m_pFFUp);
+	SAFE_DELETE(m_pFFLeft);
+	SAFE_DELETE(m_pFFDown);
+	SAFE_DELETE(m_pFFRight);
+
+	//2類
+	SAFE_DELETE(m_pSFUp);
+	SAFE_DELETE(m_pSFLeft);
+	SAFE_DELETE(m_pSFDown);
+	SAFE_DELETE(m_pSFRight);
+}
+
+void cWall::Setup()
+{
+	//雖ж 1類
+	m_pB1Up = new cRectMake;
+	m_pB1Up->Setup(D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 4), D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4), D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 4), D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 4), NULL);
+	
+	m_pB1Left = new cRectMake;
+	m_pB1Left->Setup(D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 0), D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 0), D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4), D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 4), NULL);
+
+	m_pB1Right = new cRectMake;
+	m_pB1Right->Setup(D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 4), D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 4), D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 0), D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 0), NULL);
+	
+	m_pB1Down = new cRectMake;
+	m_pB1Down->Setup(D3DXVECTOR3(CENTERX + 9, B1F, CENTERZ + 0), D3DXVECTOR3(CENTERX + 9, FF, CENTERZ + 0), D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 0), D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 0), NULL);
+
+	m_pB1Down2 = new cRectMake;
+	m_pB1Down2->Setup(D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 0), D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 0), D3DXVECTOR3(CENTERX + 10, FF, CENTERZ + 0), D3DXVECTOR3(CENTERX + 10, B1F, CENTERZ + 0), NULL);
+
+	//1類
+	m_pFFUp = new cRectMake;
+	m_pFFUp->Setup(D3DXVECTOR3(CENTERX + 5, FF, CENTERZ + 2), D3DXVECTOR3(CENTERX + 5, SF, CENTERZ + 2), D3DXVECTOR3(CENTERX + 13, SF, CENTERZ + 2), D3DXVECTOR3(CENTERX + 13, FF, CENTERZ + 2), NULL);
+
+	m_pFFLeft = new cRectMake;
+	m_pFFLeft->Setup(D3DXVECTOR3(CENTERX + 5, FF, CENTERZ - 4), D3DXVECTOR3(CENTERX + 5, SF, CENTERZ - 4), D3DXVECTOR3(CENTERX + 5, SF, CENTERZ + 2), D3DXVECTOR3(CENTERX + 5, FF, CENTERZ + 2), NULL);
+
+	m_pFFRight = new cRectMake;
+	m_pFFRight->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ + 2), D3DXVECTOR3(CENTERX + 13, SF, CENTERZ + 2), D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 4), D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4), NULL);
+
+	m_pFFDown = new cRectMake;
+	m_pFFDown->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4), D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 4), D3DXVECTOR3(CENTERX + 5, SF, CENTERZ - 4), D3DXVECTOR3(CENTERX + 5, FF, CENTERZ - 4), NULL);
+
+	//2類
+	m_pSFUp = new cRectMake;
+	m_pSFUp->Setup(D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3), D3DXVECTOR3(CENTERX + 6, TOP, CENTERZ + 3), D3DXVECTOR3(CENTERX + 10.7, TOP, CENTERZ + 3), D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 3), NULL);
+
+	m_pSFLeft = new cRectMake;
+	m_pSFLeft->Setup(D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.2), D3DXVECTOR3(CENTERX + 6, TOP, CENTERZ - 2.2), D3DXVECTOR3(CENTERX + 6, TOP, CENTERZ + 3), D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3), NULL);
+
+	m_pSFRight = new cRectMake;
+	m_pSFRight->Setup(D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 3), D3DXVECTOR3(CENTERX + 10.7, TOP, CENTERZ + 3), D3DXVECTOR3(CENTERX + 10.7, TOP, CENTERZ - 2.2), D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ - 2.2), NULL);
+
+	m_pSFDown = new cRectMake;
+	m_pSFDown->Setup(D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ - 2.2), D3DXVECTOR3(CENTERX + 10.7, TOP, CENTERZ - 2.2), D3DXVECTOR3(CENTERX + 6, TOP, CENTERZ - 2.2), D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.2), NULL);
+}
+
+void cWall::Render()
+{
+	//雖ж 1類
+	m_pB1Up->Render();
+	m_pB1Left->Render();
+	m_pB1Right->Render();
+	m_pB1Down->Render();
+	m_pB1Down2->Render();
+
+	//1類
+	m_pFFUp->Render();
+	m_pFFLeft->Render();
+	m_pFFRight->Render();
+	m_pFFDown->Render();
+
+	//2類
+	m_pSFUp->Render();
+	m_pSFLeft->Render();
+	m_pSFRight->Render();
+	m_pSFDown->Render();
+
+}
