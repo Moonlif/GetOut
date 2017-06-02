@@ -22,7 +22,7 @@ void cDataManager::Setup()
 		m_mapItemName[ITEM_BASEMENT_JAILKEY] = "KEY1";
 		m_mapItemRadius[ITEM_BASEMENT_JAILKEY] = 0.5f;
 		m_mapItemScaling[ITEM_BASEMENT_JAILKEY] = 0.5f;
-		m_mapItemMesh[ITEM_BASEMENT_JAILKEY] = loader.LoadMesh(m_mapItemVecMtlTex[ITEM_BASEMENT_JAILKEY], "interactObj", "box.obj");
+		m_mapItemMesh[ITEM_BASEMENT_JAILKEY] = loader.LoadMesh(m_mapItemVecMtlTex[ITEM_BASEMENT_JAILKEY], "Objects", "box.obj");
 
 	}
 }

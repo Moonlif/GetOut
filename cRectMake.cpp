@@ -43,7 +43,7 @@ void cRectMake::Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3
 	m_stMtl.Specular = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 
 	//if (szFile)
-		m_pTexture = g_pTextureManager->GetTexture("obj/Amadeus_maps/cs_office_texture_16.jpg");
+		m_pTexture = g_pTextureManager->GetTexture("texture/maps/cs_office_texture_16.jpg");
 }
 
 void cRectMake::Render()

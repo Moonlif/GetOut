@@ -73,7 +73,7 @@ void cFloor::Setup()
 	v1 = D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 4); vecVertex.push_back(v1);
 	v2 = D3DXVECTOR3(CENTERX + 6.4, B1F, CENTERZ + 4); vecVertex.push_back(v2);
 	v3 = D3DXVECTOR3(CENTERX + 6.4, B1F, CENTERZ + 2.1); vecVertex.push_back(v3);
-	m_pB1Prison->Setup(v0, v1, v2, v3, "obj/Amadeus_maps/cs_office_texture_142.jpg");
+	m_pB1Prison->Setup(v0, v1, v2, v3, "texture/maps/cs_office_texture_142.jpg");
 	//스타트룸 공간
 	m_pB1StartSpace = new cRectMake;
 	v0 = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2); vecVertex.push_back(v0);

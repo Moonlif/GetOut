@@ -1,23 +1,9 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-#include "cCamera.h"
-
-//map
-#include "cMapObject.h"
-
-//character
-
-
-//ui
-#include "cTotalUIRender.h"
-
-//interact
-#include "cInteract.h"
-
 
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
-	, m_pMapObject(NULL)
+	, m_pMap(NULL)
 	, m_pTotalUIRender(NULL)
 	, m_pInteract(NULL)
 {	 
@@ -31,7 +17,7 @@ cMainGame::~cMainGame()
 	//코드 추가
 	{
 		//map
-		SAFE_DELETE(m_pMapObject);
+		SAFE_DELETE(m_pMap);
 
 		//character
 
@@ -59,8 +45,8 @@ void cMainGame::Setup()
 		g_pData->Setup();
 
 		//map
-		//m_pMapObject = new cMapObject;
-		//m_pMapObject->Setup();
+		m_pMap = new cMap;
+		m_pMap->Setup();
 
 		//character
 
@@ -112,7 +98,7 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMapObject) m_pMapObject->Render();
+		if (m_pMap) m_pMap->Render();
 
 		//character
 
