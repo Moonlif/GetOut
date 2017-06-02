@@ -28,47 +28,12 @@ void cCharacterSelectScene::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-<<<<<<< HEAD
-	//라이트 셋업
-	{
-		D3DXCOLOR commonColor(0.8f, 0.8f, 0.8f, 1.0f);
-		float commonRange = 3.3f;
 
-	m_pBlackImage = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0), 0);
-		////오른쪽 아래 라이트
-		//g_pLightManager->SetSpotLight(eLIGHT::E_sCHASLECT_RDIGHT, commonColor, commonColor, commonColor, 
-		//	D3DXVECTOR3(2, 4.9f, -800), commonRange, D3DX_PI, D3DX_PI / 6, D3DXVECTOR3(0, -1, 0));
-		//g_pD3DDevice->LightEnable(eLIGHT::E_sCHASLECT_RDIGHT, true);
-
-		////오른쪽 위 라이트
-		//g_pLightManager->SetSpotLight(eLIGHT::E_sCHASLECT_RULIGHT, commonColor, commonColor, commonColor,
-		//	D3DXVECTOR3(2, 5.1f, -800), commonRange, D3DX_PI, D3DX_PI / 6, D3DXVECTOR3(0, 1, 0));
-		//g_pD3DDevice->LightEnable(eLIGHT::E_sCHASLECT_RULIGHT, false);
-		//
-		////왼쪽 아래 라이트
-		//g_pLightManager->SetSpotLight(eLIGHT::E_sCHASLECT_LDIGHT, commonColor, commonColor, commonColor,
-		//	D3DXVECTOR3(-2, 4.9f, -800), commonRange, D3DX_PI, D3DX_PI / 6, D3DXVECTOR3(0, -1, 0));
-		//g_pD3DDevice->LightEnable(eLIGHT::E_sCHASLECT_LDIGHT, true);
-
-		////왼쪽 위 라이트
-		//g_pLightManager->SetSpotLight(eLIGHT::E_sCHASLECT_LULIGHT, commonColor, commonColor, commonColor,
-		//	D3DXVECTOR3(-2, 5.1f, -800), commonRange, D3DX_PI, D3DX_PI / 6, D3DXVECTOR3(0, 1, 0));
-		//g_pD3DDevice->LightEnable(eLIGHT::E_sCHASLECT_LULIGHT, false);
-	}
-
-	m_pBlackImage = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 1.0f), 200);
-	m_pRoot = m_pBlackImage;
-
-
-	//테스트
-	TestCharacSetup();
-=======
 	//백그라운드 UI
 	SetBackground();
 
 	//메쉬, 라이트 셋업
 	SetMesh();
->>>>>>> da5668ca910b76697a8e3c2917793b5697f70cbb
 }
 
 void cCharacterSelectScene::Update()
