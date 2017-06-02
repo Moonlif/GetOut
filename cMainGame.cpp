@@ -1,19 +1,9 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-#include "cCamera.h"
-
-//map
-#include "cMapObject.h"
-
-//character
-
-
-//ui
-#include "cTotalUIRender.h"
-
 
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
+	, m_pMap(NULL)
 {	 
 }
 
@@ -21,18 +11,22 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
-	SAFE_DELETE(m_pTotalUIRender);
-
 	//코드 추가
 	{
 		//map
-		SAFE_DELETE(m_pMapObject);
+		SAFE_DELETE(m_pMap);
 
 		//character
 
 		//ui
+		SAFE_DELETE(m_pTotalUIRender);
+
+		//interact
+		SAFE_DELETE(m_pInteract);
 	}
 
+	g_pData->Destroy();
+	g_pSocketmanager->Destroy();
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
 }
@@ -42,24 +36,34 @@ void cMainGame::Setup()
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
-	//light
-	Set_Light();
-
 	//코드 추가
 	{
+		g_pData->Setup();
+
 		//map
-		m_pMapObject = new cMapObject;
-		m_pMapObject->Setup();
+		m_pMap = new cMap;
+		m_pMap->Setup();
 
 		//character
+
+		//interact
+		m_pInteract = new cInteract;
+		m_pInteract->Setup();
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();
+
+		//test light
+		g_pLightManager->SetDirectionLight(0, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
+			D3DXVECTOR3(0, 1, 1));
+		g_pD3DDevice->LightEnable(0, true);
+
+		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
 
-	m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
-
+	//g_pSocketmanager->Setup();
+	//g_pSocketmanager->Setup_Chat();
 }
 
 void cMainGame::Update()
@@ -67,7 +71,6 @@ void cMainGame::Update()
 
 	g_pTimeManager->Update();
 	if (m_pCamera) m_pCamera->Update();
-
 	{
 		//map
 
@@ -75,26 +78,34 @@ void cMainGame::Update()
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update();
+
+		//interact
+		if (m_pInteract) m_pInteract->Update();
 	}
 }
 
 void cMainGame::Render()
 {
-	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
+	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(200, 200, 200), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 
 	
 	//코드 추가
 	{
 		//map
-		//m_pMapObject->Render();
+		if (m_pMap) m_pMap->Render();
 
 		//character
 
+		//interact stuff
+		if (m_pInteract) m_pInteract->Render();
+
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
-
 	}
+
+
+
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
@@ -117,27 +128,4 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_ptMouse.y = HIWORD(lParam);
 		break;
 	}
-}
-
-//light
-void cMainGame::Set_Light()
-{
-	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
-	g_pD3DDevice->SetRenderState(D3DRS_SPECULARENABLE, true);
-
-	D3DLIGHT9 stLight;
-	ZeroMemory(&stLight, sizeof(D3DLIGHT9));
-
-	//directional light
-	stLight.Type = D3DLIGHT_DIRECTIONAL;
-	stLight.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	stLight.Diffuse = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	stLight.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-
-	D3DXVECTOR3 vDir(1.0f, -1.0f, 1.0f);
-	D3DXVec3Normalize(&vDir, &vDir);
-	stLight.Direction = vDir;
-
-	g_pD3DDevice->SetLight(0, &stLight);
-	g_pD3DDevice->LightEnable(0, true);
 }

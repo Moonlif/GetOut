@@ -29,6 +29,7 @@ void cCharacterSelectScene::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
+
 	//백그라운드 UI
 	SetBackground();
 

@@ -1,9 +1,9 @@
 #pragma once
-class cCamera;
+#include "cCamera.h"
 
-class cMapObject;
-class cTotalUIRender;
-
+#include "cMap.h"
+#include "cTotalUIRender.h"
+#include "cInteract.h"
 
 class cMainGame
 {
@@ -15,20 +15,20 @@ private:
 	cCamera*			m_pCamera;
 
 	//map
-	cMapObject* m_pMapObject;
-	
+	cMap* m_pMap;
+
 	//character
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;
+
+	//interact
+	cInteract* m_pInteract;
 
 public:
 	void Setup();
 	void Update();
 	void Render();
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	
-	//light
-	void Set_Light();
 };
 

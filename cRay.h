@@ -24,6 +24,7 @@ public:
 
 	bool IntersectTri(IN D3DXVECTOR3& v0, IN D3DXVECTOR3& v1, IN D3DXVECTOR3& v2, OUT D3DXVECTOR3& vPickedPosition);
 	bool IsPicked(ST_SPHERE* pSphere);
+	bool IsPicked(D3DXVECTOR3 vPosition, float fRadius);
 
 };
 
