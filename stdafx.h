@@ -32,6 +32,8 @@ using namespace std;
 
 //엘립스
 #define EPSILON			(0.001f)
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 #include "Info.h"

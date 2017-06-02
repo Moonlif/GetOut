@@ -45,14 +45,19 @@ void cDataManager::Destroy()
 
 void cDataManager::Chat(string Text)
 {
+	m_listChat_SEND.push_back(Text);
 }
 
 string cDataManager::GetText()
 {
-	if (m_listChat.empty())
-		return NULL;
+	if (m_listChat_SEND.empty())
+	{
+		string size;
+		size = m_listChat_SEND.size();
+		return size;
+	}
 
-	string Text = m_listChat.front();
-	m_listChat.pop_front();
+	string Text = m_listChat_SEND.front();
+	m_listChat_SEND.pop_front();
 	return Text;
 }

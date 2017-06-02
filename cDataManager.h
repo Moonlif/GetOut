@@ -9,15 +9,16 @@ class cDataManager
 private:
 	SINGLETONE(cDataManager);
 
-	// >> : À¯Áö»ó
-	list<string> m_listChat;
-	// << :
+	list<string> m_listChat_SEND;
+
 public:
 	std::map<ItemCode, string> m_mapItemName;
 	std::map<ItemCode, float> m_mapItemRadius;
 	std::map<ItemCode, float> m_mapItemScaling;
 	std::map<ItemCode, LPD3DXMESH> m_mapItemMesh;
 	std::map<ItemCode, std::vector<cMtlTex*>> m_mapItemVecMtlTex;
+
+	list<string> m_listChat_RECV;
 
 public:
 	void Setup();

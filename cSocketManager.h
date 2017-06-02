@@ -12,7 +12,7 @@
 
 #define BUF_SIZE 100
 #define NAME_SIZE 20
-#define HOSTIP "127.0.0.1"
+#define HOSTIP "122.45.137.187"
 #define PORT_DATA 1234
 #define PORT_CHAT 9090
 
@@ -27,8 +27,10 @@ private:
 	SOCKADDR_IN ServAdr_CHAT;
 	HANDLE hSndThread, hRcvThread;
 
+
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
+
 public:
 	void Setup();
 	void Setup_Chat();
@@ -36,4 +38,5 @@ public:
 	void Destroy();
 
 	void ErrorHandling(char * msg);
+
 };
