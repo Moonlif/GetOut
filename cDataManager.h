@@ -9,6 +9,9 @@ class cDataManager
 private:
 	SINGLETONE(cDataManager);
 
+	// >> : À¯Áö»ó
+	list<string> m_listChat;
+	// << :
 public:
 	std::map<ItemCode, string> m_mapItemName;
 	std::map<ItemCode, float> m_mapItemRadius;
@@ -19,5 +22,8 @@ public:
 public:
 	void Setup();
 	void Destroy();
+	
+	void Chat(string Text);
+	string GetText();
 };
 
