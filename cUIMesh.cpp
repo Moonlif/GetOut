@@ -25,6 +25,7 @@ cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 
 	m_vPosition = pos;
 		
+
 }
 
 
@@ -35,7 +36,10 @@ cUIMesh::~cUIMesh()
 
 void cUIMesh::Render(LPD3DXSPRITE pSprite)
 {
+	if (m_isHidden) return;
+
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
+
 	m_pMesh->DrawSubset(0);
 
 	cUIObject::Render(pSprite);

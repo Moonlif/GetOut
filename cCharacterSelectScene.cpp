@@ -5,6 +5,7 @@
 #include "cUIObject.h"
 #include "cUIMesh.h"
 #include "cUIButton.h"
+#include "cUILight.h"
 
 cCharacterSelectScene::cCharacterSelectScene()
 	:m_pSprite(NULL)
@@ -41,7 +42,10 @@ void cCharacterSelectScene::Update()
 	m_pPlayer1->Update();
 	m_pPlayer2->Update();
 
-	
+	//케릭터 선택 업데이트
+	UpdateCharacterSelect();
+
+
 }
 
 void cCharacterSelectScene::Render()
@@ -52,9 +56,33 @@ void cCharacterSelectScene::Render()
 }
 
 
+void cCharacterSelectScene::UpdateCharacterSelect()
+{
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
+	{
+		//cUITextView* pTextView = (cUITextView*)m_pUIRoot->FindChildByTag(E_TEXT_VIEW);
+		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1);
+		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2);
+		//플레이어 1번 선택시
+		if (PtInRect(&Player1->Getrc(), g_ptMouse))
+		{
+			m_pPlayer1->SetIsHidden(false);
+			m_pPlayer2->SetIsHidden(true);
+		}
+		//플레이어 2번 선택시
+		else if ((PtInRect(&Player2->Getrc(), g_ptMouse)))
+		{
+			m_pPlayer1->SetIsHidden(true);
+			m_pPlayer2->SetIsHidden(false);
+		}
+	}
+	
+}
+
 void cCharacterSelectScene::SetBackground()
 {
-	m_pBackgroundImage = new cUIImageView("UI/CharacterSelectScene/size_Amnesia.jpg", D3DXVECTOR3(0, 0, 0), 220);
+	m_pBackgroundImage = new cUIImageView("UI/CharacterSelectScene/size_Amnesia.jpg", D3DXVECTOR3(0, 0, 1.0f), 220);
+	m_pBackgroundImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	m_pRoot = m_pBackgroundImage;
 
 	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(890, 170, 0), 200);
@@ -67,7 +95,7 @@ void cCharacterSelectScene::SetBackground()
 	m_pRoot->AddChild(pPlyer1Image);
 
 	cUIImageView* pPlyer2Image = new cUIImageView("UI/CharacterSelectScene/cha2.png", D3DXVECTOR3(1060, 95, 0), 255);
-	pPlyer1Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2);
+	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2);
 	m_pRoot->AddChild(pPlyer2Image);
 
 	cUIButton*	pStartButton = new cUIButton("UI/button/master_button_normal.png", "UI/button/master_button_over.png",
@@ -80,9 +108,16 @@ void cCharacterSelectScene::SetBackground()
 //플레이어 메쉬, 조명 셋업
 void cCharacterSelectScene::SetMesh()
 {
-	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::BOX, D3DXVECTOR3(-3, 0, 0));
+	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::BOX, D3DXVECTOR3(-1, 0, 10));
+	pPlayer1->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER1);
+	pPlayer1->SetIsHidden(true);
 	m_pPlayer1 = pPlayer1;
 
-	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::BOX, D3DXVECTOR3(0, 0, 3));
+	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::SPHERE, D3DXVECTOR3(-1, 0, 10));
+	pPlayer2->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER2);
+	pPlayer2->SetIsHidden(true);
 	m_pPlayer2 = pPlayer2;
+
+	cUILight* pLight1 = new cUILight;
+	pLight1->SetSpotLight(eL)
 }

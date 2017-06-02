@@ -3,6 +3,7 @@
 
 
 cUI_globalVarius::cUI_globalVarius()
+	:m_IsStartedGame(false)
 {
 }
 

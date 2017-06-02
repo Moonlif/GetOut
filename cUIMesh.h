@@ -17,6 +17,7 @@ public:
 
 private:
 	LPD3DXMESH			m_pMesh;
+
 public:
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 };
