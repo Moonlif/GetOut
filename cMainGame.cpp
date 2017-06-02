@@ -14,6 +14,7 @@
 
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
+	, m_pMap(NULL)
 {	 
 }
 
@@ -22,7 +23,7 @@ cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
 	SAFE_DELETE(m_pTotalUIRender);
-
+	SAFE_DELETE(m_pMap);
 	//코드 추가
 	{
 		//map
@@ -48,9 +49,10 @@ void cMainGame::Setup()
 	//코드 추가
 	{
 		//map
-		m_pMapObject = new cMapObject;
-		m_pMapObject->Setup();
-
+		//m_pMapObject = new cMapObject;
+		//m_pMapObject->Setup();
+		m_pMap = new cMap;
+		m_pMap->Setup();
 		//character
 
 		//ui
@@ -86,8 +88,8 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		m_pMapObject->Render();
-
+		//m_pMapObject->Render();
+		m_pMap->Render();
 		//character
 
 		//ui

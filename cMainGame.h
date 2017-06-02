@@ -3,7 +3,7 @@ class cCamera;
 
 class cMapObject;
 class cTotalUIRender;
-
+#include "cMap.h"
 
 class cMainGame
 {
@@ -16,7 +16,8 @@ private:
 
 	//map
 	cMapObject* m_pMapObject;
-	
+	cMap* m_pMap;
+
 	//character
 
 	//ui
