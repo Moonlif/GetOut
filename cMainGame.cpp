@@ -60,8 +60,8 @@ void cMainGame::Setup()
 		g_pData->Setup();
 
 		//map
-		m_pMapObject = new cMapObject;
-		m_pMapObject->Setup();
+		//m_pMapObject = new cMapObject;
+		//m_pMapObject->Setup();
 
 		//character
 
@@ -98,14 +98,14 @@ void cMainGame::Update()
 
 void cMainGame::Render()
 {
-	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
+	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(200, 200, 200), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 
 	
 	//코드 추가
 	{
 		//map
-		m_pMapObject->Render();
+		//m_pMapObject->Render();
 
 		//character
 

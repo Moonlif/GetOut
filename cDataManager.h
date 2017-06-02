@@ -11,7 +11,8 @@ private:
 
 public:
 	std::map<ItemCode, string> m_mapItemName;
-	std::map<ItemCode, float> m_mapItemSize;
+	std::map<ItemCode, float> m_mapItemRadius;
+	std::map<ItemCode, float> m_mapItemScaling;
 	std::map<ItemCode, LPD3DXMESH> m_mapItemMesh;
 	std::map<ItemCode, std::vector<cMtlTex*>> m_mapItemVecMtlTex;
 

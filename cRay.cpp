@@ -76,3 +76,49 @@ bool cRay::IsPicked(ST_SPHERE * pSphere)
 
 	return qv*qv - vv * (qq - rr) >= 0;
 }
+
+bool cRay::IsPicked(D3DXVECTOR3 vPosition, float fRadius)
+{
+	cRay r = (*this);
+
+	D3DXMATRIXA16 matInvWorld;
+	D3DXMatrixIdentity(&matInvWorld);
+	matInvWorld._41 = -vPosition.x;
+	matInvWorld._42 = -vPosition.y;
+	matInvWorld._43 = -vPosition.z;
+
+	D3DXVec3TransformCoord(&r.m_vOrigin, &r.m_vOrigin, &matInvWorld);
+	D3DXVec3TransformNormal(&r.m_vDirection, &r.m_vDirection, &matInvWorld);
+
+	float vv = D3DXVec3Dot(&r.m_vDirection, &r.m_vDirection);
+	float qv = D3DXVec3Dot(&r.m_vOrigin, &r.m_vDirection);
+	float qq = D3DXVec3Dot(&r.m_vOrigin, &r.m_vOrigin);
+	float rr = fRadius * fRadius;
+
+	return qv*qv - vv * (qq - rr) >= 0;
+}
+
+/*
+* = DotProduct
+X = Multiply
+
+Ray = p0 + tu
+||Ray - vCenter|| = r
+||p0 + tu - c|| = r
+u*u t^2 + 2*u(p0-c)t + (p0-c)*(p0-c) - r*r = 0
+-> At^2 + Bt + C = 0
+A = u*u
+B = 2*u(p0-c)
+C = (p0-c)*(p0-c) - r*r
+
+D = B^2 - 4AC
+D/4 = (B')^2 - AC	(B' = B/2)
+D/4 = u*(p0-c)Xu*(p0-c) - u*uX((p0-c)*(p0-c)-r*r)
+
+p0-c -> q = D3DXVec3TransformCoord(&r.m_vOrigin, &r.m_vOrigin, &matInvWorld);
+u -> v = D3DXVec3TransformNormal(&r.m_vDirection, &r.m_vDirection, &matInvWorld);
+
+D/4 = v*(p0-c) X v*(p0-c) - v*v X ((p0-c)*(p0-c)-r*r)
+	= v*q X v*q - v*v X (q*q - r*r)
+	= qv X qv - vv X (qq - rr)
+*/

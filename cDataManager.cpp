@@ -17,11 +17,13 @@ void cDataManager::Setup()
 {
 	//Using by Interaction 
 	{
-		cObjLoader loader;
+		cObjLoader loader; 
 
 		m_mapItemName[ITEM_KEY1] = "KEY1";
-		m_mapItemSize[ITEM_KEY1] = 0.5f;
+		m_mapItemRadius[ITEM_KEY1] = 0.5f;
+		m_mapItemScaling[ITEM_KEY1] = 0.5f;
 		m_mapItemMesh[ITEM_KEY1] = loader.LoadMesh(m_mapItemVecMtlTex[ITEM_KEY1], "interactObj", "box.obj");
+
 	}
 }
 

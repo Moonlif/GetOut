@@ -2,6 +2,7 @@
 #include "cInteract.h"
 #include "cStuff.h"
 #include "cTrigger.h"
+#include "cRay.h"
 
 cInteract::cInteract()
 {
@@ -34,6 +35,29 @@ void cInteract::Setup()
 
 void cInteract::Update()
 {
+	//picking
+	cRay Ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
+	{
+		for each(auto it in m_vecStuff)
+		{
+			if (Ray.IsPicked(it->GetPosition(), it->GetRadius()))
+			{
+				switch (it->GetCode())
+				{
+				case ITEM_KEY1:
+				{
+					int a = 0;
+				}
+					break;
+				default:
+					break;
+				}
+		
+			}
+		}
+	}
+
 	for each (auto it in m_vecStuff)
 	{
 		it->Update();

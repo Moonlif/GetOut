@@ -155,9 +155,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (GetAsyncKeyState(VK_F9) & 0x0001)
+	{
+		if (g_bDebug) g_bDebug = false;
+		else g_bDebug = true;
+	}
+
 	if (g_pMainGame) g_pMainGame->WndProc(hWnd, message, wParam, lParam);
 
-    switch (message)
+	switch (message)
     {
 	case WM_TIMER:
 		g_nFps = g_nCountFps;
@@ -167,6 +173,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) ::DestroyWindow(hWnd);
 		break;
+
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
