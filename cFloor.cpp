@@ -140,10 +140,10 @@ void cFloor::Setup()
 	//1Ãþ -> 2Ãþ °è´Ü
 	for (size_t i = 0; i < 10; i++) {
 		m_pB1Stair2[i] = new cRectMake;
-		v0 = D3DXVECTOR3(CENTERX + 7.9, ((FF - B1F) * 0.1 * i) + FF, CENTERZ - 3 + (0.3 * i)); vecVertex.push_back(v0);
-		v1 = D3DXVECTOR3(CENTERX + 7.9, ((FF - B1F) * 0.1 * i) + FF, CENTERZ - 2.5 + (0.3 * i)); vecVertex.push_back(v1);
-		v2 = D3DXVECTOR3(CENTERX + 8.9, ((FF - B1F) * 0.1 * i) + FF, CENTERZ - 2.5 + (0.3 * i)); vecVertex.push_back(v2);
-		v3 = D3DXVECTOR3(CENTERX + 8.9, ((FF - B1F) * 0.1 * i) + FF, CENTERZ - 3 + (0.3 * i)); vecVertex.push_back(v3);
+		v0 = D3DXVECTOR3(CENTERX + 7.9, ((SF - FF) * 0.1 * i) + FF, CENTERZ - 3 + (0.3 * i)); vecVertex.push_back(v0);
+		v1 = D3DXVECTOR3(CENTERX + 7.9, ((SF - FF) * 0.1 * i) + FF, CENTERZ - 2.5 + (0.3 * i)); vecVertex.push_back(v1);
+		v2 = D3DXVECTOR3(CENTERX + 8.9, ((SF - FF) * 0.1 * i) + FF, CENTERZ - 2.5 + (0.3 * i)); vecVertex.push_back(v2);
+		v3 = D3DXVECTOR3(CENTERX + 8.9, ((SF - FF) * 0.1 * i) + FF, CENTERZ - 3 + (0.3 * i)); vecVertex.push_back(v3);
 		m_pB1Stair2[i]->Setup(v0, v1, v2, v3, NULL);
 	}
 

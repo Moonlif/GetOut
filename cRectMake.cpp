@@ -38,12 +38,12 @@ void cRectMake::Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3
 	_verTex.p = v3;	m_vecBottomVertex.push_back(_verTex);
 
 	ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
-	m_stMtl.Ambient = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
-	m_stMtl.Diffuse = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
-	m_stMtl.Specular = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
+	m_stMtl.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+	m_stMtl.Diffuse = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+	m_stMtl.Specular = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 
-	if (szFile)
-		m_pTexture = g_pTextureManager->GetTexture(szFile);
+	//if (szFile)
+		m_pTexture = g_pTextureManager->GetTexture("obj/Amadeus_maps/cs_office_texture_16.jpg");
 }
 
 void cRectMake::Render()

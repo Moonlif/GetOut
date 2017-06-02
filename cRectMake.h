@@ -1,4 +1,12 @@
 #pragma once
+#define B1F 0
+#define FF 2
+#define SF 2 + FF
+#define TOP 2 + SF
+//스타딩 좌표
+#define CENTERX -10
+#define CENTERZ 0
+
 
 class cRectMake
 {
