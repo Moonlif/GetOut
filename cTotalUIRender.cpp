@@ -7,6 +7,7 @@
 cTotalUIRender::cTotalUIRender()
 	:m_pChaSelectScene(NULL),
 	m_pStartScene(NULL)
+	, m_pCamraStartPos(0,0,0)
 {
 }
 
@@ -22,19 +23,13 @@ void cTotalUIRender::Setup()
 	m_pStartScene = new cStartScene;
 	m_pStartScene->Setup();
 
-
-
-	m_vCameraTarget = D3DXVECTOR3(0, 5, -800);
-
-	//빠르게 넘어가기 위해 임시.
-	SetupChaSelectScene();
+	m_pCamraStartPos = D3DXVECTOR3(0, 0, -100);
 }
 
 void cTotalUIRender::Update()
 {
 	if (m_pStartScene) m_pStartScene->Update();
 	if (m_pChaSelectScene) m_pChaSelectScene->Update();
-
 }
 
 void cTotalUIRender::Render()

@@ -3,8 +3,6 @@
 #include "cUIImageView.h"
 #include "cUITextView.h"
 
-
-
 cStartScene::cStartScene()
 	:m_pStartSceneRoot(NULL)
 	, m_pSprite(NULL)
@@ -29,8 +27,6 @@ void cStartScene::Setup()
 	m_pStartText = new cUITextView("Press any key to start", D3DXVECTOR3(400, 500, 0), D3DCOLOR_ARGB(255, 255, 255, 0),
 		ST_SIZEN(500, 200), 20, 20, 500, "±¼¸²Ã¼");
 	m_pStartSceneRoot->AddChild(m_pStartText);
-
-
 }
 
 void cStartScene::Update()

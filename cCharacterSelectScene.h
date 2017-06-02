@@ -3,8 +3,7 @@
 class cUIObject;
 class cUITextView;
 class cUIImageView;
-//테스트용
-class cSkinnedMesh;
+
 class cCharacterSelectScene
 {
 public:
@@ -12,20 +11,23 @@ public:
 	~cCharacterSelectScene();
 
 private:
-	cUIObject*			m_pRoot;
-	cUIImageView*		m_pBlackImage;
+	//배경관련
+	cUIObject*				m_pRoot;
+	cUIImageView*			m_pBackgroundImage;
 
-	LPD3DXSPRITE		m_pSprite;
+	//플레이어 관련
+	cUIObject*				m_pPlayer1;
+	cUIObject*				m_pPlayer2;
 
-	//테스트
-	LPD3DXMESH			m_pBox1, m_pBox2;
-	D3DMATERIAL9		m_stMtlBox;
+	//스프라이트
+	LPD3DXSPRITE			m_pSprite;
 public:
 	void Setup();
 	void Update();
 	void Render();
 
-	void TestCharacSetup();
-	void TestCharacRender();
+
+	void SetBackground();
+	void SetMesh();
 };
 

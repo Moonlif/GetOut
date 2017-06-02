@@ -15,13 +15,7 @@ cUIObject::cUIObject()
 
 cUIObject::~cUIObject()
 {
-	for each(auto c in m_vecChild)
-	{
-		SAFE_RELEASE(c);
-	}
-
-
-	SAFE_RELEASE(m_pParent);
+	//Destroy();
 }
 
 void cUIObject::AddChild(cUIObject * pChild)
