@@ -4,7 +4,7 @@
 #include "cMtlTex.h"
 
 cStuff::cStuff()
-	: m_eCode(ITEM_KEY1)
+	: m_eCode(ITEM_NONE)
 	, m_fRadius(0.0f)
 	, m_fScaling(0.0f)
 	, m_vPosition(0, 0, 0)
@@ -36,12 +36,18 @@ void cStuff::Setup(ItemCode code, D3DXVECTOR3 position, bool isOnMap)
 	m_sName = g_pData->m_mapItemName[m_eCode];
 	m_fRadius = g_pData->m_mapItemRadius[m_eCode];
 	m_fScaling = g_pData->m_mapItemScaling[m_eCode];
-	m_pMesh = g_pData->m_mapItemMesh[m_eCode];
-	g_pData->m_mapItemMesh[m_eCode]->AddRef();
-	m_vecMtlTex = g_pData->m_mapItemVecMtlTex[m_eCode];
-	for (int i = 0; i < m_vecMtlTex.size(); ++i)
+	if (g_pData->m_mapItemMesh.find(m_eCode) != g_pData->m_mapItemMesh.end())
 	{
-		m_vecMtlTex[i]->AddRef();
+		m_pMesh = g_pData->m_mapItemMesh[m_eCode];
+		g_pData->m_mapItemMesh[m_eCode]->AddRef();
+	}
+	if (g_pData->m_mapItemVecMtlTex.find(m_eCode) != g_pData->m_mapItemVecMtlTex.end())
+	{
+		m_vecMtlTex = g_pData->m_mapItemVecMtlTex[m_eCode];
+		for (int i = 0; i < m_vecMtlTex.size(); ++i)
+		{
+			m_vecMtlTex[i]->AddRef();
+		}
 	}
 
 	D3DXCreateSphere(g_pD3DDevice, m_fRadius, 10, 10, &m_pMeshSphere, NULL);

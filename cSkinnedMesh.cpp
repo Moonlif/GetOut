@@ -8,7 +8,9 @@ cSkinnedMesh::cSkinnedMesh()
 	, m_fBlendTime(0.3f)
 	, m_fPassedBlendTime(0.0f)
 	, m_isAnimBlend(false)
+	, m_vPosition(0, 0, 0)
 {
+	D3DXMatrixIdentity(&m_matWorld);
 }
 
 
@@ -70,7 +72,8 @@ void cSkinnedMesh::Update(LPD3DXFRAME pFrame, LPD3DXFRAME pParent)
 		pFrame = m_pRoot;
 
 	ST_BONE* pBone = (ST_BONE*)pFrame;
-	pBone->CombinedTransformationMatrix = pBone->TransformationMatrix;
+	pBone->CombinedTransformationMatrix = pBone->TransformationMatrix;	
+
 	if (pParent)
 	{
 		pBone->CombinedTransformationMatrix *=

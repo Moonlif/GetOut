@@ -21,12 +21,20 @@ void cTotalUIRender::Setup()
 {
 	m_pStartScene = new cStartScene;
 	m_pStartScene->Setup();
+
+
+
+	m_vCameraTarget = D3DXVECTOR3(0, 5, -800);
+
+	//빠르게 넘어가기 위해 임시.
+	SetupChaSelectScene();
 }
 
 void cTotalUIRender::Update()
 {
 	if (m_pStartScene) m_pStartScene->Update();
 	if (m_pChaSelectScene) m_pChaSelectScene->Update();
+
 }
 
 void cTotalUIRender::Render()

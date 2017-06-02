@@ -15,25 +15,25 @@ cDataManager::~cDataManager()
 
 void cDataManager::Setup()
 {
-	//Using by Interaction 
+	//Using by Interaction - Á¤ÈÆ
 	{
 		cObjLoader loader; 
 
-		m_mapItemName[ITEM_KEY1] = "KEY1";
-		m_mapItemRadius[ITEM_KEY1] = 0.5f;
-		m_mapItemScaling[ITEM_KEY1] = 0.5f;
-		m_mapItemMesh[ITEM_KEY1] = loader.LoadMesh(m_mapItemVecMtlTex[ITEM_KEY1], "interactObj", "box.obj");
+		m_mapItemName[ITEM_BASEMENT_JAILKEY] = "KEY1";
+		m_mapItemRadius[ITEM_BASEMENT_JAILKEY] = 0.5f;
+		m_mapItemScaling[ITEM_BASEMENT_JAILKEY] = 0.5f;
+		m_mapItemMesh[ITEM_BASEMENT_JAILKEY] = loader.LoadMesh(m_mapItemVecMtlTex[ITEM_BASEMENT_JAILKEY], "interactObj", "box.obj");
 
 	}
 }
 
 void cDataManager::Destroy()
 {
+	//Using by Interaction - Á¤ÈÆ
 	for each (auto it in m_mapItemMesh)
 	{
 		SAFE_RELEASE(it.second);
 	}
-
 	for each(auto it in m_mapItemVecMtlTex)
 	{
 		for (int i = 0; i < it.second.size(); i++)

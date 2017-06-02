@@ -27,6 +27,11 @@ void cLightManager::SetSpotLight(DWORD nIndex, D3DXCOLOR Ambient, D3DXCOLOR Diff
 	stLight.Position = pos;
 	D3DXVec3Normalize(&dir, &dir);
 	stLight.Direction = dir;
+	
+	stLight.Attenuation0 = 0.1f;
+	stLight.Attenuation1 = 0.1f;
+	stLight.Attenuation2 = 0.0f;
+	stLight.Falloff = 1.0f;
 
 	g_pD3DDevice->SetLight(nIndex, &stLight);
 	g_pD3DDevice->LightEnable(nIndex, false);
@@ -62,6 +67,10 @@ void cLightManager::SetPointLight(DWORD nIndex, D3DXCOLOR Ambient, D3DXCOLOR Dif
 	stLight.Specular = Specular;
 	stLight.Position = pos;
 	stLight.Range = range;
+
+	stLight.Attenuation0 = 0.1f;
+	stLight.Attenuation1 = 0.1f;
+	stLight.Attenuation2 = 0.1f;
 
 	g_pD3DDevice->SetLight(nIndex, &stLight);
 	g_pD3DDevice->LightEnable(nIndex, false);

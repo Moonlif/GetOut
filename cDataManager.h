@@ -16,8 +16,6 @@ public:
 	std::map<ItemCode, LPD3DXMESH> m_mapItemMesh;
 	std::map<ItemCode, std::vector<cMtlTex*>> m_mapItemVecMtlTex;
 
-	LPD3DXMESH mesh;
-
 public:
 	void Setup();
 	void Destroy();

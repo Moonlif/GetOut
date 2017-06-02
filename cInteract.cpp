@@ -25,11 +25,11 @@ cInteract::~cInteract()
 void cInteract::Setup()
 {
 	cStuff* stuff = new cStuff;
-	stuff->Setup(ITEM_KEY1, D3DXVECTOR3(0, 0, 0), true);
+	stuff->Setup(ITEM_BASEMENT_JAILKEY, D3DXVECTOR3(0, 0, 0), true);
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
-	stuff->Setup(ITEM_KEY1, D3DXVECTOR3(0, 2.0f, 0), true);
+	stuff->Setup(ITEM_BASEMENT_JAILKEY, D3DXVECTOR3(0, 2.0f, 0), true);
 	m_vecStuff.push_back(stuff);
 }
 
@@ -45,12 +45,15 @@ void cInteract::Update()
 			{
 				switch (it->GetCode())
 				{
-				case ITEM_KEY1:
+				case ITEM_BASEMENT_JAILKEY:
 				{
 					int a = 0;
 				}
 					break;
-				default:
+				case ITEM_NONE:
+				{
+
+				}
 					break;
 				}
 		

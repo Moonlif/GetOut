@@ -13,6 +13,9 @@ protected:
 	float m_fPassedBlendTime;
 	bool m_isAnimBlend;
 
+	//
+	SYNTHESIZE(D3DXVECTOR3, m_vPosition, Position);
+	D3DXMATRIXA16 m_matWorld;
 public:
 	void Setup(char* szFolder, char* szFile);
 	void Update();
