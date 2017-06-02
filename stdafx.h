@@ -176,15 +176,6 @@ struct ST_ASTAR
 	POINT parent;
 };
 
-enum eLIGHT
-{
-	//s = Spot, d = Direction, p = Point
-
-
-	E_sCHASLECT_LIGHT1 = 10000,
-	E_sCHASLECT_LIGHT2,
-};
-
 #include "cObject.h"
 #include "iMap.h"
 //singletone

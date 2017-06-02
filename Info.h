@@ -40,3 +40,11 @@ enum Trigger
 	TRIGGER_1STFLOOR_TOILET,
 	TRIGGER_2NDFLOOR_SWITCH,
 };
+
+enum eLIGHT
+{
+	//s = Spot, d = Direction, p = Point
+
+	E_sCHASLECT_LIGHT1 = 10000,
+	E_sCHASLECT_LIGHT2,
+};

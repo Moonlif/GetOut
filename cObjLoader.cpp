@@ -506,6 +506,7 @@ LPD3DXMESH cObjLoader::LoadMesh(OUT std::vector<cMtlTex*> & vecMtlTex, IN char* 
 
 	std::string sMtlName;
 
+	if (fp == NULL) return NULL;
 	while (true)
 	{
 		if (feof(fp)) break;

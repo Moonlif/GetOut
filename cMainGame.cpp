@@ -62,17 +62,20 @@ void cMainGame::Setup()
 
 		//character
 
-		//ui
-		m_pTotalUIRender = new cTotalUIRender;
-		m_pTotalUIRender->Setup();
-
 		//interact
 		m_pInteract = new cInteract;
 		m_pInteract->Setup();
+
+		//ui
+		m_pTotalUIRender = new cTotalUIRender;
+		m_pTotalUIRender->Setup();
 	}
 
-	m_pCamera->ReTarget(&m_pTotalUIRender->GetCameraTarget());
+	g_pLightManager->SetDirectionLight(0, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), 
+		D3DXVECTOR3(0, 1, 1));
+	g_pD3DDevice->LightEnable(0, true);
 
+	//m_pCamera->ReTarget(&m_pTotalUIRender->GetCameraTarget());
 }
 
 void cMainGame::Update()
@@ -102,7 +105,7 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		//m_pMapObject->Render();
+		if (m_pMapObject) m_pMapObject->Render();
 
 		//character
 

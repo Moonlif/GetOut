@@ -36,7 +36,7 @@ void cStuff::Setup(ItemCode code, D3DXVECTOR3 position, bool isOnMap)
 	m_sName = g_pData->m_mapItemName[m_eCode];
 	m_fRadius = g_pData->m_mapItemRadius[m_eCode];
 	m_fScaling = g_pData->m_mapItemScaling[m_eCode];
-	if (g_pData->m_mapItemMesh.find(m_eCode) != g_pData->m_mapItemMesh.end())
+	if (g_pData->m_mapItemMesh.find(m_eCode)->second != NULL)
 	{
 		m_pMesh = g_pData->m_mapItemMesh[m_eCode];
 		g_pData->m_mapItemMesh[m_eCode]->AddRef();
