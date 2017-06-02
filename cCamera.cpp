@@ -10,8 +10,9 @@ cCamera::cCamera()
 	, m_fCameraDistance(5.0f)
 	, m_isLButtonDown(false)
 	, m_vCamRotAngle(0, 0, 0)
+	, m_fCameraHeight(0)
 {
-	m_ptPrevMouse.x = 0; 
+	m_ptPrevMouse.x = 0;
 	m_ptPrevMouse.y = 0;
 }
 
@@ -42,7 +43,7 @@ void cCamera::Update()
 	D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
 	matR = matRX * matRY;
 
-	m_vEye = D3DXVECTOR3(0, 5, -m_fCameraDistance);
+	m_vEye = D3DXVECTOR3(0, m_fCameraHeight, -m_fCameraDistance);
 	D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
 
 	if (m_pvTarget)
@@ -81,7 +82,7 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			m_vCamRotAngle.y += (fDeltaX / 100.f);
 			m_vCamRotAngle.x += (fDeltaY / 100.f);
-			
+
 			if (m_vCamRotAngle.x > D3DX_PI / 3.0f)  m_vCamRotAngle.x = D3DX_PI / 3.0f;
 			if (m_vCamRotAngle.x < -D3DX_PI / 2.0f)  m_vCamRotAngle.x = -D3DX_PI / 2.0f;
 

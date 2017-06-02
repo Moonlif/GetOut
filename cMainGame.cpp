@@ -36,7 +36,6 @@ cMainGame::~cMainGame()
 
 void cMainGame::Setup()
 {
-
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
@@ -58,14 +57,12 @@ void cMainGame::Setup()
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();
 
-
-
 		//test light
 		g_pLightManager->SetDirectionLight(0, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
 			D3DXVECTOR3(0, 1, 1));
 		g_pD3DDevice->LightEnable(0, true);
 
-		//m_pCamera->ReTarget(&m_pTotalUIRender->GetCameraTarget());
+		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
 
 	g_pSocketmanager->Setup();
@@ -74,6 +71,7 @@ void cMainGame::Setup()
 
 void cMainGame::Update()
 {
+
 	g_pTimeManager->Update();
 	if (m_pCamera) m_pCamera->Update();
 	{

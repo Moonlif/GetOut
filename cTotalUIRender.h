@@ -10,9 +10,11 @@ public:
 	~cTotalUIRender();
 
 private:
-	cStartScene*							m_pStartScene;
-	cCharacterSelectScene*					m_pChaSelectScene;
-	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,		m_vCameraTarget, CameraTarget);
+	cStartScene*						m_pStartScene;
+	cCharacterSelectScene*				m_pChaSelectScene;
+
+	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,	m_pCamraStartPos, CamraStartPos);
+
 public:
 	void Setup();
 	void Update();

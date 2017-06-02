@@ -3,8 +3,6 @@
 #include "cUIImageView.h"
 #include "cUITextView.h"
 
-
-
 cStartScene::cStartScene()
 	:m_pStartSceneRoot(NULL)
 	, m_pSprite(NULL)
@@ -30,7 +28,8 @@ void cStartScene::Setup()
 		ST_SIZEN(500, 200), 20, 20, 500, "±¼¸²Ã¼");
 	m_pStartSceneRoot->AddChild(m_pStartText);
 
-
+	m_pStartText->SetIsHidden(true);
+	m_IsStartSceneOpen = false;
 }
 
 void cStartScene::Update()
