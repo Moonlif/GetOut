@@ -7,28 +7,31 @@ cUIButton::cUIButton()
 {
 }
 
-
-cUIButton::~cUIButton()
-{
-}
-
-void cUIButton::SetTexture(char* szNormal, char* szMouseOver, char* szSelected)
+cUIButton::cUIButton(char * szNormal, char * szMouseOver, char * szSelected, D3DXVECTOR3 pos)
 {
 	D3DXIMAGE_INFO stImageInfo;
 
 	m_aTexture[E_NORMAL] = g_pTextureManager->GetTexture(szNormal, &stImageInfo);
-	
+
 	m_stSize.nWidth = stImageInfo.Width;
 	m_stSize.nHeight = stImageInfo.Height;
 
 	m_aTexture[E_MOUSEOVER] = g_pTextureManager->GetTexture(szMouseOver, &stImageInfo);
-	
+
 	assert(m_stSize.nWidth == stImageInfo.Width && m_stSize.nHeight == stImageInfo.Height);
 
 	m_aTexture[E_SELECTED] = g_pTextureManager->GetTexture(szSelected, &stImageInfo);
 
 	assert(m_stSize.nWidth == stImageInfo.Width && m_stSize.nHeight == stImageInfo.Height);
+
+	m_vPosition = pos;
 }
+
+
+cUIButton::~cUIButton()
+{
+}
+
 
 void cUIButton::Update()
 {

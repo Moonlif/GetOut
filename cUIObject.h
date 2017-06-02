@@ -15,6 +15,7 @@ protected:
 	SYNTHESIZE(ST_SIZEN,		m_stSize, Size);
 	SYNTHESIZE(RECT,			m_rc, rc);
 	SYNTHESIZE(bool,			m_isHidden, IsHidden);
+	SYNTHESIZE(D3DXVECTOR3,		m_vScaling, Scaling);
 
 	//tag
 	SYNTHESIZE(int,				m_nTag, Tag);
@@ -28,6 +29,6 @@ public:
 	//tag
 	virtual cUIObject* FindChildByTag(int nTag);
 
-	void SetupRect();
+	void SetupRect(cUIObject* pParents);
 };
 

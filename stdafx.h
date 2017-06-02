@@ -187,6 +187,15 @@ enum eLIGHT
 	E_sCHASLECT_LDIGHT,						//왼쪽 캐릭 아래 라이트
 };
 
+enum eUITAG
+{
+	E_CHARACTERSELECT_IMAGE_EXPLAIN,
+	E_CHARACTERSELECT_IMAGE_PLAYER1,
+	E_CHARACTERSELECT_IMAGE_PLAYER2,
+
+	E_CHARACTERSELECT_BUTTON_START,
+};
+
 #include "cObject.h"
 #include "iMap.h"
 //singletone
