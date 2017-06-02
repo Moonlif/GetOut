@@ -16,7 +16,7 @@ private:
 
 	//map
 	cMap* m_pMap;
-	
+
 	//character
 
 	//ui

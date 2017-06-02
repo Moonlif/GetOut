@@ -4,8 +4,6 @@
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
-	, m_pTotalUIRender(NULL)
-	, m_pInteract(NULL)
 {	 
 }
 
@@ -13,7 +11,6 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
-
 	//코드 추가
 	{
 		//map
