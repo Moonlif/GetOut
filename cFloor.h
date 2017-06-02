@@ -1,11 +1,6 @@
 #pragma once
 #include "cRectMake.h"
-#define B1F 0
-#define FF 3
-#define SF 6
-//스타딩 좌표
-#define CENTERX -10
-#define CENTERZ 0
+
 
 
 class cFloor

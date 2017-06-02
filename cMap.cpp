@@ -20,6 +20,7 @@ void cMap::Setup()
 {
 	m_pFloor = new cFloor;
 	m_pFloor->Setup();
+	m_pWall = new cWall;
 	m_pWall->Setup();
 }
 
