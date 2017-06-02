@@ -43,12 +43,14 @@ cMainGame::~cMainGame()
 	}
 
 	g_pData->Destroy();
+	g_pSocketmanager->Destroy();
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
 }
 
 void cMainGame::Setup()
 {
+
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
@@ -70,11 +72,14 @@ void cMainGame::Setup()
 		m_pTotalUIRender->Setup();
 
 		//interact
-		m_pInteract = new cInteract;
-		m_pInteract->Setup();
+		//m_pInteract = new cInteract;
+		//m_pInteract->Setup();
 	}
 
 	m_pCamera->ReTarget(NULL);
+
+	g_pSocketmanager->Setup();
+	g_pSocketmanager->Setup_Chat();
 
 }
 
@@ -82,7 +87,11 @@ void cMainGame::Update()
 {
 	g_pTimeManager->Update();
 	if (m_pCamera) m_pCamera->Update();
-
+	if (GetAsyncKeyState(VK_F10) & 0x0001)
+	{
+		string Text = "¾È³çÇÏ¼¼¿ä";
+		g_pData->Chat(Text);
+	}
 	{
 		//map
 

@@ -10,7 +10,8 @@ private:
 	SINGLETONE(cDataManager);
 
 	// >> : À¯Áö»ó
-	list<string> m_listChat;
+	list<string> m_listChat_SEND;
+	LPD3DXFONT	m_pFont;
 	// << :
 public:
 	std::map<ItemCode, string> m_mapItemName;
@@ -18,12 +19,14 @@ public:
 	std::map<ItemCode, LPD3DXMESH> m_mapItemMesh;
 	std::map<ItemCode, std::vector<cMtlTex*>> m_mapItemVecMtlTex;
 
+	list<string> m_listChat_RECV;
 	LPD3DXMESH mesh;
 
 public:
 	void Setup();
 	void Destroy();
 	
+	void Render(LPD3DXSPRITE pSprite);
 	void Chat(string Text);
 	string GetText();
 };
