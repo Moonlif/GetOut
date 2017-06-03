@@ -6,6 +6,12 @@ class cUIImageView;
 class cCamera;
 #include "cUIButton.h"
 
+#define IMAGECHANGESPEED 12
+#define CAMERASHAKESPEED 5
+#define CAMERASHAKERANGE 0.5f
+#define DELETEBACKGROUNDSPEED 4;
+#define SETBACKGROUNDSPEED 4;
+
 class cCharacterSelectScene : public iButtonDelegate
 {
 public:
@@ -40,6 +46,7 @@ public:
 	void UpdateCharacterSelect();
 	void UpdateBeforGameStart();
 	void DeleteBackground();
+	D3DXVECTOR3 RandomCircle(D3DXVECTOR3 pos, float range);
 
 	virtual void OnClick(cUIButton* pSender) override;
 };

@@ -23,7 +23,7 @@ void cTotalUIRender::Setup()
 	m_pStartScene = new cStartScene;
 	m_pStartScene->Setup();
 
-	m_pCamraStartPos = D3DXVECTOR3(0, 0, -100);
+	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 }
 
 void cTotalUIRender::Update(cCamera* camera)

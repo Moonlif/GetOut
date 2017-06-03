@@ -14,7 +14,7 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_pPlayer1(NULL)
 	, m_pPlayer2(NULL)
 	, m_isDeleteBackground(false)
-	, m_vRetargetPos(0,0,-100)
+	, m_vRetargetPos(0,0,0)
 {
 }
 
@@ -81,7 +81,7 @@ void cCharacterSelectScene::UpdateSetFirstBackground()
 	if (nAlpha <= 200) Explain->SetAlpha(nAlpha);
 	Button->SetAlpha(nAlpha);
 
-	nAlpha += 4;
+	nAlpha += SETBACKGROUNDSPEED;
 }
 
 void cCharacterSelectScene::UpdateCharacterSelect()
@@ -130,6 +130,8 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 
 	static int alpha = 0;
 	static int Time = 0;
+	static int nImage = 0;
+	static D3DXVECTOR3 SavePt = D3DXVECTOR3(-1.0f, 0, 0);
 	//배경 세팅
 	cUIImageView* img1 = (cUIImageView*)m_pGameStart->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART1);
 	cUIImageView* img2 = (cUIImageView*)m_pGameStart->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART2);
@@ -145,46 +147,70 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	img4->SetAlpha(alpha);
 	img5->SetAlpha(alpha);
 	img6->SetAlpha(alpha);
-
-
-
+	
+	if (nImage >= 6)
+	{
+		g_pUIvarius->SetIsStartedGame(true);
+		//g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
+		//1번케릭 클릭시
+		if (m_pPlayer2->GetIsHidden())
+		{
+			m_pCamera->ReTarget(&m_pPlayer1->GetPosition());
+		}
+		//2번케릭 클릭시
+		else if (m_pPlayer1->GetIsHidden())
+		{
+			m_pCamera->ReTarget(&m_pPlayer2->GetPosition());
+		}
+		return;
+	}
+	//카메라 흔들기
 	if (alpha >= 255)
 	{
 		alpha = 255;
 		Time++;
+		
+		
+		if (Time % CAMERASHAKESPEED == 0) m_vRetargetPos = RandomCircle(SavePt, CAMERASHAKERANGE);
+
+		//카메라 거리 좁히기
+		static float dis = 5.0f;
+		dis -= 0.1f;
+		if (dis <= 0.1f) dis = 0.1f;
+		m_pCamera->SetCameraDistance(dis);
 	}
+	
 
-
-	static int nImage = 0;
-	if (Time > 5)
+	//배경이미지 바꿔주기
+	if (Time > IMAGECHANGESPEED)
 	{
 		nImage++;
 		Time = 0;
+		
 
 		switch (nImage)
 		{
 		case 1:
-			img1->SetAlpha(0);
-
+			img1->SetIsHidden(true);
+			img2->SetPosition(D3DXVECTOR3(0, 0, 0));
 			break;
 		case 2:
-			img2->SetAlpha(0);
-
+			img2->SetIsHidden(true);
+			img3->SetPosition(D3DXVECTOR3(0, 0, 0));
 			break;
 		case 3:
-			img3->SetAlpha(0);
-
+			img3->SetIsHidden(true);
+			img4->SetPosition(D3DXVECTOR3(0, 0, 0));
 			break;
 		case 4:
-			img4->SetAlpha(0);
-
+			img4->SetIsHidden(true);
+			img5->SetPosition(D3DXVECTOR3(0, 0, 0));
 			break;
 		case 5:
-			img5->SetAlpha(0);
-
+			img5->SetIsHidden(true);
 			break;
 		case 6:
-			img6->SetAlpha(0);
+			img6->SetIsHidden(true);
 			break;
 		default:
 			break;
@@ -218,36 +244,33 @@ void cCharacterSelectScene::DeleteBackground()
 	text->SetIsHidden(true);
 	button->SetScaling(D3DXVECTOR3(x, y, 0));
 	
-	alpha -= 4;
+	alpha -= DELETEBACKGROUNDSPEED;
 	if(x > 0) x -= 0.05f;
 	if(y > 0) y -= 0.05f;
 
 	if (x <= 0) x = 0;
 	if (y <= 0) y = 0;
 
-	//
+}
 
+D3DXVECTOR3 cCharacterSelectScene::RandomCircle(D3DXVECTOR3 pos, float range)
+{
+	float RandomX = 0;
+	float RandomY = 0;
 
+	RandomX = RND->getFloatFromTo(pos.x - range, pos.x + range);
+	RandomY = RND->getFloatFromTo(pos.y - range, pos.y + range);
+
+	return D3DXVECTOR3(RandomX, RandomY, pos.z);
 }
 
 void cCharacterSelectScene::OnClick(cUIButton * pSender)
 {
 	if (pSender->GetTag() == eUITAG::E_CHARACTERSELECT_BUTTON_START)
 	{
-		//1번케릭 클릭시
-		if (m_pPlayer2->GetIsHidden())
-		{
-			m_pCamera->ReTarget(&m_vRetargetPos);
-			m_isDeleteBackground = true;
-		}
-		//2번케릭 클릭시
-		else if (m_pPlayer1->GetIsHidden())
-		{
-			m_pCamera->ReTarget(&m_vRetargetPos);
-			m_isDeleteBackground = true;
-		}
 
-		
+		m_pCamera->ReTarget(&m_vRetargetPos);
+		m_isDeleteBackground = true;
 	}
 }
 
@@ -283,10 +306,13 @@ void cCharacterSelectScene::SetBackground()
 	ExplainImage->AddChild(pExplain);
 
 	//------------------------------------------------------------------------------
+	cUIImageView* gameStart6 = new cUIImageView("UI/CharacterSelectScene/welcome_bg06.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
+	gameStart6->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART6);
+	m_pGameStart = gameStart6;
 
-	cUIImageView* gameStart1 = new cUIImageView("UI/CharacterSelectScene/welcome_bg01.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
+	cUIImageView* gameStart1 = new cUIImageView("UI/CharacterSelectScene/welcome_bg01.jpg", D3DXVECTOR3(0, 0, 0), 0);
 	gameStart1->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART1);
-	m_pGameStart = gameStart1;
+	m_pGameStart->AddChild(gameStart1);
 
 	cUIImageView* gameStart2 = new cUIImageView("UI/CharacterSelectScene/welcome_bg02.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	gameStart2->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART2);
@@ -304,29 +330,18 @@ void cCharacterSelectScene::SetBackground()
 	cUIImageView* gameStart5 = new cUIImageView("UI/CharacterSelectScene/welcome_bg05.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	gameStart5->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART5);
 	m_pGameStart->AddChild(gameStart5);
-
-	cUIImageView* gameStart6 = new cUIImageView("UI/CharacterSelectScene/welcome_bg06.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
-	gameStart6->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART6);
-	m_pGameStart->AddChild(gameStart6);
-
-
-
-
-
-
-
 	
 }
 
 //플레이어 메쉬, 조명 셋업
 void cCharacterSelectScene::SetMesh()
 {
-	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::BOX, D3DXVECTOR3(-1, 0, -95));
+	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::BOX, D3DXVECTOR3(-1, 0, 5));
 	pPlayer1->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER1);
 	pPlayer1->SetIsHidden(true);
 	m_pPlayer1 = pPlayer1;
 
-	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::SPHERE, D3DXVECTOR3(-1, 0, -95));
+	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::SPHERE, D3DXVECTOR3(-1, 0, 5));
 	pPlayer2->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER2);
 	pPlayer2->SetIsHidden(true);
 	m_pPlayer2 = pPlayer2;

@@ -13,8 +13,8 @@ private:
 
 	POINT				m_ptPrevMouse;
 	bool				m_isLButtonDown;
-	float				m_fCameraDistance;
-	SYNTHESIZE(float, m_fCameraHeight, CameraHeight);
+	SYNTHESIZE(float,	m_fCameraDistance, CameraDistance);
+	SYNTHESIZE(float,	m_fCameraHeight, CameraHeight);
 	D3DXVECTOR3			m_vCamRotAngle;
 
 public:
