@@ -93,7 +93,7 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap) m_pMap->Render();
+		//if (m_pMap) m_pMap->Render();
 
 		//character
 

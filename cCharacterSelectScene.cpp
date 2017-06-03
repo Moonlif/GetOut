@@ -29,7 +29,6 @@ void cCharacterSelectScene::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-
 	//백그라운드 UI
 	SetBackground();
 
@@ -39,6 +38,9 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update()
 {
+	//첫 배경 알파값 업데이트
+	UpdateSetFirstBackground();
+
 	m_pRoot->Update();
 	m_pPlayer1->Update();
 	m_pPlayer2->Update();
@@ -56,6 +58,25 @@ void cCharacterSelectScene::Render()
 	m_pPlayer2->Render(m_pSprite);
 }
 
+
+void cCharacterSelectScene::UpdateSetFirstBackground()
+{
+	static int nAlpha = 0;
+	if (nAlpha >= 255) return;
+	cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1);
+	cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2);
+	cUIImageView* Background = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
+	cUIImageView* Explain = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_EXPLAIN);
+	cUIButton* Button = (cUIButton*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
+
+	Player1->SetAlpha(nAlpha);
+	Player2->SetAlpha(nAlpha);
+	if (nAlpha <= 220) Background->SetAlpha(nAlpha);
+	if (nAlpha <= 200) Explain->SetAlpha(nAlpha);
+	Button->SetAlpha(nAlpha);
+
+	nAlpha += 2;
+}
 
 void cCharacterSelectScene::UpdateCharacterSelect()
 {
@@ -77,25 +98,25 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			m_pPlayer2->SetIsHidden(false);
 		}
 	}
-	
+
 }
 
 void cCharacterSelectScene::SetBackground()
 {
-	m_pBackgroundImage = new cUIImageView("UI/CharacterSelectScene/size_Amnesia.jpg", D3DXVECTOR3(0, 0, 1.0f), 220);
+	m_pBackgroundImage = new cUIImageView("UI/CharacterSelectScene/size_Amnesia.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	m_pBackgroundImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	m_pRoot = m_pBackgroundImage;
 
-	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(890, 170, 0), 200);
+	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(890, 170, 0), 0);
 	ExplainImage->SetScaling(D3DXVECTOR3(0.4f, 0.45f, 1.0f));
 	ExplainImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_EXPLAIN);
 	m_pRoot->AddChild(ExplainImage);
 
-	cUIImageView* pPlyer1Image = new cUIImageView("UI/CharacterSelectScene/cha1.png", D3DXVECTOR3(940, 95, 0), 255);
+	cUIImageView* pPlyer1Image = new cUIImageView("UI/CharacterSelectScene/cha1.png", D3DXVECTOR3(940, 95, 0), 0);
 	pPlyer1Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1);
 	m_pRoot->AddChild(pPlyer1Image);
 
-	cUIImageView* pPlyer2Image = new cUIImageView("UI/CharacterSelectScene/cha2.png", D3DXVECTOR3(1060, 95, 0), 255);
+	cUIImageView* pPlyer2Image = new cUIImageView("UI/CharacterSelectScene/cha2.png", D3DXVECTOR3(1060, 95, 0), 0);
 	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2);
 	m_pRoot->AddChild(pPlyer2Image);
 
@@ -119,6 +140,8 @@ void cCharacterSelectScene::SetMesh()
 	pPlayer2->SetIsHidden(true);
 	m_pPlayer2 = pPlayer2;
 
-	cUILight* pLight1 = new cUILight;
-	pLight1->SetSpotLight(eL)
+	//D3DXCOLOR color = d3dxcolor(255, 255, 255, 255);
+
+	//cUILight* pLight1 = new cUILight;
+	//pLight1->SetSpotLight(eLIGHT::E_CHARACTERSELECT_PLAYER1, )
 }

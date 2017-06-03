@@ -178,33 +178,7 @@ struct ST_ASTAR
 	POINT parent;
 };
 
-<<<<<<< HEAD
-enum eLIGHT
-{
-	//s = Spot, d = Direction, p = Point
 
-
-	E_sCHASLECT_RULIGHT = 10000,			//오른쪽 캐릭 위 라이트
-	E_sCHASLECT_RDIGHT,						//오른쪽 캐릭 아래 라이트
-	E_sCHASLECT_LULIGHT,					//왼쪽 캐릭 위 라이트
-	E_sCHASLECT_LDIGHT,						//왼쪽 캐릭 아래 라이트
-};
-
-enum eUITAG
-{
-	E_CHARACTERSELECT_IMAGE_BACKGROUND = 0,
-	E_CHARACTERSELECT_IMAGE_EXPLAIN,
-	E_CHARACTERSELECT_IMAGE_PLAYER1,
-	E_CHARACTERSELECT_IMAGE_PLAYER2,
-
-	E_CHARACTERSELECT_BUTTON_START,
-
-	E_CHARACTERSELECT_MESH_PLAYER1,
-	E_CHARACTERSELECT_MESH_PLAYER2,
-};
-
-=======
->>>>>>> b2611cdbff8831c07cfaad8da3bd51cfef4c4884
 #include "cObject.h"
 #include "iMap.h"
 //singletone

@@ -26,6 +26,7 @@ public:
 	void Update();
 	void Render();
 
+	void UpdateSetFirstBackground();
 	void UpdateCharacterSelect();
 	void SetBackground();
 	void SetMesh();
