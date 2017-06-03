@@ -24,8 +24,11 @@ cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 	}
 
 	m_vPosition = pos;
-		
-
+	D3DXCOLOR color(0.8f, 0.8f, 0.8f, 1.0f);
+	ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
+	m_stMtl.Ambient = color;
+	m_stMtl.Diffuse = color;
+	m_stMtl.Specular = color;
 }
 
 
@@ -39,7 +42,7 @@ void cUIMesh::Render(LPD3DXSPRITE pSprite)
 	if (m_isHidden) return;
 
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
-
+	g_pD3DDevice->SetMaterial(&m_stMtl);
 	m_pMesh->DrawSubset(0);
 
 	cUIObject::Render(pSprite);

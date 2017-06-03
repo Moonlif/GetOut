@@ -49,6 +49,7 @@ void cUIObject::Update()
 	{
 		D3DXMATRIXA16 matParentWorld;
 		D3DXMatrixIdentity(&matParentWorld);
+
 		D3DXMatrixTranslation(&matParentWorld, m_pParent->GetPosition().x,
 			m_pParent->GetPosition().y, m_pParent->GetPosition().z);
 

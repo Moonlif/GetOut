@@ -4,82 +4,61 @@
 
 cUILight::cUILight()
 {
-	D3DXCreateBox(g_pD3DDevice, 0.1f, 0.1f, 0.1f, &m_pGizmo, NULL);
+	D3DXCreateSphere(g_pD3DDevice, 0.2f, 5, 5, &m_pGizmo, NULL);
 }
 
 cUILight::~cUILight()
 {
+	SAFE_RELEASE(m_pGizmo);
 }
 
 
-void cUILight::SetSpotLight(DWORD nIndex, D3DXCOLOR Ambient, D3DXCOLOR Diffuse, D3DXCOLOR Specular, D3DXVECTOR3 pos, float range, float phi, float theta, D3DXVECTOR3 dir)
+void cUILight::SetSpotLight(DWORD nIndex, D3DXCOLOR color, D3DXVECTOR3 pos, float range, float phi, float theta, D3DXVECTOR3 dir)
 {
 	D3DLIGHT9 stLight;
 
-	ZeroMemory(&stLight, sizeof(D3DLIGHT9));
-	stLight.Type = D3DLIGHT_SPOT;
-	stLight.Ambient = Ambient;
-	stLight.Diffuse = Diffuse;
-	stLight.Specular = Specular;
-	stLight.Range = range;
-	stLight.Phi = phi;
-	stLight.Theta = theta;
-	stLight.Position = pos;
-	D3DXVec3Normalize(&dir, &dir);
-	stLight.Direction = dir;
+	m_vPosition = pos;
+	m_nName = nIndex;
 
-	stLight.Attenuation0 = 0.1f;
-	stLight.Attenuation1 = 0.1f;
-	stLight.Attenuation2 = 0.1f;
-	stLight.Falloff = 1.0f;
-
-	g_pD3DDevice->SetLight(nIndex, &stLight);
-	g_pD3DDevice->LightEnable(nIndex, false);
+	g_pLightManager->SetSpotLight(nIndex, color, color, color, pos, range, phi, theta, dir);
 }
 
-void cUILight::SetDirectionLight(DWORD nIndex, D3DXCOLOR Ambient, D3DXCOLOR Diffuse, D3DXCOLOR Specular, D3DXVECTOR3 dir)
+void cUILight::SetDirectionLight(DWORD nIndex, D3DXCOLOR color, D3DXVECTOR3 dir)
 {
 	D3DLIGHT9 stLight;
+	m_nName = nIndex;
 
-	ZeroMemory(&stLight, sizeof(D3DLIGHT9));
-	stLight.Type = D3DLIGHT_DIRECTIONAL;
-	stLight.Ambient = Ambient;
-	stLight.Diffuse = Diffuse;
-	stLight.Specular = Specular;
-
-	D3DXVec3Normalize(&dir, &dir);
-	stLight.Direction = dir;
-
-	g_pD3DDevice->SetLight(nIndex, &stLight);
-	g_pD3DDevice->LightEnable(nIndex, false);
+	g_pLightManager->SetDirectionLight(nIndex, color, color, color, dir);
 }
 
-void cUILight::SetPointLight(DWORD nIndex, D3DXCOLOR Ambient, D3DXCOLOR Diffuse, D3DXCOLOR Specular, D3DXVECTOR3 pos, float range)
+void cUILight::SetPointLight(DWORD nIndex, D3DXCOLOR color, D3DXVECTOR3 pos, float range)
 {
 	D3DLIGHT9 stLight;
 
-	ZeroMemory(&stLight, sizeof(D3DLIGHT9));
-	stLight.Type = D3DLIGHT_POINT;
-	stLight.Ambient = Ambient;
-	stLight.Diffuse = Diffuse;
-	stLight.Specular = Specular;
-	stLight.Position = pos;
-	stLight.Range = range;
+	m_vPosition = pos;
+	m_nName = nIndex;
 
-	stLight.Attenuation0 = 0.1f;
-	stLight.Attenuation1 = 0.1f;
-	stLight.Attenuation2 = 0.1f;
-
-	g_pD3DDevice->SetLight(nIndex, &stLight);
-	g_pD3DDevice->LightEnable(nIndex, false);
+	g_pLightManager->SetPointLight(nIndex, color, color, color, pos, range);
 }
 
 void cUILight::Render(LPD3DXSPRITE pSprite)
 {
-	if (m_isHidden) return;
+	if (m_isHidden)
+	{
+		g_pD3DDevice->LightEnable(m_nName, false);
+		return;
+	}
+	//라이트 포지션 세팅
+	D3DLIGHT9 stLight;
+	ZeroMemory(&stLight, sizeof(D3DLIGHT9));
+	g_pD3DDevice->GetLight(m_nName, &stLight);
+	stLight.Position.x = m_matWorld._41;
+	stLight.Position.y = m_matWorld._42;
+	stLight.Position.z = m_matWorld._43;
+	g_pD3DDevice->SetLight(m_nName, &stLight);
 
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
-	m_pGizmo->DrawSubset(0);
+	//g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
+	//m_pGizmo->DrawSubset(0);
 
 	cUIObject::Render(pSprite);
 }

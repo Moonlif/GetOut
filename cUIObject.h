@@ -10,7 +10,7 @@ public:
 protected:
 	std::vector<cUIObject*>		m_vecChild;
 	D3DXMATRIXA16				m_matWorld;
-	SYNTHESIZE(D3DXVECTOR3,		m_vPosition, Position);
+	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,		m_vPosition, Position);
 	SYNTHESIZE(cUIObject*,		m_pParent, Parent);
 	SYNTHESIZE(ST_SIZEN,		m_stSize, Size);
 	SYNTHESIZE(RECT,			m_rc, rc);
