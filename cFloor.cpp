@@ -180,13 +180,14 @@ void cFloor::Render()
 
 	m_pFFRoom->Render();
 	m_pFFLivingRoom->Render();
-	m_pFFLivingRoom2->Render();
+	
 	m_pFFPassage->Render();
 	m_pFFPassage2->Render();
 	m_pFFBathRoom->Render();
 	for (size_t i = 0; i < 10; i++) {
 		m_pB1Stair2[i]->Render();
 	}
+	m_pFFLivingRoom2->Render();
 
 
 	m_pSFLeftRoom->Render();
