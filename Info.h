@@ -31,6 +31,7 @@ enum StuffCode
 	STUFF_NOTE4,
 	STUFF_PAPER1,
 	STUFF_PAPER2,
+	STUFF_PAPER3,
 
 	STUFF_POSTER1,
 	STUFF_POSTER2,
@@ -132,4 +133,13 @@ struct ITEMINFO
 	//StuffCode				tagName;
 	//void*					Texture;
 	eITEMTYPE				ItemType;
+};
+
+
+enum animationState
+{
+	ANIM_IDLE,
+	ANIM_WALK,
+	ANIM_ATTACK,
+	ANIM_DEATH,
 };
