@@ -59,7 +59,7 @@ void cRectMake::Render(int index)
 	D3DXMATRIXA16 matS, matWorld;
 	D3DXMatrixIdentity(&matS);
 	D3DXMatrixIdentity(&matWorld);
-	D3DXMatrixScaling(&matS, 3, 3, 3);
+	D3DXMatrixScaling(&matS, 6, 6, 6);
 	matWorld = matS;
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 	g_pD3DDevice->SetMaterial(&m_stMtl);
