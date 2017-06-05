@@ -1,19 +1,15 @@
 #pragma once
 #include "cRectMake.h"
-
-class cFloor
+class cCeiling
 {
 private:
 	/**********************
-	雖ж
+		雖ж
 	**********************/
 	cRectMake* m_pB1FStartRoom;
 	cRectMake* m_pB1FRoom;
-	cRectMake* m_pB1Stair[10];
-	cRectMake* m_pB1Water;
-	cRectMake* m_pB1FBlood;
 	/***********************
-	1類
+		1類
 	************************/
 	cRectMake* m_pFFRoom;
 	cRectMake* m_pFFBathRoom;
@@ -21,16 +17,16 @@ private:
 	cRectMake* m_pFFLivingRoom2;
 	cRectMake* m_pFFPassage;
 	cRectMake* m_pFFPassage2;
-	cRectMake* m_pB1Stair2[10];
+
 	/***********************
-	2類
+		2類
 	************************/
 	cRectMake* m_pSFLeftRoom;
 	cRectMake* m_pSFRightRoom;
 	cRectMake* m_pSFPassage;
 public:
-	cFloor();
-	~cFloor();
+	cCeiling();
+	~cCeiling();
 	void Setup();
 	void Render();
 };

@@ -57,6 +57,7 @@ void cMainGame::Setup()
 		//test light
 		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
 			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(0, 1, 1));
+		g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
@@ -97,13 +98,11 @@ void cMainGame::Render()
 		//character
 
 		//interact stuff
-		if (m_pInteract) m_pInteract->Render();
+		if (m_pInteract && g_pUIvarius->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	}
-
-
 
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);

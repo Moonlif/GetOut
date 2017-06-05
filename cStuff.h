@@ -8,7 +8,7 @@ public:
 	~cStuff();
 
 private:
-	SYNTHESIZE(ItemCode, m_eCode, Code);
+	SYNTHESIZE(StuffCode, m_eStuffCode, StuffCode);
 	SYNTHESIZE(float, m_fRadius, Radius);
 	SYNTHESIZE(float, m_fScaling, Scaling);
 	SYNTHESIZE(D3DXVECTOR3, m_vPosition, Position);
@@ -21,7 +21,7 @@ private:
 
 	LPD3DXMESH m_pMeshSphere;
 public:
-	void Setup(ItemCode code, D3DXVECTOR3 position, bool isOnMap);
+	void Setup(StuffCode code, D3DXVECTOR3 position, bool isOnMap);
 	void Update();
 	void Render();
 };

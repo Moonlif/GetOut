@@ -25,11 +25,15 @@ cInteract::~cInteract()
 void cInteract::Setup()
 {
 	cStuff* stuff = new cStuff;
-	stuff->Setup(ITEM_BASEMENT_JAILKEY, D3DXVECTOR3(0, 0, 0), true);
+	stuff->Setup((StuffCode)1, D3DXVECTOR3(0, 0, 0), true);
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
-	stuff->Setup(ITEM_BASEMENT_JAILKEY, D3DXVECTOR3(0, 2.0f, 0), true);
+	stuff->Setup(STUFF_BOX1, D3DXVECTOR3(0, 5.0f, 0), true);
+	m_vecStuff.push_back(stuff);
+
+	stuff = new cStuff;
+	stuff->Setup(STUFF_KEY1, D3DXVECTOR3(5.0f, 2.0f, 0), true);
 	m_vecStuff.push_back(stuff);
 }
 
@@ -43,19 +47,14 @@ void cInteract::Update()
 		{
 			if (Ray.IsPicked(it->GetPosition(), it->GetRadius()))
 			{
-				switch (it->GetCode())
-				{
-				case ITEM_BASEMENT_JAILKEY:
-				{
-					int a = 0;
-				}
-					break;
-				case ITEM_NONE:
-				{
-
-				}
-					break;
-				}
+				//switch (it->GetStuffCode())
+				//{
+				//case ITEM_BASEMENT_JAILKEY:
+				//{
+				//	int a = 0;
+				//}
+				//	break;
+				//}
 		
 			}
 		}
