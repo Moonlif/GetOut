@@ -12,7 +12,7 @@ class cUI_globalVarius
 private:
 	SINGLETONE(cUI_globalVarius);
 
-	map<DWORD, ITEMINFO>	m_mapItemInfo;
+	//map<StuffCode, ITEMINFO>	m_mapItemInfo;
 	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
 

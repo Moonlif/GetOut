@@ -106,12 +106,13 @@ enum eITEMTYPE
 {
 	KEY,
 	THROW,
+	COMBINE,
 	NONE,
 };
 
 struct ITEMINFO
 {
 	//StuffCode				tagName;
-	//void*					Texture;
+	LPDIRECT3DTEXTURE9		Texture;
 	eITEMTYPE				ItemType;
 };
