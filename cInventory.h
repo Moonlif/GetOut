@@ -1,6 +1,6 @@
 #pragma once
 class cUIObject;
-
+class cUIInvenItem;
 
 class cInventory
 {
@@ -9,7 +9,8 @@ public:
 	~cInventory();
 
 private:
-	cUIObject*			m_pUIBase;
+	cUIObject*				m_pUIBase;
+	cUIInvenItem*			m_pInven;
 
 	LPD3DXSPRITE		m_pSprite;
 public:
@@ -18,5 +19,6 @@ public:
 	void Render();
 
 	void SetInventoryBase();
+	void SetItem(StuffCode ItemName);
 };
 

@@ -2,7 +2,7 @@
 #include "cInventory.h"
 #include "cUIImageView.h"
 #include "cUITextView.h"
-
+#include "cUIInvenItem.h"
 
 cInventory::cInventory()
 {
@@ -24,6 +24,12 @@ void cInventory::Setup()
 void cInventory::Update()
 {
 	if (m_pUIBase) m_pUIBase->Update();
+
+	//테스트용
+	if (GetAsyncKeyState('0') & 0x0001)
+	{
+
+	}
 }
 
 void cInventory::Render()
@@ -85,12 +91,20 @@ void cInventory::SetInventoryBase()
 	D3DXVECTOR3 InveSize(2.3f, 1.1f, 1.0f);
 	int			nAlpha = 150;
 
-	for (int i = 0; i < 21; ++i)
+	//아이템창 1번설정
+	
+	cUIInvenItem *inven = new cUIInvenItem("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3(- 5, 15, 0), nAlpha);
+	inven->SetScaling(InveSize);
+	inven->SetTag(eUITAG::INVENTORY_1);
+	m_pInven = inven;
+	upLine->AddChild(m_pInven);
+	//이후 설정
+	for (int i = 1; i < 21; ++i)
 	{
-		cUIImageView *inven1 = new cUIImageView("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3((i % 7) * 95 - 5,(i / 7) * 105 + 15, 0), nAlpha);
+		cUIInvenItem *inven1 = new cUIInvenItem("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3((i % 7) * 95 + 320,(i / 7) * 105 + 50, 0), nAlpha);
 		inven1->SetScaling(InveSize);
 		inven1->SetTag(eUITAG::INVENTORY_1 + i);
-		upLine->AddChild(inven1);
+		m_pInven->AddChild(inven1);
 	}
 
 	///-----------------------------------------------------------------
@@ -143,4 +157,9 @@ void cInventory::SetInventoryBase()
 	cUITextView *UseInvenText = new cUITextView("사용 아이템", D3DXVECTOR3(470, 580, 0), D3DCOLOR_XRGB(255, 255, 255),
 		ST_SIZEN(300, 100), 15, 20, 500);
 	UseInven->AddChild(UseInvenText);
+}
+
+void cInventory::SetItem(StuffCode ItemName)
+{
+	
 }

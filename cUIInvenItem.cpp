@@ -4,10 +4,11 @@
 
 cUIInvenItem::cUIInvenItem()
 	:m_pItemTexture(NULL)
+	, m_nAlpha(255)
 {
 }
 
-cUIInvenItem::cUIInvenItem(char * szFullPath, float x, float y, int alpha)
+cUIInvenItem::cUIInvenItem(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 	: m_pItemTexture(NULL)
 {
 	m_nAlpha = alpha;
@@ -18,12 +19,14 @@ cUIInvenItem::cUIInvenItem(char * szFullPath, float x, float y, int alpha)
 	m_stSize.nWidth = stImageInfo.Width;
 	m_stSize.nHeight = stImageInfo.Height;
 
-	m_vPosition = D3DXVECTOR3(x, y, 1.0f);
+	m_vPosition = pos;
 }
 
 
 cUIInvenItem::~cUIInvenItem()
 {
+	SAFE_RELEASE(m_pTexture);
+	SAFE_RELEASE(m_pItemTexture);
 }
 
 void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
@@ -35,9 +38,16 @@ void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
 
 	RECT rc;
 	SetRect(&rc, 0, 0, m_stSize.nWidth, m_stSize.nHeight);
-
+	//배경이미지
 	pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0), D3DCOLOR_ARGB(m_nAlpha, 255, 255, 255));
+
+	//아이템이미지
+	if(m_pItemTexture) 	pSprite->Draw(m_pItemTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0), 
+		D3DCOLOR_ARGB(m_nAlpha, 255, 255, 255));
+
+
 	pSprite->End();
 
 	cUIObject::Render(pSprite);
+
 }

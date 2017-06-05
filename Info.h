@@ -31,6 +31,7 @@ enum StuffCode
 	STUFF_NOTE4,
 	STUFF_PAPER1,
 	STUFF_PAPER2,
+	STUFF_PAPER3,
 
 	STUFF_POSTER1,
 	STUFF_POSTER2,
@@ -130,7 +131,6 @@ enum eITEMTYPE
 
 struct ITEMINFO
 {
-	//StuffCode				tagName;
 	LPDIRECT3DTEXTURE9		Texture;
 	eITEMTYPE				ItemType;
 };

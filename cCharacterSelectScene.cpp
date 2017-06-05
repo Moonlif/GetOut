@@ -211,6 +211,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			break;
 		case 6:
 			img6->SetIsHidden(true);
+			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			break;
 		default:
 			break;

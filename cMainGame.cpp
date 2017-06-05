@@ -41,8 +41,8 @@ void cMainGame::Setup()
 		g_pData->Setup();
 
 		//map
-		m_pMap = new cMap;
-		m_pMap->Setup();
+	//	m_pMap = new cMap;
+	//	m_pMap->Setup();
 
 		//character
 
@@ -93,7 +93,7 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
+		//if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
 
 		//character
 

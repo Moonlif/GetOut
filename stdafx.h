@@ -36,7 +36,7 @@ using namespace std;
 #define _CRT_SECURE_NO_WARNINGS
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
-#include "Info.h"
+
 #include <vector>
 #include <map>
 #include <set>
@@ -181,6 +181,7 @@ struct ST_ASTAR
 
 #include "cObject.h"
 #include "iMap.h"
+#include "Info.h"
 //singletone
 #include "cDeviceManager.h"
 #include "cTextureManager.h"

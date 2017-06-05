@@ -22,5 +22,6 @@ protected:
 public:
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 
+	virtual cUITextView* FindEmptyInvene();
 };
 
