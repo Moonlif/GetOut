@@ -21,22 +21,19 @@ class cSocketManager
 private:
 	SINGLETONE(cSocketManager);
 
-	WSADATA wsaData;
+	WSADATA wsaData_CHAT, wsaData_DATA;
 	// >> : For Chat
-	SOCKET hSockChat;
-	SOCKADDR_IN ServAdr_CHAT;
-	HANDLE hSndThread, hRcvThread;
-
+	SOCKET hSocket_CHAT, hSocket_DATA;
+	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA;
+	HANDLE hSndThread, hRcvThread, hDataThread;
 
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
 
 public:
-	void Setup();
-	void Setup_Chat();
+	void Setup_DATA();
+	void Setup_CHAT();
+	void Update_DATA();
 	void Update();
 	void Destroy();
-
-	void ErrorHandling(char * msg);
-
 };
