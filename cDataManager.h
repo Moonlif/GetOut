@@ -21,6 +21,16 @@ public:
 
 	list<string> m_listChat_RECV;
 
+	//±Õ¿µ
+	int m_nPlayerNum;
+	D3DXVECTOR3 m_vPosition1P;
+	D3DXVECTOR3 m_vPosition2P;
+	D3DXVECTOR3 m_vRotation1P;
+	D3DXVECTOR3 m_vRotation2P;
+	animationState m_eOtherPlayerAnimState;
+
+
+
 public:
 	void Setup();
 	void Destroy();
