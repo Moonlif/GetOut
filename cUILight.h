@@ -5,7 +5,7 @@ class cUILight : public cUIObject
 {
 public:
 	cUILight();
-	~cUILight();
+	virtual~cUILight();
 private:
 	LPD3DXMESH		m_pGizmo;
 	DWORD			m_nName;

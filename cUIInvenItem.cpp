@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "cUIImageView.h"
+#include "cUIInvenItem.h"
 
 
-cUIImageView::cUIImageView()
-	: m_pTexture(NULL)
-	, m_nAlpha(255)
+cUIInvenItem::cUIInvenItem()
+	:m_pItemTexture(NULL)
 {
 }
 
-cUIImageView::cUIImageView(char * szFullPath, D3DXVECTOR3 pos, int alpha)
+cUIInvenItem::cUIInvenItem(char * szFullPath, float x, float y, int alpha)
+	: m_pItemTexture(NULL)
 {
 	m_nAlpha = alpha;
 	D3DXIMAGE_INFO stImageInfo;
@@ -18,16 +18,15 @@ cUIImageView::cUIImageView(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 	m_stSize.nWidth = stImageInfo.Width;
 	m_stSize.nHeight = stImageInfo.Height;
 
-	m_vPosition = pos;
+	m_vPosition = D3DXVECTOR3(x, y, 1.0f);
 }
 
 
-cUIImageView::~cUIImageView()
+cUIInvenItem::~cUIInvenItem()
 {
 }
 
-
-void cUIImageView::Render(LPD3DXSPRITE pSprite)
+void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
 {
 	if (m_isHidden) return;
 

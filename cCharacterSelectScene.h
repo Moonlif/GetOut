@@ -1,8 +1,6 @@
 #pragma once
 
 class cUIObject;
-class cUITextView;
-class cUIImageView;
 class cCamera;
 #include "cUIButton.h"
 

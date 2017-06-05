@@ -110,6 +110,6 @@ void cUIObject::SetupRect(cUIObject* pParents)
 		m_matWorld._43 += m_pParent->m_matWorld._43;
 	}
 
-	SetRect(&m_rc, m_matWorld._41, m_matWorld._42, m_matWorld._41 + m_stSize.nWidth,
-		m_matWorld._42 + m_stSize.nHeight);
+	SetRect(&m_rc, m_matWorld._41, m_matWorld._42, m_matWorld._41 + (m_stSize.nWidth * m_vScaling.x),
+		m_matWorld._42 + (m_stSize.nHeight* m_vScaling.y));
 }
