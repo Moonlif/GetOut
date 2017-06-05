@@ -3,6 +3,7 @@
 class cStartScene;
 class cCharacterSelectScene;
 class cCamera;
+class cInventory;
 
 class cTotalUIRender
 {
@@ -13,6 +14,7 @@ public:
 private:
 	cStartScene*						m_pStartScene;
 	cCharacterSelectScene*				m_pChaSelectScene;
+	cInventory*							m_pInventory;
 
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,	m_pCamraStartPos, CamraStartPos);
 

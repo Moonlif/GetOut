@@ -13,7 +13,7 @@ public:
 
 	cUIMesh();
 	cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos);
-	~cUIMesh();
+	virtual~cUIMesh();
 
 private:
 	LPD3DXMESH			m_pMesh;
