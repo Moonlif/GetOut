@@ -1,6 +1,6 @@
 #pragma once
 #define B1F 0
-#define FF 2
+#define FF 2 + B1F
 #define SF 2 + FF
 #define TOP 2 + SF
 //½ºÅ¸µù ÁÂÇ¥
@@ -18,6 +18,6 @@ public:
 	cRectMake();
 	~cRectMake();
 	void Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, char * szFile);
-	void Render();
+	void Render(int index = 0);
 };
 

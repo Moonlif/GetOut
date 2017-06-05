@@ -62,8 +62,8 @@ void cMainGame::Setup()
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
 
-	g_pSocketmanager->Setup();
-	g_pSocketmanager->Setup_Chat();
+	//g_pSocketmanager->Setup();
+	//g_pSocketmanager->Setup_Chat();
 }
 
 void cMainGame::Update()

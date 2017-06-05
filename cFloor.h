@@ -1,33 +1,33 @@
 #pragma once
 #include "cRectMake.h"
 
-
-
 class cFloor
 {
 private:
-	SYNTHESIZE(std::vector<D3DXVECTOR3>, vecVertex, VecVertex);
-	//雖ж
-	cRectMake* m_pB1StartRoom;
-	cRectMake* m_pB1Prison;
-	cRectMake* m_pB1StartSpace;
-	cRectMake* m_pB1NextRoom;
+	/**********************
+	雖ж
+	**********************/
+	cRectMake* m_pB1FStartRoom;
+	cRectMake* m_pB1FRoom;
 	cRectMake* m_pB1Stair[10];
-	//1類
+	cRectMake* m_pB1Water;
+	cRectMake* m_pB1FBlood;
+	/***********************
+	1類
+	************************/
+	cRectMake* m_pFFRoom;
+	cRectMake* m_pFFBathRoom;
+	cRectMake* m_pFFLivingRoom;
+	cRectMake* m_pFFLivingRoom2;
 	cRectMake* m_pFFPassage;
 	cRectMake* m_pFFPassage2;
-	cRectMake* m_pFFLivingRoom;
-	cRectMake* m_pFFRoom;
-	cRectMake* m_pFBathRoom;
 	cRectMake* m_pB1Stair2[10];
-	//2類
+	/***********************
+	2類
+	************************/
+	cRectMake* m_pSFLeftRoom;
+	cRectMake* m_pSFRightRoom;
 	cRectMake* m_pSFPassage;
-	cRectMake* m_pSFRoom;
-	cRectMake* m_pSFRoom2;
-
-	std::vector<ST_PNT_VERTEX> m_vecBottomVertex;
-	LPDIRECT3DTEXTURE9		   m_pTexture;
-	D3DMATERIAL9			   m_stMtl;
 public:
 	cFloor();
 	~cFloor();
