@@ -102,8 +102,8 @@ void cFloor::Setup()
 	m_pFFBathRoom = new cRectMake;
 	m_pFFBathRoom->Setup(D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 4)
 		, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.5)
-		, D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 0.5)
-		, D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 4)
+		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5)
+		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
 		, "Texture/maps/bathRoom.jpg");
 	//거실1
 	m_pFFLivingRoom = new cRectMake;
@@ -111,28 +111,28 @@ void cFloor::Setup()
 		, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3)
-		, "Texture/maps/cs_office_texture_7.jpg");
+		, "Texture/maps/cs_office_texture_5.jpg");
 	//거실2
 	m_pFFLivingRoom2 = new cRectMake;
 	m_pFFLivingRoom2->Setup(D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 0.5)
-		, "Texture/maps/cs_office_texture_7.jpg");
+		, "Texture/maps/cs_office_texture_5.jpg");
 	//통로1
 	m_pFFPassage = new cRectMake;
 	m_pFFPassage->Setup(D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 4)
 		, D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 4)
-		, "Texture/maps/cs_office_texture_7.jpg");
+		, "Texture/maps/cs_office_texture_5.jpg");
 	//통로2
 	m_pFFPassage2 = new cRectMake;
 	m_pFFPassage2->Setup(D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 4)
 		, D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 3)
 		, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3)
 		, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4)
-		, "Texture/maps/cs_office_texture_7.jpg");
+		, "Texture/maps/cs_office_texture_5.jpg");
 
 	for (size_t i = 0; i < 10; i++) {
 		m_pB1Stair2[i] = new cRectMake;
@@ -179,11 +179,11 @@ void cFloor::Render()
 	}
 
 	m_pFFRoom->Render();
-	m_pFFBathRoom->Render();
 	m_pFFLivingRoom->Render();
 	m_pFFLivingRoom2->Render();
 	m_pFFPassage->Render();
 	m_pFFPassage2->Render();
+	m_pFFBathRoom->Render();
 	for (size_t i = 0; i < 10; i++) {
 		m_pB1Stair2[i]->Render();
 	}

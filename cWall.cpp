@@ -291,12 +291,12 @@ void cWall::SetupFF()
 			, "Texture/maps/cs_office_texture_8.jpg");
 	
 		//통로 아래
-		m_pFFDown_1 = new cRectMake;
-		m_pFFDown_1->Setup(D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
+		m_pFFDown = new cRectMake;
+		m_pFFDown->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 4)
 			, D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 4)
-			, D3DXVECTOR3(CENTERX + 3, SF, CENTERZ - 4)
-			, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 4)
-			, "Texture/maps/cs_office_texture_8.jpg");
+			, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
+			, NULL);
 
 
 		//현관쪽 벽
@@ -334,45 +334,45 @@ void cWall::SetupFF()
 			, D3DXVECTOR3(CENTERX + 3, SF, CENTERZ - 4)
 			, D3DXVECTOR3(CENTERX + 3, SF, CENTERZ - 0.4)
 			, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.4)
-			, "Texture/maps/cs_office_texture_8.jpg");
+			, "Texture/maps/bathRoom.jpg");
 
 		//화장실 아래
-		m_pFFDown = new cRectMake;
-		m_pFFDown->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 4)
+		m_pFFDown_1 = new cRectMake;
+		m_pFFDown_1->Setup(D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
 			, D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 4)
-			, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
-			, "Texture/maps/cs_office_texture_8.jpg");
+			, D3DXVECTOR3(CENTERX + 3, SF, CENTERZ - 4)
+			, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 4)
+			, "Texture/maps/bathRoom.jpg");
 
 		//오른쪽
-		v = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 4);
-		v1 = D3DXVECTOR3(CENTERX + 5.9, SF, CENTERZ - 4);
-		v2 = D3DXVECTOR3(CENTERX + 5.9, SF, CENTERZ - 3);
-		v3 = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 3);
+		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4);
+		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 4);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 3);
+		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3);
 
 		m_pFFBathRoomR1 = new cRectMake;
-		m_pFFBathRoomR1->Setup(v ,v1 ,v2 ,v3, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomR1->Setup(v3, v2, v1, v, "Texture/maps/bathRoom.jpg"); 
 		m_pFFBathRoomR1_1 = new cRectMake;
-		m_pFFBathRoomR1_1->Setup(v3 ,v2 ,v1 ,v, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomR1_1->Setup(v, v1, v2, v3, "Texture/maps/cs_office_texture_8.jpg");
 	
-		v = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 0.5);
-		v1 = D3DXVECTOR3(CENTERX + 5.9, SF, CENTERZ - 0.5);
-		v2 = D3DXVECTOR3(CENTERX + 5.9, SF, CENTERZ - 2.5);
-		v3 = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 2.5);
+		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5);
+		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.5);
+		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 2.5);
 	
 		m_pFFBathRoomR2 = new cRectMake;
-		m_pFFBathRoomR2->Setup(v, v1, v2, v3, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomR2->Setup(v, v1, v2, v3, "Texture/maps/bathRoom.jpg");
 		m_pFFBathRoomR2_1 = new cRectMake;
 		m_pFFBathRoomR2_1->Setup(v3, v2, v1, v, "Texture/maps/cs_office_texture_8.jpg");
 
-		v = D3DXVECTOR3(CENTERX + 5.9, SF - 0.5, CENTERZ - 3);
-		v1 = D3DXVECTOR3(CENTERX + 5.9, SF, CENTERZ - 3);
-		v2 = D3DXVECTOR3(CENTERX + 5.9, SF, CENTERZ - 2.5);
-		v3 = D3DXVECTOR3(CENTERX + 5.9, SF - 0.5, CENTERZ - 2.5);
+		v = D3DXVECTOR3(CENTERX + 6, SF - 0.5, CENTERZ - 3);
+		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 3);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.5);
+		v3 = D3DXVECTOR3(CENTERX + 6, SF - 0.5, CENTERZ - 2.5);
 		m_pFFBathRoomR3 = new cRectMake;
-		m_pFFBathRoomR3->Setup(v, v1, v2, v3, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomR3->Setup(v3, v2, v1, v, "Texture/maps/bathRoom.jpg"); 
 		m_pFFBathRoomR3_1 = new cRectMake;
-		m_pFFBathRoomR3_1->Setup(v3, v2, v1, v, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomR3_1->Setup(v, v1, v2, v3, "Texture/maps/cs_office_texture_8.jpg");
 
 		//위쪽
 		v = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.5);
@@ -380,7 +380,7 @@ void cWall::SetupFF()
 		v2 = D3DXVECTOR3(CENTERX + 5.2, SF, CENTERZ - 0.5);
 		v3 = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.5);
 		m_pFFBathRoomU1 = new cRectMake;
-		m_pFFBathRoomU1->Setup(v, v1, v2, v3, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomU1->Setup(v, v1, v2, v3, "Texture/maps/bathRoom.jpg");
 		m_pFFBathRoomU1_1 = new cRectMake;
 		m_pFFBathRoomU1_1->Setup(v3, v2, v1, v, "Texture/maps/cs_office_texture_8.jpg");
 
@@ -389,7 +389,7 @@ void cWall::SetupFF()
 		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5);
 		v3 = D3DXVECTOR3(CENTERX + 6, FF + 0.3, CENTERZ - 0.5);
 		m_pFFBathRoomU2 = new cRectMake;
-		m_pFFBathRoomU2->Setup(v, v1, v2, v3, "Texture/maps/cs_office_texture_8.jpg");
+		m_pFFBathRoomU2->Setup(v, v1, v2, v3, "Texture/maps/bathRoom.jpg");
 		m_pFFBathRoomU2_1 = new cRectMake;
 		m_pFFBathRoomU2_1->Setup(v3, v2, v1, v, "Texture/maps/cs_office_texture_8.jpg");
 	}
