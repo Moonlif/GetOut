@@ -4,6 +4,7 @@
 cUIButton::cUIButton()
 	: m_eButtonState(E_NORMAL)
 	, m_pDelegate(NULL)
+	, m_nAlpha(255)
 {
 }
 
@@ -81,7 +82,7 @@ void cUIButton::Render(LPD3DXSPRITE pSprite)
 	RECT rc;
 	SetRect(&rc, 0, 0, m_stSize.nWidth, m_stSize.nHeight);
 
-	pSprite->Draw(m_aTexture[m_eButtonState], &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0), D3DCOLOR_ARGB(255, 255, 255, 255));
+	pSprite->Draw(m_aTexture[m_eButtonState], &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0), D3DCOLOR_ARGB(m_nAlpha, 255, 255, 255));
 	pSprite->End();
 
 	cUIObject::Render(pSprite);

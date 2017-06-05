@@ -10,7 +10,7 @@ cUITextView::cUITextView()
 }
 
 cUITextView::cUITextView(string str, D3DXVECTOR3 pos, D3DCOLOR color, ST_SIZEN size, int wordWidth, int wordHeight, UINT wordWeight, char * fontName)
-	:m_dwDrawTextFormat(DT_CENTER | DT_VCENTER | DT_WORDBREAK)
+	:m_dwDrawTextFormat(DT_LEFT | DT_TOP | DT_WORDBREAK)
 {
 	m_sText = str;
 	m_vPosition = pos;

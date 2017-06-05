@@ -75,6 +75,8 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONUP:
 		break;
 	case WM_MOUSEMOVE:
+		if (!g_pUIvarius->GetIsStartedGame()) return;
+
 		if (m_isLButtonDown)
 		{
 			float fDeltaX = (float)g_ptMouse.x - m_ptPrevMouse.x;
@@ -90,6 +92,8 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_MOUSEWHEEL:
+		if (!g_pUIvarius->GetIsStartedGame()) return;
+
 		//Ä«¸Þ¶ó ÁÜ ÀÎ¾Æ¿ô
 		m_fCameraDistance -= (GET_WHEEL_DELTA_WPARAM(wParam) / 120.f);
 		if (m_fCameraDistance < 0.0001f)

@@ -55,9 +55,9 @@ void cMainGame::Setup()
 		m_pTotalUIRender->Setup();
 
 		//test light
-		g_pLightManager->SetDirectionLight(0, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
-			D3DXVECTOR3(0, 1, 1));
-		g_pD3DDevice->LightEnable(0, true);
+		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
+			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(0, 1, 1));
+		g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
@@ -77,7 +77,7 @@ void cMainGame::Update()
 		//character
 
 		//ui
-		if (m_pTotalUIRender) m_pTotalUIRender->Update();
+		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
 
 		//interact
 		if (m_pInteract) m_pInteract->Update();
@@ -93,18 +93,16 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		//if (m_pMap) m_pMap->Render();
+		if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
 
 		//character
 
 		//interact stuff
-		if (m_pInteract) m_pInteract->Render();
+		if (m_pInteract && g_pUIvarius->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
-		//if (m_pTotalUIRender) m_pTotalUIRender->Render();
+		if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	}
-
-
 
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);

@@ -21,19 +21,20 @@ void cStartScene::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-	m_pStartSceneImage = new cUIImageView("UI/StartScene/1_StartScene.JPG", D3DXVECTOR3(0, 0, 0), 255);
+	m_pStartSceneImage = new cUIImageView("UI/StartScene/1_StartScene.JPG", D3DXVECTOR3(0, 0, 1.0f), 255);
 	m_pStartSceneRoot = m_pStartSceneImage;
 
 	m_pStartText = new cUITextView("Press any key to start", D3DXVECTOR3(400, 500, 0), D3DCOLOR_ARGB(255, 255, 255, 0),
 		ST_SIZEN(500, 200), 20, 20, 500, "굴림체");
 	m_pStartSceneRoot->AddChild(m_pStartText);
 
-	m_pStartText->SetIsHidden(true);
-	m_IsStartSceneOpen = false;
+	//	m_pStartText->SetIsHidden(true);
+	//m_IsStartSceneOpen = false;
 }
 
 void cStartScene::Update()
 {
+
 	m_pStartSceneRoot->Update();
 
 	//Press any key to start 키 알파값 업데이트
@@ -58,9 +59,7 @@ void cStartScene::Update()
 		static int	nImageAlpha = 255;
 		nImageAlpha -= 5;
 
-		D3DCOLOR ImageColor = D3DCOLOR_ARGB(nImageAlpha, 255, 255, 0);
-
-		m_pStartSceneImage->SetImageColor(ImageColor);
+		m_pStartSceneImage->SetAlpha(nImageAlpha);
 
 		if (nImageAlpha <= 0)
 		{

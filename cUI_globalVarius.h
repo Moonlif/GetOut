@@ -12,7 +12,7 @@ class cUI_globalVarius
 private:
 	SINGLETONE(cUI_globalVarius);
 
-	//bool m_IsStartSceneOpen;
+	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 
 public:
 

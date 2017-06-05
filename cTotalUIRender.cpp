@@ -26,10 +26,10 @@ void cTotalUIRender::Setup()
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 }
 
-void cTotalUIRender::Update()
+void cTotalUIRender::Update(cCamera* camera)
 {
 	if (m_pStartScene) m_pStartScene->Update();
-	if (m_pChaSelectScene) m_pChaSelectScene->Update();
+	if (m_pChaSelectScene) m_pChaSelectScene->Update(camera);
 }
 
 void cTotalUIRender::Render()

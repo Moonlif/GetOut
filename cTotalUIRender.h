@@ -2,6 +2,7 @@
 
 class cStartScene;
 class cCharacterSelectScene;
+class cCamera;
 
 class cTotalUIRender
 {
@@ -17,7 +18,7 @@ private:
 
 public:
 	void Setup();
-	void Update();
+	void Update(cCamera* camera);
 	void Render();
 
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

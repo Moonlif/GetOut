@@ -4,11 +4,13 @@
 
 cUIImageView::cUIImageView()
 	: m_pTexture(NULL)
+	, m_nAlpha(255)
 {
 }
 
 cUIImageView::cUIImageView(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 {
+	m_nAlpha = alpha;
 	D3DXIMAGE_INFO stImageInfo;
 
 	m_pTexture = g_pTextureManager->GetTexture(szFullPath, &stImageInfo);
@@ -17,7 +19,6 @@ cUIImageView::cUIImageView(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 	m_stSize.nHeight = stImageInfo.Height;
 
 	SetRect(&m_rc, 0, 0, m_stSize.nWidth, m_stSize.nHeight);
-	m_dwImageColor = D3DCOLOR_ARGB(alpha, 255, 255, 255);
 
 	m_vPosition = pos;
 }
@@ -38,7 +39,7 @@ void cUIImageView::Render(LPD3DXSPRITE pSprite)
 	RECT rc;
 	SetRect(&rc, 0, 0, m_stSize.nWidth, m_stSize.nHeight);
 
-	pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0), m_dwImageColor);
+	pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0), D3DCOLOR_ARGB(m_nAlpha, 255, 255, 255));
 	pSprite->End();
 
 	cUIObject::Render(pSprite);

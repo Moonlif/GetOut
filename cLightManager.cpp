@@ -30,7 +30,7 @@ void cLightManager::SetSpotLight(DWORD nIndex, D3DXCOLOR Ambient, D3DXCOLOR Diff
 	
 	stLight.Attenuation0 = 0.1f;
 	stLight.Attenuation1 = 0.1f;
-	stLight.Attenuation2 = 0.0f;
+	stLight.Attenuation2 = 0.1f;
 	stLight.Falloff = 1.0f;
 
 	g_pD3DDevice->SetLight(nIndex, &stLight);

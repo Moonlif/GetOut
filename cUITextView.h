@@ -8,7 +8,7 @@ class cUITextView : public cUIObject
 public:
 	cUITextView();
 	cUITextView(string str, D3DXVECTOR3 pos, D3DCOLOR color, ST_SIZEN size,
-		int wordWidth, int wordHeight, UINT wordWeight, char* fontName);
+		int wordWidth, int wordHeight, UINT wordWeight, char* fontName = "±¼¸²Ã¼");
 	virtual ~cUITextView();
 
 protected:
