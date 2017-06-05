@@ -12,11 +12,12 @@ private:
 	list<string> m_listChat_SEND;
 
 public:
-	std::map<ItemCode, string> m_mapItemName;
-	std::map<ItemCode, float> m_mapItemRadius;
-	std::map<ItemCode, float> m_mapItemScaling;
-	std::map<ItemCode, LPD3DXMESH> m_mapItemMesh;
-	std::map<ItemCode, std::vector<cMtlTex*>> m_mapItemVecMtlTex;
+	//정훈 - 오브젝트용
+	std::map<StuffCode, string> m_mapStuffName;
+	std::map<StuffCode, float> m_mapStuffRadius;
+	std::map<StuffCode, float> m_mapStuffScaling;
+	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;
+	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
 	list<string> m_listChat_RECV;
 

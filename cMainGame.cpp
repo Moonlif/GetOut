@@ -62,8 +62,8 @@ void cMainGame::Setup()
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
 
-	g_pSocketmanager->Setup();
-	g_pSocketmanager->Setup_Chat();
+	//g_pSocketmanager->Setup();
+	//g_pSocketmanager->Setup_Chat();
 }
 
 void cMainGame::Update()
@@ -93,7 +93,7 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap) m_pMap->Render();
+		//if (m_pMap) m_pMap->Render();
 
 		//character
 
@@ -101,7 +101,7 @@ void cMainGame::Render()
 		if (m_pInteract) m_pInteract->Render();
 
 		//ui
-		if (m_pTotalUIRender) m_pTotalUIRender->Render();
+		//if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	}
 
 

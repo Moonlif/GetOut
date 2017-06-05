@@ -21,7 +21,7 @@ cMapObject::~cMapObject()
 void cMapObject::Setup()
 {
 	cObjLoader loadMesh;
-	loadMesh.Load(m_vecGroup, "obj", "cs_office.obj", true);
+	loadMesh.Load(m_vecGroup, "obj", "cs_office.obj");
 }
 
 void cMapObject::Render()
