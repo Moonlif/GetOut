@@ -114,6 +114,11 @@ void cDataManager::Setup()
 		m_mapStuffScaling[STUFF_PAPER2] = 0.5f;
 		m_mapStuffMesh[STUFF_PAPER2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_PAPER2], "Objects/clickable", "paper2.obj", 1);
 
+		m_mapStuffName[STUFF_PAPER3] = "paper3";
+		m_mapStuffRadius[STUFF_PAPER3] = 0.5f;
+		m_mapStuffScaling[STUFF_PAPER3] = 0.5f;
+		m_mapStuffMesh[STUFF_PAPER3] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_PAPER3], "Objects/clickable", "paper2.obj", 1);
+
 		m_mapStuffName[STUFF_POSTER1] = "poster1";
 		m_mapStuffRadius[STUFF_POSTER1] = 0.5f;
 		m_mapStuffScaling[STUFF_POSTER1] = 0.5f;

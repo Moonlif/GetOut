@@ -4,6 +4,11 @@
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
+	, m_p1Player(NULL)
+	, m_p2Player(NULL)
+	, m_pTotalUIRender(NULL)
+	, m_pInteract(NULL)
+
 {	 
 }
 
@@ -17,6 +22,8 @@ cMainGame::~cMainGame()
 		SAFE_DELETE(m_pMap);
 
 		//character
+		SAFE_DELETE(m_p1Player);
+		SAFE_DELETE(m_p2Player);
 
 		//ui
 		SAFE_DELETE(m_pTotalUIRender);
@@ -45,6 +52,10 @@ void cMainGame::Setup()
 	//	m_pMap->Setup();
 
 		//character
+		m_p1Player = new Player;
+		m_p1Player->Setup(PLAYER_TYPE::MALE);
+		m_p2Player = new Player;
+		m_p2Player->Setup(PLAYER_TYPE::FEMALE);
 
 		//interact
 		m_pInteract = new cInteract;
@@ -75,6 +86,8 @@ void cMainGame::Update()
 		//map
 
 		//character
+		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Update();//g_pData->m_nPlayerNum);
+		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Update();//g_pData->m_nPlayerNum);
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
@@ -96,6 +109,8 @@ void cMainGame::Render()
 		//if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
 
 		//character
+		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Render();
+		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Render();
 
 		//interact stuff
 		if (m_pInteract && g_pUIvarius->GetIsStartedGame()) m_pInteract->Render();

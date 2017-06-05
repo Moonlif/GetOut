@@ -36,7 +36,10 @@ using namespace std;
 #define _CRT_SECURE_NO_WARNINGS
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 #include <vector>
 #include <map>
 #include <set>
@@ -189,7 +192,16 @@ struct ST_ASTAR
 #include "cFontManager.h"
 #include "cTimeManager.h"
 #include "cRandom.h"
-#include "cSocketManager.h"
+
+//영현
 #include "cUI_globalVarius.h"
 #include "cLightManager.h"
+
+//지상
+#include "cSocketManager.h"
 #include "cDataManager.h"
+
+//균영
+#include "BoundingVolume.h"	
+#include "SkinnedMeshManager.h"
+#include "keyManager.h"

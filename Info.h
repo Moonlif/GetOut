@@ -134,3 +134,12 @@ struct ITEMINFO
 	LPDIRECT3DTEXTURE9		Texture;
 	eITEMTYPE				ItemType;
 };
+
+
+enum animationState
+{
+	ANIM_IDLE,
+	ANIM_WALK,
+	ANIM_ATTACK,
+	ANIM_DEATH,
+};

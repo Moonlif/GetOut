@@ -4,6 +4,7 @@
 #include "cMap.h"
 #include "cTotalUIRender.h"
 #include "cInteract.h"
+#include "Player.h"
 
 class cMainGame
 {
@@ -18,6 +19,8 @@ private:
 	cMap* m_pMap;
 
 	//character
+	Player* m_p1Player;
+	Player* m_p2Player;
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;
