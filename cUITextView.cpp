@@ -33,6 +33,9 @@ void cUITextView::Render(LPD3DXSPRITE pSprite)
 	if (m_pFont) m_pFont->DrawTextA(NULL, m_sText.c_str(), m_sText.length(), &m_rc, m_dwDrawTextFormat, m_dwTextColor);
 	
 	cUIObject::Render(pSprite);
+}
 
-	//cout << m_rc.left << " " << m_rc.top << endl;
+cUITextView * cUITextView::FindEmptyInvene()
+{
+	return nullptr;
 }

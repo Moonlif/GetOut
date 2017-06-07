@@ -8,17 +8,19 @@ class cUI_globalVarius
 //public:
 //	cUI_globalVarius();
 //	~cUI_globalVarius();
-
+	
 private:
 	SINGLETONE(cUI_globalVarius);
 
-	map<DWORD, ITEMINFO>	m_mapItemInfo;
-	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
-	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
+
+	
+	SYNTHESIZE(bool, m_IsBagFull, IsBagFull)
 
 public:
+	map<StuffCode, ITEMINFO>	m_mapItemInfo;
 
 
+	ITEMINFO GetItemInfo(StuffCode ItemName);
 	void SetItemInfo();
 };
 

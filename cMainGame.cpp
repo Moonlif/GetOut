@@ -48,8 +48,8 @@ void cMainGame::Setup()
 		g_pData->Setup();
 
 		//map
-		m_pMap = new cMap;
-		m_pMap->Setup();
+	//	m_pMap = new cMap;
+	//	m_pMap->Setup();
 
 		//character
 		m_p1Player = new Player;
@@ -68,7 +68,6 @@ void cMainGame::Setup()
 		//test light
 		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
 			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(0, 1, 1));
-		g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
@@ -86,8 +85,8 @@ void cMainGame::Update()
 		//map
 
 		//character
-		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Update();//g_pData->m_nPlayerNum);
-		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Update();//g_pData->m_nPlayerNum);
+		if (g_pData->GetIsStartedGame() && m_p1Player) m_p1Player->Update();//g_pData->m_nPlayerNum);
+		if (g_pData->GetIsStartedGame() && m_p2Player) m_p2Player->Update();//g_pData->m_nPlayerNum);
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
@@ -106,19 +105,17 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		//if (m_pMap && g_pUIvarius->GetIsStartedGame()) 
-		if(g_bDebug == false)	m_pMap->Render();
+		if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
 
 		//character
-		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Render();
-		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Render();
+		if (g_pData->GetIsStartedGame() && m_p1Player) m_p1Player->Render();
+		if (g_pData->GetIsStartedGame() && m_p2Player) m_p2Player->Render();
 
 		//interact stuff
-		//if (m_pInteract && g_pUIvarius->GetIsStartedGame()) 
-			m_pInteract->Render();
+		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
-		//if (m_pTotalUIRender) m_pTotalUIRender->Render();
+		if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	}
 
 	g_pD3DDevice->EndScene();
@@ -130,7 +127,7 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (m_pCamera) m_pCamera->WndProc(hWnd, message, wParam, lParam);
 
 	//스타트씬에서 아무키나 눌러서 시작하면 업데이트, 렌더 안하기 위함. by 영현 17.05.30
-	//if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
+	if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
 
 	switch (message)
 	{
