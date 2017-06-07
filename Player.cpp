@@ -13,12 +13,11 @@ Player::~Player()
 	if (player_Weapon) SAFE_DELETE(player_Weapon);
 }
 
-void Player::Setup(PLAYER_TYPE type, cMap* map)
+void Player::Setup(PLAYER_TYPE type)
 {
 	playerType = type;
 
 	
-	map->getSurface()->GetVecVertex();
 	
 	if (playerType == MALE)
 	{
@@ -41,7 +40,7 @@ void Player::Setup(PLAYER_TYPE type, cMap* map)
 	D3DXCreateSphere(g_pD3DDevice, 0.5f * player->GetSize(), 16, 16, &baseSphereMesh, nullptr);
 }
 
-void Player::Update()
+void Player::Update(cMap* map)
 {
 	if (g_pKeyManager->isStayKeyDown('W'))
 	{
@@ -148,25 +147,25 @@ void Player::Render()
 bool Player::GetHeight(IN float x, OUT float & y, IN float z, cMap* map)
 {
 	{
-		//D3DXVECTOR3 vRayPos(x, 1000, z);
-		//D3DXVECTOR3 vRayDir(0, -1, 0);
-		//for (size_t i = 0; i < map->getSurface()->GetVecVertex.size(); i += 3) {
-		//	float u, v, f;
+		D3DXVECTOR3 vRayPos(x, 1000, z);
+		D3DXVECTOR3 vRayDir(0, -1, 0);
+		for (size_t i = 0; i < map->getSurface()->GetVecVertex().size(); i += 3) {
+			float u, v, f;
 
-		//	if (D3DXIntersectTri(
-		//		map->getSurface()->GetVecVertex[i + 0],
-		//		map->getSurface()->GetVecVertex[i + 1],
-		//		map->getSurface()->GetVecVertex[i + 2],
-		//		&vRayPos,
-		//		&vRayDir,
-		//		&u,
-		//		&v,
-		//		&f
-		//	)) {
-		//		y = 1000 - f;
-		//		return true;
-		//	}
-		//}
+			if (D3DXIntersectTri(
+				&map->getSurface()->GetVecVertex()[i + 0],
+				&map->getSurface()->GetVecVertex()[i + 1],
+				&map->getSurface()->GetVecVertex()[i + 2],
+				&vRayPos,
+				&vRayDir,
+				&u,
+				&v,
+				&f
+			)) {
+				y = 1000 - f;
+				return true;
+			}
+		}
 		return false;
 	}
 }

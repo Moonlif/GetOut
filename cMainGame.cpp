@@ -52,10 +52,10 @@ void cMainGame::Setup()
 		m_pMap->Setup();
 
 		//character
-		//m_p1Player = new Player;
-		//m_p1Player->Setup(PLAYER_TYPE::MALE);
-		//m_p2Player = new Player;
-		//m_p2Player->Setup(PLAYER_TYPE::FEMALE, NULL);
+		m_p1Player = new Player;
+		m_p1Player->Setup(PLAYER_TYPE::MALE);
+		m_p2Player = new Player;
+		m_p2Player->Setup(PLAYER_TYPE::FEMALE);
 
 		//interact
 		m_pInteract = new cInteract;
@@ -85,8 +85,8 @@ void cMainGame::Update()
 		//map
 
 		//character
-		if (g_pData->GetIsStartedGame() && m_p1Player) m_p1Player->Update();//g_pData->m_nPlayerNum);
-		if (g_pData->GetIsStartedGame() && m_p2Player) m_p2Player->Update();//g_pData->m_nPlayerNum);
+		if (g_pData->GetIsStartedGame() && m_p1Player) m_p1Player->Update(m_pMap);
+		if (g_pData->GetIsStartedGame() && m_p2Player) m_p2Player->Update(m_pMap);
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);

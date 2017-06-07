@@ -36,8 +36,8 @@ public:
 	Player();
 	~Player();
 
-	void Setup(PLAYER_TYPE type, cMap* map);
-	void Update();
+	void Setup(PLAYER_TYPE type);
+	void Update(cMap* map);
 	void Render();
 
 	inline D3DXVECTOR3& GetPosition() { return position; }
