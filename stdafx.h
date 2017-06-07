@@ -36,10 +36,7 @@ using namespace std;
 #define _CRT_SECURE_NO_WARNINGS
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 #include <vector>
 #include <map>
 #include <set>

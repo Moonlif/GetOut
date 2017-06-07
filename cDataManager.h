@@ -11,6 +11,10 @@ private:
 
 	list<string> m_listChat_SEND;
 
+	//영현
+	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
+	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
+
 public:
 	//정훈 - 오브젝트용
 	std::map<StuffCode, string> m_mapStuffName;
@@ -28,8 +32,6 @@ public:
 	D3DXVECTOR3 m_vRotation1P;
 	D3DXVECTOR3 m_vRotation2P;
 	animationState m_eOtherPlayerAnimState;
-
-
 
 public:
 	void Setup();

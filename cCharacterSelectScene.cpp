@@ -15,6 +15,8 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_pPlayer2(NULL)
 	, m_isDeleteBackground(false)
 	, m_vRetargetPos(0,0,0)
+	, m_Player1_Number(0)
+	, m_Player2_Number(0)
 {
 }
 
@@ -87,8 +89,7 @@ void cCharacterSelectScene::UpdateSetFirstBackground()
 void cCharacterSelectScene::UpdateCharacterSelect()
 {
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
-	{
-		
+	{		
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1);
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
@@ -104,7 +105,11 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 
 			//텍스트 변경
-			pExplain->SetText("1번 캐릭");
+			pExplain->SetText("남자 캐릭터 \n\n장점:\n힘이 쌔서 무거운 물체를 옮길 수 있다. \n\n단점:\n몸집이 커서 좁은 곳은 들어가지 못한다.");
+
+			//데이터 메니져에 선택한 데이터 보내주기
+			m_Player1_Number = 1;
+			g_pData->m_nPlayerNum = 1;
 		}
 		//플레이어 2번 선택시
 		else if ((PtInRect(&Player2->Getrc(), g_ptMouse)))
@@ -117,7 +122,11 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, true);
 
 			//텍스트 변경
-			pExplain->SetText("2번 캐릭");
+			pExplain->SetText("여자 캐릭터 \n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
+
+			//데이터 메니져에 선택한 데이터 보내주기
+			m_Player1_Number = 2;
+			g_pData->m_nPlayerNum = 2;
 		}
 	}
 
@@ -126,7 +135,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 void cCharacterSelectScene::UpdateBeforGameStart()
 {
 	//카메라 움직이기
-	if (m_vRetargetPos.x > -1.0f) m_vRetargetPos.x -= 0.1f;
+	if (m_vRetargetPos.x > -0.5f) m_vRetargetPos.x -= 0.1f;
 
 	static int alpha = 0;
 	static int Time = 0;
@@ -148,34 +157,18 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	img5->SetAlpha(alpha);
 	img6->SetAlpha(alpha);
 	
-	if (nImage >= 6)
-	{
-		g_pUIvarius->SetIsStartedGame(true);
-		//g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
-		//1번케릭 클릭시
-		if (m_pPlayer2->GetIsHidden())
-		{
-			m_pCamera->ReTarget(&m_pPlayer1->GetPosition());
-		}
-		//2번케릭 클릭시
-		else if (m_pPlayer1->GetIsHidden())
-		{
-			m_pCamera->ReTarget(&m_pPlayer2->GetPosition());
-		}
-		return;
-	}
 	//카메라 흔들기
 	if (alpha >= 255)
 	{
 		alpha = 255;
 		Time++;
 		
-		
+		//카메라 흔들기
 		if (Time % CAMERASHAKESPEED == 0) m_vRetargetPos = RandomCircle(SavePt, CAMERASHAKERANGE);
 
 		//카메라 거리 좁히기
 		static float dis = 5.0f;
-		dis -= 0.1f;
+		dis -= 0.05f;
 		if (dis <= 0.1f) dis = 0.1f;
 		m_pCamera->SetCameraDistance(dis);
 	}
@@ -191,6 +184,11 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		switch (nImage)
 		{
 		case 1:
+			//다크 라이트 키기
+			//g_pD3DDevice->LightEnable(eLIGHT::D_DARK, true);
+			//밑에 있는 라이트들 꺼주기
+			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, false);
+			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 			img1->SetIsHidden(true);
 			img2->SetPosition(D3DXVECTOR3(0, 0, 0));
 			break;
@@ -210,8 +208,13 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			img5->SetIsHidden(true);
 			break;
 		case 6:
+			//게임 시작
 			img6->SetIsHidden(true);
+			g_pData->SetIsStartedGame(true);
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
+			m_pCamera->SetCameraDistance(0.1f);
+
+			//카메라 리타겟은 캐릭터에서 바꿔주기
 			break;
 		default:
 			break;
@@ -259,7 +262,7 @@ D3DXVECTOR3 cCharacterSelectScene::RandomCircle(D3DXVECTOR3 pos, float range)
 	float RandomX = 0;
 	float RandomY = 0;
 
-	RandomX = RND->getFloatFromTo(pos.x - range, pos.x + range);
+	RandomX = RND->getFloatFromTo(pos.x, pos.x + range * 2);
 	RandomY = RND->getFloatFromTo(pos.y - range, pos.y + range);
 
 	return D3DXVECTOR3(RandomX, RandomY, pos.z);
@@ -302,7 +305,7 @@ void cCharacterSelectScene::SetBackground()
 	m_pRoot->AddChild(pStartButton);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35,60,0), 
-		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(230, 500), 15,20, 500);
+		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(230, 500), 13,20, 500);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 
@@ -337,12 +340,12 @@ void cCharacterSelectScene::SetBackground()
 //플레이어 메쉬, 조명 셋업
 void cCharacterSelectScene::SetMesh()
 {
-	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::BOX, D3DXVECTOR3(-1, 0, 5));
+	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::MALE, D3DXVECTOR3(-0.5f, -1, 1));
 	pPlayer1->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER1);
 	pPlayer1->SetIsHidden(true);
 	m_pPlayer1 = pPlayer1;
 
-	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::SPHERE, D3DXVECTOR3(-1, 0, 5));
+	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::FEMALE, D3DXVECTOR3(-0.5f, -1, 1));
 	pPlayer2->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER2);
 	pPlayer2->SetIsHidden(true);
 	m_pPlayer2 = pPlayer2;
@@ -360,4 +363,8 @@ void cCharacterSelectScene::SetMesh()
 		10.0f, D3DX_PI / 2, D3DX_PI / 4, D3DXVECTOR3(0, 1, 0));
 	pLight2->SetTag(eUITAG::E_CHARACTERSELECT_LIGHT_PLAYER2);
 	m_pPlayer2->AddChild(pLight2);
+
+	//다크 라이트 세팅
+	g_pLightManager->SetDirectionLight(eLIGHT::D_DARK, D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f),
+		D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f), D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f), D3DXVECTOR3(0, 0, 1));
 }

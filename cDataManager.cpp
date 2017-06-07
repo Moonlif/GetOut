@@ -5,6 +5,8 @@
 #include "cObjLoader.h"
 
 cDataManager::cDataManager()
+	:m_IsInvenOpen(false)
+	, m_IsStartedGame(false)
 {
 }
 

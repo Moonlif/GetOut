@@ -32,6 +32,10 @@ private:
 	bool								m_isDeleteBackground;
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3, m_vRetargetPos, mRetargetPos)
 	cCamera*							m_pCamera;
+
+	//어떤 캐릭 선택했나?
+	SYNTHESIZE(int, m_Player1_Number, Player1_Number); //1번 남자, 2번 여자
+	SYNTHESIZE(int, m_Player2_Number, Player2_Number); 
 public:
 	void Setup();
 	void Update(cCamera* camera);
@@ -39,7 +43,7 @@ public:
 
 	void SetBackground();
 	void SetMesh();
-
+	
 	void UpdateSetFirstBackground();
 	void UpdateCharacterSelect();
 	void UpdateBeforGameStart();
