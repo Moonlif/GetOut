@@ -5,12 +5,21 @@
 
 cStuff::cStuff()
 	: m_eStuffCode(STUFF_NONE)
-	, m_fRadius(0.0f)
-	, m_fScaling(0.0f)
 	, m_vPosition(0, 0, 0)
-	, m_sName("NONE")
-	, m_pMesh(NULL)
+	, m_vRotation(0, 0, 0)
+	, m_fRadius(0.0f)
 	, m_IsOnMap(true)
+
+	, m_vAdjust(0, 0, 0)
+	, m_fScaling(0.0f)
+	, m_vRenderPosition(0, 0, 0)
+	, m_vRenderRotation(0, 0, 0)
+	, m_fSwitchValue(0.0f)
+	, m_bSwitch(false)
+	, m_vRePosition(0, 0, 0)
+	, m_vReRotation(0, 0, 0)
+
+	, m_pMesh(NULL)
 	, m_pMeshSphere(NULL)
 {
 }
@@ -27,15 +36,16 @@ cStuff::~cStuff()
 	SAFE_RELEASE(m_pMeshSphere);
 }
 
-void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, bool isOnMap)
+void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D3DXVECTOR3 adjust, float radius, float scaling, bool isOnMap)
 {
 	m_eStuffCode = code;
-	m_vPosition = position;
+	m_vPosition = m_vRenderPosition = position;
+	m_vRotation = m_vRenderRotation = rotation;
+	m_vAdjust = adjust;
+	m_fRadius = radius;
+	m_fScaling = scaling;
 	m_IsOnMap = isOnMap;
 
-	m_sName = g_pData->m_mapStuffName[m_eStuffCode];
-	m_fRadius = g_pData->m_mapStuffRadius[m_eStuffCode];
-	m_fScaling = g_pData->m_mapStuffScaling[m_eStuffCode];
 	if (g_pData->m_mapStuffMesh.find(m_eStuffCode)->second != NULL)
 	{
 		m_pMesh = g_pData->m_mapStuffMesh[m_eStuffCode];
@@ -53,8 +63,33 @@ void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, bool isOnMap)
 	D3DXCreateSphere(g_pD3DDevice, m_fRadius, 10, 10, &m_pMeshSphere, NULL);
 }
 
+void cStuff::Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation)
+{
+	m_bSwitch = true;
+	m_fSwitchValue = 0.0f;
+	m_vRePosition = position;
+	m_vReRotation = rotation;
+}
+
 void cStuff::Update()
 {
+	if (m_bSwitch)
+	{
+		m_fSwitchValue += 0.05f;
+		
+		m_vRenderPosition = m_vPosition + (m_vRePosition - m_vPosition) * m_fSwitchValue;
+		m_vRenderRotation = m_vRotation + (m_vReRotation - m_vRotation) * m_fSwitchValue;
+		
+		if (m_fSwitchValue > 1.0f)
+		{
+			m_fSwitchValue = 0.0f;
+			m_bSwitch = false;
+
+			m_vPosition = m_vRenderPosition;
+			m_vRotation = m_vRenderRotation;
+		}
+	}
+
 }
 
 void cStuff::Render()
@@ -66,15 +101,21 @@ void cStuff::Render()
 		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	}
 
-	D3DXMATRIXA16 matWorld, matS, matT;
+	D3DXMATRIXA16 matWorld, matS, matR, matT;
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matS);
+	D3DXMatrixIdentity(&matR);
 	D3DXMatrixIdentity(&matT);
 
 	D3DXMatrixScaling(&matS, m_fScaling, m_fScaling, m_fScaling);
-	D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
+	D3DXMATRIXA16 matRx, matRy, matRz;
+	D3DXMatrixRotationX(&matRx, m_vRenderRotation.x);
+	D3DXMatrixRotationY(&matRy, m_vRenderRotation.y);
+	D3DXMatrixRotationZ(&matRz, m_vRenderRotation.z);
+	matR = matRx * matRy * matRz;
+	D3DXMatrixTranslation(&matT, m_vRenderPosition.x - m_vAdjust.x, m_vRenderPosition.y - m_vAdjust.y, m_vRenderPosition.z - m_vAdjust.z);
 
-	matWorld = matS * matT;
+	matWorld = matS * matR * matT;
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 
 	for (int i = 0; i < m_vecMtlTex.size(); ++i)

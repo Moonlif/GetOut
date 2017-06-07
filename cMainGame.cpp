@@ -106,17 +106,19 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
+		//if (m_pMap && g_pUIvarius->GetIsStartedGame()) 
+		if(g_bDebug == false)	m_pMap->Render();
 
 		//character
 		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Render();
 		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Render();
 
 		//interact stuff
-		if (m_pInteract && g_pUIvarius->GetIsStartedGame()) m_pInteract->Render();
+		//if (m_pInteract && g_pUIvarius->GetIsStartedGame()) 
+			m_pInteract->Render();
 
 		//ui
-		if (m_pTotalUIRender) m_pTotalUIRender->Render();
+		//if (m_pTotalUIRender) m_pTotalUIRender->Render();
 	}
 
 	g_pD3DDevice->EndScene();
@@ -128,7 +130,7 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (m_pCamera) m_pCamera->WndProc(hWnd, message, wParam, lParam);
 
 	//스타트씬에서 아무키나 눌러서 시작하면 업데이트, 렌더 안하기 위함. by 영현 17.05.30
-	if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
+	//if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
 
 	switch (message)
 	{
