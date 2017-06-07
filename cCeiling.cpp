@@ -56,7 +56,7 @@ void cCeiling::Setup()
 		, D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 0)
 		, D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 8, FF, CENTERZ + 4)
-		, "Texture/maps/cs_office_texture_7.jpg");
+		, "Texture/maps/castlebase_ceiling03.dds");
 
 	/***********************
 	1Ãþ

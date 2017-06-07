@@ -43,7 +43,7 @@ private:
 	cRectMake* m_pFFLeft_1;
 
 	cRectMake* m_pFFDown;
-	cRectMake* m_pFFDown_1;
+	
 
 	//현관 벽
 	cRectMake* m_pFFDoorR1;
@@ -51,6 +51,8 @@ private:
 	cRectMake* m_pFFDoorR3;
 	
 
+	//화장실 아래
+	cRectMake* m_pFFDown_1;
 	//화장실 오른쪽벽
 	cRectMake* m_pFFBathRoomR1;
 	cRectMake* m_pFFBathRoomR1_1;

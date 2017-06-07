@@ -15,6 +15,7 @@ public:
 		IN char* fontName = "±¼¸²Ã¼");
 
 	void TextOut3D(IN ID3DXMesh* font, IN D3DXVECTOR3 scailing, IN D3DXVECTOR3 rotation, IN D3DXVECTOR3 position);
+	void TextOut2D(IN LPD3DXFONT font, IN string str, IN int ptLeft, IN int ptTop, IN int ptRight, IN int ptBottom);
 	UINT CarcWeight(UINT weight);
 };
 

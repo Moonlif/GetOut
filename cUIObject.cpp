@@ -93,6 +93,7 @@ cUIObject * cUIObject::FindChildByTag(int nTag)
 	return NULL;
 }
 
+
 void cUIObject::SetupRect(cUIObject* pParents)
 {
 	//버튼이나, 텍스트나 모두 렌더링 할 때마다 셋렉트를 하는 것이 아닌 한번만 렉트를 초기화 하는게 더 나아 보여서

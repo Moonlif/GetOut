@@ -1,5 +1,6 @@
 #pragma once
 #include "cUIObject.h"
+class SkinnedMesh;
 
 class cUIMesh : public cUIObject
 {
@@ -8,6 +9,8 @@ public:
 	{
 		BOX,
 		SPHERE,
+		MALE,
+		FEMALE,
 		OTHER,
 	};
 
@@ -16,6 +19,8 @@ public:
 	virtual~cUIMesh();
 
 private:
+	eMESHTYPE			m_eType;
+	SkinnedMesh*		m_pSkinnedMesh;
 	LPD3DXMESH			m_pMesh;
 	D3DMATERIAL9		m_stMtl;
 public:

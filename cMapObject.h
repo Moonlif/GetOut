@@ -1,5 +1,7 @@
 #pragma once
-class cGroup;			//17.05.30 최진호 추가
+#include "cObjLoader.h"
+#include "cGroup.h"						//17.05.30 최진호 추가
+#include "cObject.h"
 
 class cMapObject
 {
@@ -9,7 +11,7 @@ public:
 	cMapObject();
 	~cMapObject();
 public:
-	void Setup();
-	void Render();
+	void Setup(char* folder ,char* fileName);
+	void Render(float size, float x, float y, float z, float rotY);
 };
 

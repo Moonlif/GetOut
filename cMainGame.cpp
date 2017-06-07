@@ -4,8 +4,7 @@
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
-	, m_p1Player(NULL)
-	, m_p2Player(NULL)
+	, m_pCharacter(NULL)
 	, m_pTotalUIRender(NULL)
 	, m_pInteract(NULL)
 
@@ -22,8 +21,7 @@ cMainGame::~cMainGame()
 		SAFE_DELETE(m_pMap);
 
 		//character
-		SAFE_DELETE(m_p1Player);
-		SAFE_DELETE(m_p2Player);
+		SAFE_DELETE(m_pCharacter);
 
 		//ui
 		SAFE_DELETE(m_pTotalUIRender);
@@ -52,10 +50,8 @@ void cMainGame::Setup()
 		m_pMap->Setup();
 
 		//character
-		m_p1Player = new Player;
-		m_p1Player->Setup(PLAYER_TYPE::MALE);
-		m_p2Player = new Player;
-		m_p2Player->Setup(PLAYER_TYPE::FEMALE);
+		m_pCharacter = new CharacterManager;
+		m_pCharacter->Setup();
 
 		//interact
 		m_pInteract = new cInteract;
@@ -68,7 +64,6 @@ void cMainGame::Setup()
 		//test light
 		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
 			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(0, 1, 1));
-		g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
@@ -81,19 +76,26 @@ void cMainGame::Update()
 {
 
 	g_pTimeManager->Update();
+
+
 	if (m_pCamera) m_pCamera->Update();
 	{
 		//map
 
 		//character
-		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Update();//g_pData->m_nPlayerNum);
-		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Update();//g_pData->m_nPlayerNum);
+		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update();
+		static bool start = false;
+		if (g_pData->GetIsStartedGame() && start == false)
+		{
+			start = true;
+			m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
+		}
+
+		//interact
+		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
-
-		//interact
-		if (m_pInteract) m_pInteract->Update();
 	}
 }
 
@@ -106,14 +108,13 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
+		if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
 
 		//character
-		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Render();
-		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Render();
+		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
 
 		//interact stuff
-		if (m_pInteract && g_pUIvarius->GetIsStartedGame()) m_pInteract->Render();
+		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
