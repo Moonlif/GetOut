@@ -1,5 +1,7 @@
 #pragma once
 #include "SkinnedMesh.h"
+#include "cMap.h"
+
 
 enum PLAYER_TYPE
 {
@@ -34,12 +36,16 @@ public:
 	Player();
 	~Player();
 
-	void Setup(PLAYER_TYPE type);
+	void Setup(PLAYER_TYPE type, cMap* map);
 	void Update();
 	void Render();
 
 	inline D3DXVECTOR3& GetPosition() { return position; }
 	inline D3DXVECTOR3& GetHeadPosition() { return headPosition; }
 	inline D3DXVECTOR3& GetSightTarget() { return sightTarget; }
+
+	bool GetHeight(IN float x, OUT float & y, IN float z, cMap* map);
+	
+
 };
 

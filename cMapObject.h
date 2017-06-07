@@ -12,6 +12,6 @@ public:
 	~cMapObject();
 public:
 	void Setup(char* folder ,char* fileName);
-	void Render(float size, float x, float y, float z);
+	void Render(float size, float x, float y, float z, float rotY);
 };
 
