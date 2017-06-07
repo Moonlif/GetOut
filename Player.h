@@ -2,7 +2,6 @@
 #include "SkinnedMesh.h"
 #include "cMap.h"
 
-
 enum PLAYER_TYPE
 {
 	MALE = 0,
@@ -13,39 +12,29 @@ enum PLAYER_TYPE
 class Player
 {
 private:
-	D3DXVECTOR3		position = D3DXVECTOR3(0,0,0);
-	D3DXVECTOR3		headPosition = D3DXVECTOR3(0, 0, 0);
-	D3DXVECTOR3		sightTarget = D3DXVECTOR3(0, 0, 0);
-	float			rotationY = 0.0f;
-	D3DXVECTOR3		direction = D3DXVECTOR3(0, 0, 1);
+	D3DXVECTOR3		position;
+	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,		headPosition, headPosition)
+	D3DXVECTOR3		direction;
 
-	D3DXMATRIXA16	worldMat;
-
-	SkinnedMesh* player = nullptr;
-	SkinnedMesh* player_Weapon = nullptr;
+	SkinnedMesh* player;
+	SkinnedMesh* player_Weapon;
 
 	PLAYER_TYPE playerType;
-
-	BoundingShere baseSphere = BoundingShere(D3DXVECTOR3(0, 0, 0), 0.5f);
-	LPD3DXMESH baseSphereMesh = nullptr;
-	D3DXMATRIXA16 baseSphereLocal;
-
-	bool showBoundingSphere = false;
+	animationState aniState;
 
 public:
 	Player();
 	~Player();
 
 	void Setup(PLAYER_TYPE type);
-	void Update(cMap* map);
+	void Update(cMap* pMap);
+	void Update(D3DXVECTOR3 pos, D3DXVECTOR3 dir, animationState ani, cMap* pMap);
 	void Render();
 
 	inline D3DXVECTOR3& GetPosition() { return position; }
-	inline D3DXVECTOR3& GetHeadPosition() { return headPosition; }
-	inline D3DXVECTOR3& GetSightTarget() { return sightTarget; }
+	inline D3DXVECTOR3& GetDirection() { return direction; }
 
+	void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
 	bool GetHeight(IN float x, OUT float & y, IN float z, cMap* map);
-	
-
 };
 

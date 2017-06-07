@@ -95,7 +95,7 @@ void cMap::SetupObject()
 
 void cMap::Render()
 {
-	m_pSurface->Render();
+	//m_pSurface->Render();
 	m_pFloor->Render();
 	m_pWall->Render();
 	m_pCeiling->Render();	
