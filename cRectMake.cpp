@@ -53,7 +53,7 @@ void cRectMake::Render(int index)
 	g_pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x80);
 	//알파테스트의 기능(D3DRS_ALPHAFUNC)를
 	//D3DCMP_GREATEREQUAL(알파값이 기준값보다 크거나 같으면 텍스쳐 출력)으로 설정
-	//g_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	g_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
 	D3DXMATRIXA16 matS, matWorld;
@@ -71,4 +71,5 @@ void cRectMake::Render(int index)
 		sizeof(ST_PNT_VERTEX));
 
 	g_pD3DDevice->SetTexture(index, NULL);
+	g_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 }
