@@ -26,7 +26,7 @@ cMainGame::~cMainGame()
 		SAFE_DELETE(m_p2Player);
 
 		//ui
-		SAFE_DELETE(m_pTotalUIRender);
+		//SAFE_DELETE(m_pTotalUIRender);
 
 		//interact
 		SAFE_DELETE(m_pInteract);
@@ -50,7 +50,7 @@ void cMainGame::Setup()
 		//map
 		m_pMap = new cMap;
 		m_pMap->Setup();
-
+	
 		//character
 		m_p1Player = new Player;
 		m_p1Player->Setup(PLAYER_TYPE::MALE);
@@ -61,16 +61,17 @@ void cMainGame::Setup()
 		m_pInteract = new cInteract;
 		m_pInteract->Setup();
 
+	
 		//ui
-		m_pTotalUIRender = new cTotalUIRender;
-		m_pTotalUIRender->Setup();
+		//m_pTotalUIRender = new cTotalUIRender;
+		//m_pTotalUIRender->Setup();
 
 		//test light
-		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
-			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(0, 1, 1));
+		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f),
+			D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f),	D3DXVECTOR3(0, 1, 1));
 		g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 
-		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
+		//m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
 
 	//g_pSocketmanager->Setup();
@@ -86,15 +87,17 @@ void cMainGame::Update()
 		//map
 
 		//character
-		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Update();//g_pData->m_nPlayerNum);
-		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Update();//g_pData->m_nPlayerNum);
+		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Update(m_pMap);//g_pData->m_nPlayerNum);
+		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Update(m_pMap);//g_pData->m_nPlayerNum);
+
 
 		//ui
-		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
+	//	if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
 
 		//interact
 		if (m_pInteract) m_pInteract->Update();
 	}
+	
 }
 
 void cMainGame::Render()
@@ -106,8 +109,9 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
-
+		//if (m_pMap && g_pUIvarius->GetIsStartedGame()) m_pMap->Render();
+		if (m_pMap) m_pMap->Render();
+		
 		//character
 		if (g_pUIvarius->GetIsStartedGame() && m_p1Player) m_p1Player->Render();
 		if (g_pUIvarius->GetIsStartedGame() && m_p2Player) m_p2Player->Render();
@@ -116,7 +120,7 @@ void cMainGame::Render()
 		if (m_pInteract && g_pUIvarius->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
-		if (m_pTotalUIRender) m_pTotalUIRender->Render();
+		
 	}
 
 	g_pD3DDevice->EndScene();
@@ -128,7 +132,7 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (m_pCamera) m_pCamera->WndProc(hWnd, message, wParam, lParam);
 
 	//스타트씬에서 아무키나 눌러서 시작하면 업데이트, 렌더 안하기 위함. by 영현 17.05.30
-	if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
+	//if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
 
 	switch (message)
 	{
