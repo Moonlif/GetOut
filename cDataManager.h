@@ -30,8 +30,8 @@ public:
 	int m_nPlayerNum;
 	D3DXVECTOR3 m_vPosition1P;
 	D3DXVECTOR3 m_vPosition2P;
-	float m_vRotation1P;
-	float m_vRotation2P;
+	D3DXVECTOR3 m_vRotation1P;
+	D3DXVECTOR3 m_vRotation2P;
 	animationState m_eOtherPlayerAnimState;
 
 public:
