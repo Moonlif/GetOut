@@ -10,7 +10,9 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
+	: dwUpdateTime(0)
 {
+	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 }
 
 cSocketManager::~cSocketManager()
@@ -21,6 +23,17 @@ void cSocketManager::Setup_DATA()
 {
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData_DATA) != 0) /// Init Socket
 		cout << "DATA WSAStartup() error!" << endl;
+
+	hSocket_DATA = socket(PF_INET, SOCK_STREAM, 0);	/// 데이터 소켓 할당
+
+	memset(&ServAdr_DATA, 0, sizeof(ServAdr_DATA));
+	ServAdr_DATA.sin_family = AF_INET;
+	ServAdr_DATA.sin_addr.s_addr = inet_addr(HOSTIP);
+	ServAdr_DATA.sin_port = PORT_DATA;
+
+	if (connect(hSocket_DATA, (SOCKADDR*)&ServAdr_DATA, sizeof(ServAdr_DATA)) == SOCKET_ERROR)
+		cout << "DATA connect() error" << endl;
+
 }
 
 void cSocketManager::Setup_CHAT()
@@ -40,7 +53,6 @@ void cSocketManager::Setup_CHAT()
 	if (connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT)) == SOCKET_ERROR)
 		cout << "CHAT connect() error" << endl;
 
-	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 
 	if (hSocket_CHAT != SOCKET_ERROR)		/// 소켓의 연결이 정상이라면
 	{
@@ -51,6 +63,32 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update_DATA()
 {
+	if (dwUpdateTime + (ONE_SECOND / DATA_INTERVAL) > GetTickCount()) return;
+
+	dwUpdateTime = GetTickCount();
+	ST_PLAYER_POSITION stData;
+	stData.nPlayerIndex = g_pData->m_nPlayerNum;
+	switch (g_pData->m_nPlayerNum)
+	{
+	case 1:
+		stData.fAngle = g_pData->m_vRotation1P;
+		stData.fX = g_pData->m_vPosition1P.x;
+		stData.fY = g_pData->m_vPosition1P.y;
+		stData.fZ = g_pData->m_vPosition1P.z;
+		break;
+	case 2:
+		stData.fAngle = g_pData->m_vRotation2P;
+		stData.fX = g_pData->m_vPosition2P.x;
+		stData.fY = g_pData->m_vPosition2P.y;
+		stData.fZ = g_pData->m_vPosition2P.z;
+		break;
+	}
+	stData.nFROM_CLIENT = 0;
+	stData.nFROM_SERVER = 0;
+	sprintf(stData.szRoomName, "%s", "DEFAULT");
+
+	send(hSocket_DATA, (char*)&stData, sizeof(ST_PLAYER_POSITION), 0);
+	
 }
 
 void cSocketManager::Update()
@@ -113,5 +151,5 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
 
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 {
-
+	return 0;
 }
