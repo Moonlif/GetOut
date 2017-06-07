@@ -48,14 +48,14 @@ void cMainGame::Setup()
 		g_pData->Setup();
 
 		//map
-	//	m_pMap = new cMap;
-	//	m_pMap->Setup();
+		m_pMap = new cMap;
+		m_pMap->Setup();
 
 		//character
-		m_p1Player = new Player;
-		m_p1Player->Setup(PLAYER_TYPE::MALE);
-		m_p2Player = new Player;
-		m_p2Player->Setup(PLAYER_TYPE::FEMALE);
+		//m_p1Player = new Player;
+		//m_p1Player->Setup(PLAYER_TYPE::MALE);
+		//m_p2Player = new Player;
+		//m_p2Player->Setup(PLAYER_TYPE::FEMALE, NULL);
 
 		//interact
 		m_pInteract = new cInteract;
