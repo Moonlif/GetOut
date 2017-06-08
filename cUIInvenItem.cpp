@@ -101,7 +101,7 @@ void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
 			m_ItemCode == StuffCode::STUFF_PAPER3)
 		{
 			D3DXMatrixScaling(&matS, 0.6f, 1.0f, 1.0f);
-			D3DXMatrixTranslation(&matT, 5.0f, 25.0f, 0.0f);
+			D3DXMatrixTranslation(&matT, 2.5f, 25.0f, 0.0f);
 		}
 		else
 		{

@@ -258,6 +258,19 @@ void cInventory::MoveItem()
 
 				return;
 			}
+			///-------------------------------------------------------
+			//			두번째 클릭한 곳이 사용아이템 일 때
+			///--------------------------------------------------------
+			cUIObject* UsingIven = m_pUIBase->FindChildByTag(eUITAG::INVENTORY_USINGITEM);
+			if (PtInRect(&UsingIven->Getrc(), g_ptMouse))
+			{
+				//사용가능한 아이템일 때
+
+				//사용불가능한 아이템일 때
+				return;
+			}
+
+
 
 			//한 곳 좌표 저장
 			SecondTag = CarcCuruntPtInven();
