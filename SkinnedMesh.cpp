@@ -3,6 +3,9 @@
 #include "AllocateHierarchy.h"
 
 SkinnedMesh::SkinnedMesh()
+	: m_fBlendTime(3.0f)
+	, m_fPassedBlendTime(0.0f)
+	, m_isAnimBlend(false)
 {
 }
 SkinnedMesh::~SkinnedMesh()
@@ -71,6 +74,23 @@ void SkinnedMesh::Load(char* path, char* fileName)
 
 void SkinnedMesh::UpdateAndRender()
 {
+	if (m_isAnimBlend)
+	{
+		m_fPassedBlendTime += g_pTimeManager->GetElapsedTime();
+		if (m_fPassedBlendTime >= m_fBlendTime)
+		{
+			m_isAnimBlend = false;
+			animController->SetTrackWeight(0, 1.0f);
+			animController->SetTrackEnable(1, false);
+		}
+		else
+		{
+			float fWeight = m_fPassedBlendTime / m_fBlendTime;
+			animController->SetTrackWeight(0, fWeight);
+			animController->SetTrackWeight(1, 1.0f - fWeight);
+		}
+	}
+
 	if (animController)
 	{
 		animController->AdvanceTime(g_pTimeManager->GetElapsedTime() + aniSpeed, NULL);
@@ -312,6 +332,35 @@ void SkinnedMesh::SetAnimationIndex(int nIndex)
 	animController->GetAnimationSet(nIndex, &animSet);
 	animController->SetTrackAnimationSet(0, animSet);
 	SAFE_RELEASE(animSet);
+}
+
+void SkinnedMesh::SetAnimationIndexBlend(int nIndex)
+{
+	m_isAnimBlend = true;
+	m_fPassedBlendTime = 0.0f;
+
+	UINT unNumAnimations = animController->GetNumAnimationSets();
+	if (nIndex > unNumAnimations) nIndex = nIndex % unNumAnimations;
+
+	LPD3DXANIMATIONSET pPrevAnimSet = NULL;
+	LPD3DXANIMATIONSET pNextAnimSet = NULL;
+
+	D3DXTRACK_DESC stTrackDesc;
+	animController->GetTrackDesc(0, &stTrackDesc);
+
+	animController->GetTrackAnimationSet(0, &pPrevAnimSet);
+	animController->SetTrackAnimationSet(1, pPrevAnimSet);
+	animController->SetTrackDesc(1, &stTrackDesc);
+
+	animController->GetAnimationSet(nIndex, &pNextAnimSet);
+	animController->SetTrackAnimationSet(0, pNextAnimSet);
+	animController->SetTrackPosition(0, 0.0f);
+
+	animController->SetTrackWeight(0, 0.0f);
+	animController->SetTrackWeight(1, 1.0f);
+
+	SAFE_RELEASE(pPrevAnimSet);
+	SAFE_RELEASE(pNextAnimSet);
 }
 
 void SkinnedMesh::Destroy()

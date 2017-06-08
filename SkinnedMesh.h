@@ -12,6 +12,7 @@ public:
 	void Destroy();
 	void UpdateAndRender();
 	void SetAnimationIndex(int index);
+	void SetAnimationIndexBlend(int nIndex);
 
 	void SetRandomTrackPosition(); // 테스트용
 	inline void SetPosition(D3DXVECTOR3 v) { position = v; boundingSphere.center = v; }
@@ -41,6 +42,10 @@ private:
 	float rotationAngle = 0.0f;
 	float aniSpeed = 0.0f;
 
+	float m_fBlendTime;
+	float m_fPassedBlendTime;
+	bool m_isAnimBlend;
+
 private:
 	SkinnedMesh();
 
@@ -48,6 +53,6 @@ private:
 	LPD3DXEFFECT LoadEffect(char* fileName);
 	void Update(Bone* current, D3DXMATRIXA16* parentMatrix);
 	void Render(Bone* bone = nullptr);
-	void SetupBoneMatrixPointers(Bone* bone);
+	void SetupBoneMatrixPointers(Bone* bone);	
 };
 
