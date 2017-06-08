@@ -146,17 +146,13 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	switch (g_pData->m_nPlayerNum)
 	{
 	case 1:
-		SendData.fAngleX = g_pData->m_vRotation1P.x;
-		SendData.fAngleY = g_pData->m_vRotation1P.y;
-		SendData.fAngleZ = g_pData->m_vRotation1P.z;
+		SendData.fAngle = g_pData->m_vRotation1P;
 		SendData.fX = g_pData->m_vPosition1P.x;
 		SendData.fY = g_pData->m_vPosition1P.y;
 		SendData.fZ = g_pData->m_vPosition1P.z;
 		break;
 	case 2:
-		SendData.fAngleX = g_pData->m_vRotation2P.x;
-		SendData.fAngleY = g_pData->m_vRotation2P.y;
-		SendData.fAngleZ = g_pData->m_vRotation2P.z;
+		SendData.fAngle = g_pData->m_vRotation2P;
 		SendData.fX = g_pData->m_vPosition2P.x;
 		SendData.fY = g_pData->m_vPosition2P.y;
 		SendData.fZ = g_pData->m_vPosition2P.z;
