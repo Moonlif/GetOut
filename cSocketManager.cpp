@@ -34,6 +34,10 @@ void cSocketManager::Setup_DATA()
 	if (connect(hSocket_DATA, (SOCKADDR*)&ServAdr_DATA, sizeof(ServAdr_DATA)) == SOCKET_ERROR)
 		cout << "DATA connect() error" << endl;
 
+	if (hSocket_DATA != SOCKET_ERROR)
+	{
+		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
+	}
 }
 
 void cSocketManager::Setup_CHAT()
@@ -89,7 +93,7 @@ void cSocketManager::Update_DATA()
 	}
 	SendData.nFROM_CLIENT = 0;
 	SendData.nFROM_SERVER = 0;
-	sprintf(SendData.szRoomName, "%s", "DEFAULT");
+	std::sprintf(SendData.szRoomName, "%s", "DEFAULT");
 
 	send(hSocket_DATA, (char*)&SendData, sizeof(ST_PLAYER_POSITION), 0);
 
@@ -167,5 +171,53 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
 
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 {
+	SOCKET hSocket = *((SOCKET*)lpParam);
+	while (true)
+	{
+		if (g_pData->GetUpdateTick() + (ONE_SECOND / DATA_INTERVAL) > GetTickCount())
+			continue;
+		g_pData->SetUpdateTick(GetTickCount());
+
+		ST_PLAYER_POSITION SendData;
+		SendData.nPlayerIndex = g_pData->m_nPlayerNum;
+		switch (g_pData->m_nPlayerNum)
+		{
+		case 1:
+			SendData.fAngleX = g_pData->m_vRotation1P.x;
+			SendData.fAngleY = g_pData->m_vRotation1P.y;
+			SendData.fAngleZ = g_pData->m_vRotation1P.z;
+			SendData.fX = g_pData->m_vPosition1P.x;
+			SendData.fY = g_pData->m_vPosition1P.y;
+			SendData.fZ = g_pData->m_vPosition1P.z;
+			break;
+		case 2:
+			SendData.fAngleX = g_pData->m_vRotation2P.x;
+			SendData.fAngleY = g_pData->m_vRotation2P.y;
+			SendData.fAngleZ = g_pData->m_vRotation2P.z;
+			SendData.fX = g_pData->m_vPosition2P.x;
+			SendData.fY = g_pData->m_vPosition2P.y;
+			SendData.fZ = g_pData->m_vPosition2P.z;
+			break;
+		}
+		SendData.nFROM_CLIENT = 0;
+		SendData.nFROM_SERVER = 0;
+		//SendData.szRoomName = string("DEFAULT").c_str();
+		std::sprintf(SendData.szRoomName, "%s", "DEFAULT");
+
+		send(hSocket, (char*)&SendData, sizeof(ST_PLAYER_POSITION), 0);
+
+		ST_PLAYER_POSITION RecvData;
+		recv(hSocket, (char*)&RecvData, sizeof(ST_PLAYER_POSITION), 0);
+
+		if (RecvData.nPlayerIndex == 1)
+		{
+			g_pData->m_vPosition1P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
+		}
+		else if (RecvData.nPlayerIndex == 2)
+		{
+			g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
+		}
+
+	}
 	return 0;
 }

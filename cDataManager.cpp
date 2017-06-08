@@ -7,6 +7,7 @@
 cDataManager::cDataManager()
 	:m_IsInvenOpen(false)
 	, m_IsStartedGame(false)
+	, m_dwUpdateTick(0)
 {
 }
 
@@ -57,7 +58,6 @@ void cDataManager::Setup()
 	//Á¤ÈÆ - ¸Ê Á¤º¸
 	{
 		m_BasementSwitch1 = false;
-
 	}
 }
 
