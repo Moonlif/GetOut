@@ -142,7 +142,7 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	}
 	
 	ST_PLAYER_POSITION SendData;
-	SendData.nPlayerIndex = 1;
+	SendData.nPlayerIndex = g_pData->m_nPlayerNum;
 	switch (g_pData->m_nPlayerNum)
 	{
 	case 1:
