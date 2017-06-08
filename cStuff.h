@@ -23,6 +23,7 @@ private:
 	D3DXVECTOR3 m_vRenderRotation;
 
 	float m_fSwitchValue;
+	float m_fSwitchValueIntensity;
 	D3DXVECTOR3 m_vRePosition;
 	D3DXVECTOR3 m_vReRotation;
 
@@ -32,7 +33,8 @@ private:
 
 public:
 	void Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D3DXVECTOR3 adjust, float radius, float scaling, bool isOnMap);
-	void Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation);
+	void Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation, float switchIntensity = 0.05f);
+	void Reposition(D3DXVECTOR3 deltaPosition);
 	void Update();
 	void Render();
 };

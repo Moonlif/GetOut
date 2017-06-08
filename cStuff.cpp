@@ -15,6 +15,7 @@ cStuff::cStuff()
 	, m_vRenderPosition(0, 0, 0)
 	, m_vRenderRotation(0, 0, 0)
 	, m_fSwitchValue(0.0f)
+	, m_fSwitchValueIntensity(0.0f)
 	, m_bSwitch(false)
 	, m_vRePosition(0, 0, 0)
 	, m_vReRotation(0, 0, 0)
@@ -63,19 +64,29 @@ void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D
 	D3DXCreateSphere(g_pD3DDevice, m_fRadius, 10, 10, &m_pMeshSphere, NULL);
 }
 
-void cStuff::Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation)
+void cStuff::Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation, float switchIntensity)
 {
 	m_bSwitch = true;
 	m_fSwitchValue = 0.0f;
 	m_vRePosition = position;
 	m_vReRotation = rotation;
+
+	m_fSwitchValueIntensity = switchIntensity;
+}
+
+void cStuff::Reposition(D3DXVECTOR3 deltaPosition)
+{
+	m_bSwitch = true;
+	m_fSwitchValue = 0.0f;
+	m_vRePosition = m_vPosition + deltaPosition;
+	m_vReRotation = m_vRotation;
 }
 
 void cStuff::Update()
 {
 	if (m_bSwitch)
 	{
-		m_fSwitchValue += 0.05f;
+		m_fSwitchValue += m_fSwitchValueIntensity;
 		
 		m_vRenderPosition = m_vPosition + (m_vRePosition - m_vPosition) * m_fSwitchValue;
 		m_vRenderRotation = m_vRotation + (m_vReRotation - m_vRotation) * m_fSwitchValue;
@@ -112,7 +123,14 @@ void cStuff::Render()
 	D3DXMatrixRotationX(&matRx, m_vRenderRotation.x);
 	D3DXMatrixRotationY(&matRy, m_vRenderRotation.y);
 	D3DXMatrixRotationZ(&matRz, m_vRenderRotation.z);
-	matR = matRx * matRy * matRz;
+	matR =  matRy * matRz * matRx;
+
+	//코드수정 필요 170608
+	D3DXQUATERNION q;
+	q.x;
+	q.y;
+	q.z;
+
 	D3DXMatrixTranslation(&matT, m_vRenderPosition.x - m_vAdjust.x, m_vRenderPosition.y - m_vAdjust.y, m_vRenderPosition.z - m_vAdjust.z);
 
 	matWorld = matS * matR * matT;

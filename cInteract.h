@@ -1,6 +1,6 @@
 #pragma once
-class cStuff;
-class cTrigger;
+
+#include "cStuff.h"
 
 class cInteract
 {
@@ -10,7 +10,10 @@ public:
 
 private:
 	std::vector<cStuff*> m_vecStuff;
-	std::vector<cTrigger*> m_vecTrigger;
+
+	int m_n1FBlockCount;
+	int m_n2FValve1Count;
+	int m_n2FValve2Count;
 
 public:
 	void Setup();

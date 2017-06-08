@@ -21,7 +21,9 @@ public:
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
-	bool m_BasementSwitch1;
+	bool m_bStuffSwitch[10];
+	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
+	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
 	//Áö»ó - Ã¤ÆÃ
 	list<string> m_listChat_RECV;
