@@ -30,7 +30,7 @@ void cCamera::Setup(D3DXVECTOR3 * pvTarget)
 	GetClientRect(g_hWnd, &rc);
 
 	D3DXMATRIXA16 matProj;
-	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 1.0f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 2.35f, 1000.0f);
 	g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 
 	{
@@ -48,7 +48,15 @@ void cCamera::Update()
 	RECT rc;
 	GetClientRect(g_hWnd, &rc);
 
+	//인벤(I버튼) 누르면 커서 나타나고 카메라 회전x
+	if (g_pData->GetIsInvenOpen())
+	{
+		isMouseView = true;
+	}
+	else isMouseView = false;
+
 	//마우스 커서 관련 테스트
+
 	//if (g_pData->GetIsStartedGame() && !isMouseView) SetCursor(NULL); // 마우스를 나타나지 않게 않다.
 	/*if (g_pKeyManager->isStayKeyDown('I'))
 	{
@@ -64,12 +72,20 @@ void cCamera::Update()
 		}
 	}*/
 
+	if (g_pData->GetIsStartedGame() && !isMouseView)
+	{
+		SetCursor(NULL); // 마우스를 나타나지 않게 않다.
+		ClipCursor(&rc);
+	}
+
 	D3DXMATRIXA16 matR, matRX, matRY;
 	D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
 	D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
 	matR = matRX * matRY;
 
-	m_vEye = D3DXVECTOR3(0, m_fCameraHeight, -m_fCameraDistance);
+	if(g_pData->GetIsStartedGame()) m_vEye = D3DXVECTOR3(0, m_fCameraHeight, m_fCameraDistance);
+	else m_vEye = D3DXVECTOR3(0, m_fCameraHeight, -m_fCameraDistance);
+
 	D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
 
 	if (m_pvTarget)
@@ -116,12 +132,14 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			float fDeltaY = (float)g_ptMouse.y - m_ptPrevMouse.y;
 
 			m_vCamRotAngle.y -= (fDeltaX / 100.f);
-			m_vCamRotAngle.x -= (fDeltaY / 100.f);
+			m_vCamRotAngle.x += (fDeltaY / 100.f);
 
 			if (m_vCamRotAngle.x > D3DX_PI / 3.0f)  m_vCamRotAngle.x = D3DX_PI / 3.0f;
 			if (m_vCamRotAngle.x < -D3DX_PI / 2.0f)  m_vCamRotAngle.x = -D3DX_PI / 2.0f;
 
 			m_ptPrevMouse = g_ptMouse;
+
+			g_pData->m_vRotation1P = m_vCamRotAngle.y;
 		}
 		break;
 	case WM_MOUSEWHEEL:

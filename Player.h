@@ -13,8 +13,9 @@ class Player
 {
 private:
 	D3DXVECTOR3		position;
-	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,		headPosition, headPosition)
+	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,	headPosition, headPosition)
 	D3DXVECTOR3		direction;
+	float			rotY;
 
 	SkinnedMesh* player;
 	SkinnedMesh* player_Weapon;
@@ -28,7 +29,7 @@ public:
 
 	void Setup(PLAYER_TYPE type);
 	void Update(cMap* pMap);
-	void Update(D3DXVECTOR3 pos, D3DXVECTOR3 dir, animationState ani, cMap* pMap);
+	void Update(D3DXVECTOR3 pos, float rot, animationState ani, cMap* pMap);
 	void Render();
 
 	inline D3DXVECTOR3& GetPosition() { return position; }

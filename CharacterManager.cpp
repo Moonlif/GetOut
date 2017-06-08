@@ -29,15 +29,15 @@ void CharacterManager::Update()
 		if (m_p1Player) m_p1Player->Update(NULL);
 		if (m_p2Player) m_p2Player->Update(g_pData->m_vPosition2P,
 			g_pData->m_vRotation2P,
-			g_pData->m_eOtherPlayerAnimState,
+			g_pData->m_eAnimState2P,
 			NULL);
 	}
 	else if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum == 2)
 	{
 		if (m_p2Player) m_p2Player->Update(NULL);
-		if (m_p1Player) m_p1Player->Update(g_pData->m_vPosition1P,
-			g_pData->m_vRotation1P,
-			g_pData->m_eOtherPlayerAnimState,
+		if (m_p1Player) m_p1Player->Update(g_pData->m_vPosition2P,
+			g_pData->m_vRotation2P,
+			g_pData->m_eAnimState2P,
 			NULL);
 	}
 }
