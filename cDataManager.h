@@ -27,6 +27,7 @@ public:
 
 	//지상 - 채팅
 	list<string> m_listChat_RECV;
+	SYNTHESIZE(DWORD, m_dwUpdateTick, UpdateTick);
 
 	//균영
 	int m_nPlayerNum;
