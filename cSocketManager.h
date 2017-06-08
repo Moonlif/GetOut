@@ -13,11 +13,11 @@
 #define ROOM_NAME_SIZE 50
 #define BUF_SIZE 100
 #define NAME_SIZE 20
-#define HOSTIP "127.0.0.1"
+#define HOSTIP "122.45.137.187"
 #define PORT_DATA 1234
 #define PORT_CHAT 9090
 #define ONE_SECOND 1000
-#define DATA_INTERVAL 60
+#define DATA_INTERVAL 10
 
 class cSocketManager
 {

@@ -68,15 +68,15 @@ void cMainGame::Setup()
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
 
-	//g_pSocketmanager->Setup();
-	//g_pSocketmanager->Setup_Chat();
+	g_pSocketmanager->Setup_CHAT();
+	g_pSocketmanager->Setup_DATA();
 }
 
 void cMainGame::Update()
 {
 
 	g_pTimeManager->Update();
-
+	g_pSocketmanager->Update_DATA();
 
 	if (m_pCamera) m_pCamera->Update();
 	{
