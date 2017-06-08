@@ -56,21 +56,21 @@ void cUI_globalVarius::SetItemInfo()
 	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_KEY5, itemInfo));
 
 	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_COMBINE;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Texture/maps/academy.png", &stImageInfo);
+	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/academy.png", &stImageInfo);
 	width = stImageInfo.Width;
 	height = stImageInfo.Height;
 	itemInfo.rc = { 0, 0, width, height };
 	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_PAPER1, itemInfo));
 
 	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_COMBINE;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Texture/maps/game.png", &stImageInfo);
+	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/game.png", &stImageInfo);
 	width = stImageInfo.Width;
 	height = stImageInfo.Height;
 	itemInfo.rc = { 0, 0, width, height };
 	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_PAPER2, itemInfo));
 
 	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_COMBINE;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Texture/maps/seoul.png", &stImageInfo);
+	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/seoul.png", &stImageInfo);
 	width = stImageInfo.Width;
 	height = stImageInfo.Height;
 	itemInfo.rc = { 0, 0, width, height };

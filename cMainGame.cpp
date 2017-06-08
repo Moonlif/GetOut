@@ -46,8 +46,8 @@ void cMainGame::Setup()
 		g_pData->Setup();
 
 		//map
-		m_pMap = new cMap;
-		m_pMap->Setup();
+		//m_pMap = new cMap;
+		//m_pMap->Setup();
 
 		//character
 		m_pCharacter = new CharacterManager;
@@ -83,16 +83,16 @@ void cMainGame::Update()
 		//map
 
 		//character
-		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update();
-		static bool start = false;
-		if (g_pData->GetIsStartedGame() && start == false)
-		{
-			start = true;
-			m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
-		}
+		//if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update();
+		//static bool start = false;
+		//if (g_pData->GetIsStartedGame() && start == false)
+		//{
+		//	start = true;
+		//	m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
+		//}
 
-		//interact
-		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
+		////interact
+		//if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
@@ -108,13 +108,13 @@ void cMainGame::Render()
 	//코드 추가
 	{
 		//map
-		if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
+		//if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
 
 		//character
-		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
+		//if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
 
 		//interact stuff
-		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
+		//if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
