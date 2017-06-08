@@ -50,9 +50,9 @@ void cTotalUIRender::Update(cCamera* camera)
 		int nRnd = RND->getInt(5);
 		if (nRnd == 1)	m_pInventory->SetItem(StuffCode::STUFF_PAPER1);
 		else if (nRnd == 2)	m_pInventory->SetItem(StuffCode::STUFF_PAPER2);
-		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_KEY1);
-		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_KEY2);
-		else 	m_pInventory->SetItem(StuffCode::STUFF_KEY4);
+		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_PAPER3);
+		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_PAPER2);
+		else 	m_pInventory->SetItem(StuffCode::STUFF_PAPER1);
 	}
 }
 

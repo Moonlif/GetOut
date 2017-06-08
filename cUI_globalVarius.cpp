@@ -2,7 +2,7 @@
 #include "cUI_globalVarius.h"
 
 cUI_globalVarius::cUI_globalVarius()
-	:m_IsBagFull(false)
+	:m_CurClickItemType(eITEMTYPE::ITEMTYPE_NONE)
 {
 	SetItemInfo();
 }
