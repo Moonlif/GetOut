@@ -53,6 +53,7 @@ private:
 
 	//화장실 아래
 	cRectMake* m_pFFDown_1;
+	cRectMake* m_pFFBathRoomPrint;
 	//화장실 오른쪽벽
 	cRectMake* m_pFFBathRoomR1;
 	cRectMake* m_pFFBathRoomR1_1;
@@ -74,6 +75,9 @@ private:
 	cRectMake* m_pFFRoomR2_1;
 	cRectMake* m_pFFRoomR3;
 	cRectMake* m_pFFRoomR3_1;
+	cRectMake* m_pFFRoomPrint1;
+	cRectMake* m_pFFRoomPrint2;
+
 	//계단
 	cRectMake* m_pFFStairs1;
 	cRectMake* m_pFFStairs1_1;
@@ -87,6 +91,8 @@ private:
 	cRectMake* m_pSFLeft;
 	cRectMake* m_pSFDown;
 	cRectMake* m_pSFRight;
+	cRectMake* m_pSFLeftPrint;
+	cRectMake* m_pSFRightPrint;
 
 	cRectMake* m_pSFLRoom1;
 	cRectMake* m_pSFLRoom1_1;

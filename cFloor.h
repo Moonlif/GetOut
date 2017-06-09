@@ -17,6 +17,8 @@ private:
 	************************/
 	cRectMake* m_pFFRoom;
 	cRectMake* m_pFFBathRoom;
+	cRectMake* m_pBloodPrint;
+
 	cRectMake* m_pFFLivingRoom;
 	cRectMake* m_pFFLivingRoom2;
 	cRectMake* m_pFFPassage;

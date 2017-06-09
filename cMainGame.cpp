@@ -8,7 +8,7 @@ cMainGame::cMainGame()
 	, m_pTotalUIRender(NULL)
 	, m_pInteract(NULL)
 
-{	 
+{
 }
 
 
@@ -63,7 +63,11 @@ void cMainGame::Setup()
 
 		//test light
 		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
+<<<<<<< HEAD
 			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(-1, -1, -1));
+=======
+			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXVECTOR3(0, 1, 1));
+>>>>>>> 18a7b461e0b69ba42c3dfcf93e892705631afd22
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
@@ -107,7 +111,7 @@ void cMainGame::Render()
 	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(200, 200, 200), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 
-	
+
 	//코드 추가
 	{
 		//map

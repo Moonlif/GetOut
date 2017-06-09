@@ -10,6 +10,7 @@ cFloor::cFloor()
 
 	, m_pFFRoom(NULL)
 	, m_pFFBathRoom(NULL)
+	, m_pBloodPrint(NULL)
 	, m_pFFLivingRoom(NULL)
 	, m_pFFLivingRoom2(NULL)
 	, m_pFFPassage(NULL)
@@ -31,6 +32,7 @@ cFloor::~cFloor()
 
 	SAFE_DELETE(m_pFFRoom);
 	SAFE_DELETE(m_pFFBathRoom);
+	SAFE_DELETE(m_pBloodPrint);
 	SAFE_DELETE(m_pFFLivingRoom);
 	SAFE_DELETE(m_pFFLivingRoom2);
 	SAFE_DELETE(m_pFFPassage);
@@ -47,6 +49,7 @@ void cFloor::Setup()
 		지하
 	**********************/
 	//스타팅 바닥
+	
 	m_pB1FStartRoom = new cRectMake;
 	m_pB1FStartRoom->Setup(D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 0)
 		, D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 4)
@@ -61,7 +64,7 @@ void cFloor::Setup()
 		, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 0)
 		, "Texture/maps/blood_stain_small.dds");
 
-
+		
 	m_pB1Water = new cRectMake;
 	m_pB1Water->Setup(D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 0)
 		, D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 4)
@@ -105,6 +108,13 @@ void cFloor::Setup()
 		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
 		, "Texture/maps/bathRoom.jpg");
+	//화장실 핏자국
+	m_pBloodPrint = new cRectMake;
+	m_pBloodPrint->Setup(D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 4)
+		, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.5)
+		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5)
+		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4)
+		, "Texture/maps/blood_stain_small.dds");
 	//거실1
 	m_pFFLivingRoom = new cRectMake;
 	m_pFFLivingRoom->Setup(D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 3)
@@ -173,7 +183,7 @@ void cFloor::Render()
 	m_pB1FStartRoom->Render();
 	m_pB1FBlood->Render();
 	m_pB1FRoom->Render();
-//	m_pB1Water->Render();
+	m_pB1Water->Render();
 	for (size_t i = 0; i < 10; i++) {
 		m_pB1Stair[i]->Render();
 	}
@@ -184,6 +194,7 @@ void cFloor::Render()
 	m_pFFPassage->Render();
 	m_pFFPassage2->Render();
 	m_pFFBathRoom->Render();
+	m_pBloodPrint->Render();
 	for (size_t i = 0; i < 10; i++) {
 		m_pB1Stair2[i]->Render();
 	}
