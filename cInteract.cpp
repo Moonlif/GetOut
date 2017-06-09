@@ -4,6 +4,8 @@
 
 cInteract::cInteract()
 	: m_n1FBlockCount(0)
+	, m_bValve1(false)
+	, m_bValve2(false)
 	, m_n2FValve1Count(0)
 	, m_n2FValve2Count(0)
 {
@@ -25,7 +27,7 @@ void cInteract::Setup()
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
-	stuff->Setup(STUFF_BOX1, D3DXVECTOR3(-9.3f, 3.5f, 18.5f), D3DXVECTOR3(D3DX_PI/2.0f,0,0), D3DXVECTOR3(0, 0, 1.7f), 3.5f, 0.2f, true);
+	stuff->Setup(STUFF_BOX1, D3DXVECTOR3(-7.1f, 3.5f, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f , D3DX_PI / 2.0f), D3DXVECTOR3(0, 0, 1.7f), 3.5f, 0.2f, true);
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
@@ -57,7 +59,7 @@ void cInteract::Setup()
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD1, D3DXVECTOR3(-6, 15.8f, 22.5f), D3DXVECTOR3(D3DX_PI/2.0f, -0.3f, D3DX_PI/2.0f), D3DXVECTOR3(0, 0, 0), 0.1f, 0.08f, true);
+	stuff->Setup(STUFF_WOOD1, D3DXVECTOR3(-6, 15.8f, 22.5f), D3DXVECTOR3(D3DX_PI/1.6f, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.08f, true);
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
@@ -65,11 +67,11 @@ void cInteract::Setup()
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD3, D3DXVECTOR3(3, 12.3f, 16.5f), D3DXVECTOR3(0.2f, 1.3f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
+	stuff->Setup(STUFF_WOOD3, D3DXVECTOR3(3, 12.3f, 16.5f), D3DXVECTOR3(0.0f, 1.3f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD3, D3DXVECTOR3(0, 12.3f, 14.5f), D3DXVECTOR3(0.2f, 2.3f, 0.05f), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
+	stuff->Setup(STUFF_WOOD3, D3DXVECTOR3(1, 12.5f, 13.5f), D3DXVECTOR3(-0.1f, 2.3f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
 	m_vecStuff.push_back(stuff);
 
 	stuff = new cStuff;
@@ -94,7 +96,7 @@ void cInteract::Update()
 {
 	//맵정보에 따른 변화
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] && m_vecStuff[1]->GetSwitch() == false)
-		m_vecStuff[1]->Reposition(D3DXVECTOR3(-3.3f, 2.3f, 18.5f), D3DXVECTOR3(D3DX_PI / 2.0f, 0, -D3DX_PI / 2.0f));
+		m_vecStuff[1]->Reposition(D3DXVECTOR3(-3.0f, 0, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0));
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] && m_vecStuff[4]->GetSwitch() == false)
 		m_vecStuff[4]->Reposition(D3DXVECTOR3(9, 4, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, -D3DX_PI / 2.0f));
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] == false && m_vecStuff[4]->GetSwitch() == false)
@@ -108,9 +110,16 @@ void cInteract::Update()
 	if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] && m_vecStuff[0]->GetSwitch() == false)
 		m_vecStuff[0]->Reposition(D3DXVECTOR3(-28, 12.15f, 3.8f), D3DXVECTOR3(0, D3DX_PI/2.0f, D3DX_PI / 2.0f), 0.1f);
 	
-	m_vecStuff[14]->Reposition(m_vecStuff[14]->GetPosition(), m_vecStuff[14]->GetRotation() + D3DXVECTOR3(m_n2FValve1Count * 5, 0, 0));
-	m_vecStuff[15]->Reposition(m_vecStuff[15]->GetPosition(), m_vecStuff[15]->GetRotation() + D3DXVECTOR3(m_n2FValve2Count * 5, 0, 0));
-
+	if (m_bValve1)
+	{
+		m_vecStuff[14]->Reposition(m_vecStuff[14]->GetPosition(), D3DXVECTOR3((float)m_n2FValve1Count * D3DX_PI/2.0f, D3DX_PI / 2.0f, 0));
+		m_bValve1 = false;
+	}
+	if (m_bValve2)
+	{
+		m_vecStuff[15]->Reposition(m_vecStuff[15]->GetPosition(), D3DXVECTOR3((float)m_n2FValve2Count * D3DX_PI/2.0f, D3DX_PI / 2.0f, 0));
+		m_bValve2 = false;
+	}
 	//캐릭터 행동에 따른 변화
 	cRay Ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
 	int keyState = 0;
@@ -154,24 +163,26 @@ void cInteract::Update()
 					if (m_vecStuff[6]->GetSwitch() == true) g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
 					break;
 				case STUFF_VALVE1:
+					m_bValve1 = true;
 					if (lButton) m_n2FValve1Count--;
 					else m_n2FValve1Count++;
-					if (m_n2FValve1Count > 10)
+					if (m_n2FValve1Count > 8)
 					{
-						m_n2FValve1Count = 10;
+						m_n2FValve1Count = 8;
 						g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
 					}
-					else if (m_n2FValve1Count < -10) m_n2FValve1Count = -10;
+					else if (m_n2FValve1Count < -8) m_n2FValve1Count = -8;
 					break;
 				case STUFF_VALVE2:
+					m_bValve2 = true;
 					if (lButton) m_n2FValve2Count--;
 					else m_n2FValve2Count++;
-					if (m_n2FValve2Count < -10)
+					if (m_n2FValve2Count < -8)
 					{
-						m_n2FValve2Count = -10;
+						m_n2FValve2Count = -8;
 						g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
 					}
-					else if (m_n2FValve2Count > 10) m_n2FValve2Count = 10;
+					else if (m_n2FValve2Count > 8) m_n2FValve2Count = 8;
 					break;
 				}
 		

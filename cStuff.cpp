@@ -125,11 +125,12 @@ void cStuff::Render()
 	D3DXMatrixRotationZ(&matRz, m_vRenderRotation.z);
 	matR =  matRy * matRz * matRx;
 
-	//코드수정 필요 170608
-	D3DXQUATERNION q;
-	q.x;
-	q.y;
-	q.z;
+	//D3DXQUATERNION q;
+	//q.x = m_vRenderRotation.x;
+	//q.y = m_vRenderRotation.y;
+	//q.z = m_vRenderRotation.z;
+	//q.w = 1;
+	//D3DXMatrixRotationQuaternion(&matR, &q);
 
 	D3DXMatrixTranslation(&matT, m_vRenderPosition.x - m_vAdjust.x, m_vRenderPosition.y - m_vAdjust.y, m_vRenderPosition.z - m_vAdjust.z);
 
