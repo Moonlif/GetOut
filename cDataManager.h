@@ -30,7 +30,8 @@ public:
 	SYNTHESIZE(DWORD, m_dwUpdateTick, UpdateTick);
 
 	//±Õ¿µ
-	int m_nPlayerNum;
+	int m_nPlayerNum1P;
+	int m_nPlayerNum2P;
 	D3DXVECTOR3 m_vPosition1P;
 	D3DXVECTOR3 m_vPosition2P;
 	float m_vRotation1P;

@@ -15,8 +15,6 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_pPlayer2(NULL)
 	, m_isDeleteBackground(false)
 	, m_vRetargetPos(0,0,0)
-	, m_Player1_Number(0)
-	, m_Player2_Number(0)
 	, m_WhatIsYourNumber(0)
 {
 }
@@ -111,8 +109,22 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		///-------------------------------------------------------------
 		//							1p, 2p정하기
 		///-------------------------------------------------------------
-		if (m_Player2_Number == 0) m_WhatIsYourNumber = 1;
-		else m_WhatIsYourNumber = 2;
+		static bool isSelect = false;
+
+		if (!isSelect)
+		{
+			//상대방이 아직 클릭하지 않았다면 1P
+			if (g_pData->m_nPlayerNum2P == 0)
+			{
+				m_WhatIsYourNumber = 1;
+			}
+			//클릭했으면 2P
+			else
+			{
+				m_WhatIsYourNumber = 2;
+			}
+			isSelect = true;
+		}
 
 		///-------------------------------------------------------------
 		//						1번 플레이어 선택시
@@ -131,8 +143,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			pExplain->SetText("남자 캐릭터 \n\n\n\n장점:\n힘이 쌔서 무거운 물체를 옮길 수 있다. \n\n\n단점:\n몸집이 커서 좁은 곳은 들어가지 못한다.");
 
 			//데이터 메니져에 선택한 데이터 보내주기
-			m_Player1_Number = 1;
-			g_pData->m_nPlayerNum = 1;
+			g_pData->m_nPlayerNum1P = 1;
+			
 
 			//1p일 때
 			if (m_WhatIsYourNumber == 1)
@@ -163,8 +175,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			pExplain->SetText("여자 캐릭터 \n\n\n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
 
 			//데이터 메니져에 선택한 데이터 보내주기
-			m_Player1_Number = 2;
-			g_pData->m_nPlayerNum = 2;
+			g_pData->m_nPlayerNum1P = 2;
+		
 
 			//1p일 때
 			if (m_WhatIsYourNumber == 1)
@@ -185,10 +197,10 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
 		{
 			//플레이어가 선택되지 않았으면 리턴
-			if (m_Player1_Number == 0) return;
+			if (m_WhatIsYourNumber == 0) return;
 
 			//같은 플레이어 선택중이라면 게임시작 안됨
-			if (m_Player1_Number == m_Player2_Number) return;
+			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P) return;
 
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
@@ -232,7 +244,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		Time++;
 		
 		//카메라 흔들기
-		if (Time % CAMERASHAKESPEED == 0) m_vRetargetPos = RandomCircle(SavePt, CAMERASHAKERANGE);
+		//if (Time % CAMERASHAKESPEED == 0) m_vRetargetPos = RandomCircle(SavePt, CAMERASHAKERANGE);
 
 		//카메라 거리 좁히기
 		static float dis = 5.0f;

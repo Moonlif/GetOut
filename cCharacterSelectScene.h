@@ -35,8 +35,6 @@ private:
 
 	//어떤 캐릭 선택했나?
 	int				m_WhatIsYourNumber;					//자신이 몇 플레이어인지
-	SYNTHESIZE(int, m_Player1_Number, Player1_Number); //1번 남자, 2번 여자
-	SYNTHESIZE(int, m_Player2_Number, Player2_Number); 
 public:
 	void Setup();
 	void Update(cCamera* camera);

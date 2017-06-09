@@ -40,6 +40,9 @@ void cTotalUIRender::Update(cCamera* camera)
 	
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
+		//게임이 시작되야 인벤이 켜짐
+		//if (!g_pData->GetIsStartedGame()) return;
+
 		if(g_pData->GetIsInvenOpen()) g_pData->SetIsInvenOpen(false);
 		else g_pData->SetIsInvenOpen(true);
 	}
