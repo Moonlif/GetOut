@@ -5,15 +5,16 @@
 #include "cSurface.h"
 #include "cObjLoader.h"
 #include "cMapObject.h"
+#include "cObjectSurface.h"
 
 class cMap
 {
 private:
-	cFloor*		m_pFloor;
-	cSurface*	m_pSurface;
-	cWall*		m_pWall;
-	cCeiling*	m_pCeiling;
-	
+	cFloor*			m_pFloor;
+	cSurface*		m_pSurface;
+	cWall*			m_pWall;
+	cCeiling*		m_pCeiling;
+	cObjectSurface* m_pOjbSurface;
 
 	cMapObject* m_pObjShackles;
 	cMapObject* m_pObjPrisonbar;
@@ -27,7 +28,10 @@ private:
 
 	cMapObject* m_pObjDesk;
 	cMapObject* m_pObjTable;
-	
+	cMapObject* m_pObjSofa;
+	cMapObject* m_pObjChair;
+	cMapObject* m_pObjBarrel;
+	cMapObject* m_pDrawers;
 public:
 	cMap();
 	~cMap();
@@ -36,5 +40,6 @@ public:
 	void Render();
 	void RenderObject();
 	cSurface* getSurface() { return m_pSurface; };
+	cObjectSurface* getObjSurface(){ return m_pOjbSurface; };
 };
 

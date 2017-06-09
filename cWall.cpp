@@ -24,6 +24,7 @@ cWall::cWall()
 	, m_pFFLeft_1(NULL)
 	, m_pFFDown(NULL)
 	, m_pFFDown_1(NULL)
+	, m_pFFBathRoomPrint(NULL)
 	, m_pFFBathRoomR1(NULL)
 	, m_pFFBathRoomR1_1(NULL)
 	, m_pFFBathRoomR2(NULL)
@@ -34,6 +35,9 @@ cWall::cWall()
 	, m_pFFBathRoomU1_1(NULL)
 	, m_pFFBathRoomU2(NULL)
 	, m_pFFBathRoomU2_1(NULL)
+	
+	, m_pFFRoomPrint1(NULL)
+	, m_pFFRoomPrint2(NULL)
 	, m_pFFRoomR1(NULL)
 	, m_pFFRoomR1_1(NULL)
 	, m_pFFRoomR2(NULL)
@@ -53,6 +57,9 @@ cWall::cWall()
 	, m_pSFLeft(NULL)
 	, m_pSFDown(NULL)
 	, m_pSFRight(NULL)
+	, m_pSFLeftPrint(NULL)
+	, m_pSFRightPrint(NULL)
+
 	, m_pSFLRoom1(NULL)
 	, m_pSFLRoom1_1(NULL)
 	, m_pSFLRoom2(NULL)
@@ -99,6 +106,7 @@ cWall::~cWall()
 		SAFE_DELETE(m_pFFDown);
 		SAFE_DELETE(m_pFFDown_1);
 	
+		SAFE_DELETE(m_pFFBathRoomPrint);
 		SAFE_DELETE(m_pFFBathRoomR1);
 		SAFE_DELETE(m_pFFBathRoomR1_1);
 		SAFE_DELETE(m_pFFBathRoomR2);
@@ -110,6 +118,8 @@ cWall::~cWall()
 		SAFE_DELETE(m_pFFBathRoomU2);
 		SAFE_DELETE(m_pFFBathRoomU2_1);
 
+		SAFE_DELETE(m_pFFRoomPrint1);
+		SAFE_DELETE(m_pFFRoomPrint2);
 		SAFE_DELETE(m_pFFRoomR1);
 		SAFE_DELETE(m_pFFRoomR1_1);
 		SAFE_DELETE(m_pFFRoomR2);
@@ -133,6 +143,8 @@ cWall::~cWall()
 		SAFE_DELETE(m_pSFLeft);
 		SAFE_DELETE(m_pSFDown);
 		SAFE_DELETE(m_pSFRight);
+		SAFE_DELETE(m_pSFLeftPrint);
+		SAFE_DELETE(m_pSFRightPrint);
 
 		SAFE_DELETE(m_pSFLRoom1);
 		SAFE_DELETE(m_pSFLRoom1_1);
@@ -345,6 +357,12 @@ void cWall::SetupFF()
 			, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 4)
 			, "Texture/maps/bathRoom.jpg");
 
+		m_pFFBathRoomPrint = new cRectMake;
+		m_pFFBathRoomPrint->Setup(D3DXVECTOR3(CENTERX + 5, FF + 0.5, CENTERZ - 4)
+			, D3DXVECTOR3(CENTERX + 5, SF - 0.5, CENTERZ - 4)
+			, D3DXVECTOR3(CENTERX + 4, SF - 0.3, CENTERZ - 4)
+			, D3DXVECTOR3(CENTERX + 4, FF + 0.7, CENTERZ - 4)
+			, "Texture/maps/maze_writing05.dds");
 		//오른쪽 1
 		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4);
 		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 4);
@@ -389,10 +407,10 @@ void cWall::SetupFF()
 		m_pFFBathRoomU1_1->Setup(v3, v2, v1, v, "Texture/maps/images.jpg");
 
 		//위쪽 2
-		v = D3DXVECTOR3(CENTERX + 5.2, FF + 0.3, CENTERZ - 0.5);
+		v = D3DXVECTOR3(CENTERX + 5.2, SF - 0.7, CENTERZ - 0.5);
 		v1 = D3DXVECTOR3(CENTERX + 5.2, SF, CENTERZ - 0.5);
 		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5);
-		v3 = D3DXVECTOR3(CENTERX + 6, FF + 0.3, CENTERZ - 0.5);
+		v3 = D3DXVECTOR3(CENTERX + 6, SF - 0.7, CENTERZ - 0.5);
 		m_pFFBathRoomU2 = new cRectMake;
 		m_pFFBathRoomU2->Setup(v, v1, v2, v3, "Texture/maps/bathRoom.jpg");
 		m_pFFBathRoomU2_1 = new cRectMake;
@@ -410,6 +428,19 @@ void cWall::SetupFF()
 			, D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 4)
 			, "Texture/maps/images.jpg");
 
+		m_pFFRoomPrint1 = new cRectMake;
+		m_pFFRoomPrint1->Setup(D3DXVECTOR3(CENTERX + 3.5, FF, CENTERZ + 4)
+			, D3DXVECTOR3(CENTERX + 3.5, SF, CENTERZ + 4)
+			, D3DXVECTOR3(CENTERX + 4.2, SF, CENTERZ + 4)
+			, D3DXVECTOR3(CENTERX + 4.2, FF, CENTERZ + 4)
+			, "Texture/maps/sketch_torture_device_saw.dds");
+
+		m_pFFRoomPrint2 = new cRectMake;
+		m_pFFRoomPrint2->Setup(D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 4)
+			, D3DXVECTOR3(CENTERX + 4.3, SF, CENTERZ + 4)
+			, D3DXVECTOR3(CENTERX + 5, SF, CENTERZ + 4)
+			, D3DXVECTOR3(CENTERX + 5, FF, CENTERZ + 4)
+			, "Texture/maps/sketch_torture_device_strappado.dds");
 		//방 왼쪽 벽
 		m_pFFLeft = new cRectMake;
 		m_pFFLeft->Setup(D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.4)
@@ -501,6 +532,13 @@ void cWall::SetupSF()
 		, D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3)
 		, "Texture/maps/images.jpg");
 
+	m_pSFLeftPrint = new cRectMake;
+	m_pSFLeftPrint->Setup(D3DXVECTOR3(CENTERX + 6, TOP - 1, CENTERZ - 2.2)
+		, D3DXVECTOR3(CENTERX + 6, TOP, CENTERZ - 2.2)
+		, D3DXVECTOR3(CENTERX + 6, TOP, CENTERZ + -1)
+		, D3DXVECTOR3(CENTERX + 6, TOP - 1, CENTERZ - 1)
+		, "Texture/maps/chalk_hieroglyphs.dds");
+
 	//오른쪽
 	m_pSFRight = new cRectMake;
 	m_pSFRight->Setup(D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 3)
@@ -530,6 +568,13 @@ void cWall::SetupSF()
 	m_pSFLRoom1->Setup(v, v1, v2, v3, "Texture/maps/images.jpg");
 	m_pSFLRoom1_1 = new cRectMake;
 	m_pSFLRoom1_1->Setup(v3, v2, v1, v, "Texture/maps/images.jpg");
+
+	m_pSFRightPrint = new cRectMake;
+	m_pSFRightPrint->Setup(D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ - 2.2)
+		, D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ - 2.2)
+		, D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1)
+		, D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1)
+		, "Texture/maps/chalk_alchemy_circles.dds");
 
 	//왼쪽방 두번째 벽
 	v = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1.5);
@@ -641,6 +686,7 @@ void cWall::RenderFF()
 	m_pFFBathRoomU1_1->Render();
 	m_pFFBathRoomU2->Render();
 	m_pFFBathRoomU2_1->Render();
+	m_pFFBathRoomPrint->Render();
 	
 	//방
 	m_pFFRoomR1->Render();
@@ -649,6 +695,8 @@ void cWall::RenderFF()
 	m_pFFRoomR2_1->Render();
 	m_pFFRoomR3->Render();
 	m_pFFRoomR3_1->Render();
+	m_pFFRoomPrint1->Render();
+	m_pFFRoomPrint2->Render();
 
 	m_pFFStairs1->Render();
 	m_pFFStairs1_1->Render();
@@ -664,7 +712,7 @@ void cWall::RenderSF()
 	m_pSFLeft->Render();
 	m_pSFRight->Render();
 	m_pSFDown->Render();
-
+	m_pSFLeftPrint->Render();
 
 	m_pSFLRoom1->Render();
 	m_pSFLRoom1_1->Render();
@@ -679,5 +727,7 @@ void cWall::RenderSF()
 	m_pSFRRoom2_1->Render();
 	m_pSFRRoom3->Render();
 	m_pSFRRoom3_1->Render();
+
+	m_pSFRightPrint->Render();
 
 }

@@ -1,12 +1,19 @@
 #pragma once
 #include "cRectMake.h"
 
-
+struct PassSurface
+{
+	D3DXVECTOR3 p;
+	int nindex;
+	bool isOpen;
+};
 
 class cSurface
 {
 private:
 	SYNTHESIZE(std::vector<D3DXVECTOR3>, vecVertex, VecVertex);
+	SYNTHESIZE(std::vector<PassSurface>, passVertex, PassVertex);
+private:
 	//지하
 	cRectMake* m_pB1StartRoom;
 	cRectMake* m_pB1Prison;
@@ -25,8 +32,20 @@ private:
 	cRectMake* m_pSFPassage;
 	cRectMake* m_pSFRoom;
 	cRectMake* m_pSFRoom2;
+	
 
-	std::vector<ST_PNT_VERTEX> m_vecBottomVertex;
+
+	//통로
+	cRectMake* m_pB1PrisonDoor;
+	cRectMake* m_pB1Door;
+	cRectMake* m_pBathRoomWall;
+	cRectMake* m_pBathRoomDoor;
+	cRectMake* m_pFFRoomDoor;
+	cRectMake* m_pSFRoomDoor1;
+	cRectMake* m_pSFRoomDoor2;
+
+
+
 	LPDIRECT3DTEXTURE9		   m_pTexture;
 	D3DMATERIAL9			   m_stMtl;
 public:
@@ -34,6 +53,6 @@ public:
 	~cSurface();
 	void Setup();
 	void Render();
-	
+	void PassSetup();
 };
 
