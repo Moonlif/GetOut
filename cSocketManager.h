@@ -7,21 +7,21 @@
 #include <Windows.h>
 #include <process.h>
 #include <WinSock2.h>
-
+#include <time.h>
 #define g_pSocketmanager cSocketManager::GetInstance()
 
-#define ROOM_NAME_SIZE 50
 #define BUF_SIZE 100
-#define NAME_SIZE 20
 #define HOSTIP "127.0.0.1"
-#define PORT_DATA 1234
-#define PORT_CHAT 9090
-#define ONE_SECOND 1000
-#define DATA_INTERVAL 10
 #define IN_PLAYER1 1 << 0
 #define IN_PLAYER2 1 << 1
+#define NAME_SIZE 20
+#define ONE_SECOND 1000
 #define OUT_PLAYER1 1 << 4
 #define OUT_PLAYER2 1 << 5
+#define PORT_DATA 1234
+#define PORT_CHAT 9090
+#define ROOM_NAME_SIZE 50
+#define SEND_PER_SECOND 10
 
 
 class cSocketManager
@@ -38,12 +38,12 @@ private:
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
 
-	DWORD	dwUpdateTime;
+	clock_t stStart, stCurrent, stUpdateTime;
 public:
 	void Setup_DATA();
 	void Setup_CHAT();
 	void Update_DATA();
-	void Update();
+	void Calc_Position();
 	void Destroy();
 };
 

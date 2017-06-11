@@ -10,7 +10,7 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
-	: dwUpdateTime(0)
+	: stUpdateTime(clock())
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 }
@@ -63,13 +63,13 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update_DATA()
 {
-	if (g_pData->GetUpdateTick() + (ONE_SECOND / DATA_INTERVAL) > GetTickCount()) return;
+	if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
-	g_pData->SetUpdateTick(GetTickCount());
+	stUpdateTime = clock();
 	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
-void cSocketManager::Update()
+void cSocketManager::Calc_Position()
 {
 }
 
