@@ -13,6 +13,12 @@ cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
+	prevPosition.x = 0;
+	prevPosition.y = 0;
+	prevPosition.z = 0;
+	nextPosition.x = 0;
+	nextPosition.y = 0;
+	nextPosition.z = 0;
 }
 
 cSocketManager::~cSocketManager()

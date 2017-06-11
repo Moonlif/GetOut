@@ -21,7 +21,7 @@
 #define PORT_DATA 1234
 #define PORT_CHAT 9090
 #define ROOM_NAME_SIZE 50
-#define SEND_PER_SECOND 10
+#define SEND_PER_SECOND 1
 
 
 class cSocketManager
@@ -30,7 +30,6 @@ private:
 	SINGLETONE(cSocketManager);
 
 	WSADATA wsaData_CHAT, wsaData_DATA;
-	// >> : For Chat
 	SOCKET hSocket_CHAT, hSocket_DATA;
 	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA;
 	HANDLE hSndThread, hRcvThread, hDataThread;
@@ -38,6 +37,7 @@ private:
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
 
+	D3DXVECTOR3 prevPosition, nextPosition;
 	clock_t stStart, stCurrent, stUpdateTime;
 public:
 	void Setup_DATA();
