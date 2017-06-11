@@ -13,11 +13,16 @@
 #define ROOM_NAME_SIZE 50
 #define BUF_SIZE 100
 #define NAME_SIZE 20
-#define HOSTIP "122.45.137.187"
+#define HOSTIP "127.0.0.1"
 #define PORT_DATA 1234
 #define PORT_CHAT 9090
 #define ONE_SECOND 1000
 #define DATA_INTERVAL 10
+#define IN_PLAYER1 1 << 0
+#define IN_PLAYER2 1 << 1
+#define OUT_PLAYER1 1 << 4
+#define OUT_PLAYER2 1 << 5
+
 
 class cSocketManager
 {
@@ -52,7 +57,7 @@ struct ST_PLAYER_POSITION
 	float fY;
 	float fZ;
 	float fAngle;
-	ST_PLAYER_POSITION() :nFROM_SERVER(0), nFROM_CLIENT(0), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
+	ST_PLAYER_POSITION() :nFROM_SERVER(0), nFROM_CLIENT(0), nPlayerIndex(0), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 

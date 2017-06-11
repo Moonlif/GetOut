@@ -142,39 +142,36 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	}
 	
 	ST_PLAYER_POSITION SendData;
-	SendData.nPlayerIndex = g_pData->m_nPlayerNum;
-	switch (g_pData->m_nPlayerNum)
+	switch (g_pData->m_nPlayerNum1P)
 	{
 	case 1:
 		SendData.fAngle = g_pData->m_vRotation1P;
 		SendData.fX = g_pData->m_vPosition1P.x;
 		SendData.fY = g_pData->m_vPosition1P.y;
 		SendData.fZ = g_pData->m_vPosition1P.z;
+		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER1;
 		break;
 	case 2:
-		SendData.fAngle = g_pData->m_vRotation2P;
-		SendData.fX = g_pData->m_vPosition2P.x;
-		SendData.fY = g_pData->m_vPosition2P.y;
-		SendData.fZ = g_pData->m_vPosition2P.z;
+		SendData.fAngle = g_pData->m_vRotation1P;
+		SendData.fX = g_pData->m_vPosition1P.x;
+		SendData.fY = g_pData->m_vPosition1P.y;
+		SendData.fZ = g_pData->m_vPosition1P.z;
+		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
 		break;
 	}
 	SendData.nFROM_CLIENT = 0;
 	SendData.nFROM_SERVER = 0;
-	//SendData.szRoomName = string("DEFAULT").c_str();
 	sprintf_s(SendData.szRoomName, "%s", "DEFAULT", 7);
-
+	
 	send(hSocket, (char*)&SendData, sizeof(ST_PLAYER_POSITION), 0);
 
 	ST_PLAYER_POSITION RecvData;
 	recv(hSocket, (char*)&RecvData, sizeof(ST_PLAYER_POSITION), 0);
 
-	if (RecvData.nPlayerIndex == 1)
-	{
-		g_pData->m_vPosition1P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
-	}
-	else if (RecvData.nPlayerIndex == 2)
-	{
+	if(RecvData.nPlayerIndex & IN_PLAYER1)
 		g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
-	}
+
+	if(RecvData.nPlayerIndex & IN_PLAYER2)
+		g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
 	return 0;
 }
