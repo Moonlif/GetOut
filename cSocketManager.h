@@ -49,15 +49,16 @@ public:
 
 struct ST_PLAYER_POSITION
 {
-	char  szRoomName[50] = { 0, };
-	int	  nFROM_SERVER;
-	int   nFROM_CLIENT;
-	int	  nPlayerIndex;
+	char  szRoomName[50] = { 0, };	// << : Key
+	int	  nFROM_SERVER;				// << : Server Flag
+	int   nFROM_CLIENT;				// << :	Client Flag
+	int	  nPlayerIndex;				// << : Player Index
+	animationState eAnimState;		// << : Animation index
 	float fX;
 	float fY;
 	float fZ;
 	float fAngle;
-	ST_PLAYER_POSITION() :nFROM_SERVER(0), nFROM_CLIENT(0), nPlayerIndex(0), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
+	ST_PLAYER_POSITION() :nFROM_SERVER(0), nFROM_CLIENT(0), nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 

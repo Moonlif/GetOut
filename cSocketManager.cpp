@@ -142,23 +142,18 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	}
 	
 	ST_PLAYER_POSITION SendData;
-	switch (g_pData->m_nPlayerNum1P)
-	{
-	case 1:
-		SendData.fAngle = g_pData->m_vRotation1P;
-		SendData.fX = g_pData->m_vPosition1P.x;
-		SendData.fY = g_pData->m_vPosition1P.y;
-		SendData.fZ = g_pData->m_vPosition1P.z;
+
+	SendData.fAngle = g_pData->m_vRotation1P;
+	SendData.fX = g_pData->m_vPosition1P.x;
+	SendData.fY = g_pData->m_vPosition1P.y;
+	SendData.fZ = g_pData->m_vPosition1P.z;
+	SendData.eAnimState = g_pData->m_eAnimState1P;
+
+	if(g_pData->m_nPlayerNum1P == 1)
 		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER1;
-		break;
-	case 2:
-		SendData.fAngle = g_pData->m_vRotation1P;
-		SendData.fX = g_pData->m_vPosition1P.x;
-		SendData.fY = g_pData->m_vPosition1P.y;
-		SendData.fZ = g_pData->m_vPosition1P.z;
+	else if(g_pData->m_nPlayerNum2P == 2)
 		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
-		break;
-	}
+
 	SendData.nFROM_CLIENT = 0;
 	SendData.nFROM_SERVER = 0;
 	sprintf_s(SendData.szRoomName, "%s", "DEFAULT", 7);
