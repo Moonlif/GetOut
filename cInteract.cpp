@@ -114,8 +114,8 @@ void cInteract::Update()
 	//캐릭터 행동에 따른 변화
 	cRay Ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
 	int keyState = 0;
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001) keyState = 1;
-	else if (GetAsyncKeyState(VK_RBUTTON) & 0x0001) keyState = 2;
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001 && !g_pData->GetIsInvenOpen()) keyState = 1;
+	else if (GetAsyncKeyState(VK_RBUTTON) & 0x0001 && !g_pData->GetIsInvenOpen()) keyState = 2;
 
 	if (keyState > 0)
 	{

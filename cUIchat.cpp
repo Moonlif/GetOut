@@ -72,7 +72,7 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 	//채팅배경 채팅일 때만 띄우기
 	if (g_pData->GetIsOnChat())
 	{
-		pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 1.0f),
+		pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0.1f),
 			D3DCOLOR_ARGB(100, 255, 255, 255));
 	}
 
@@ -90,6 +90,8 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 
 		g_pFontManager->TextOut2D(m_pFont, m_vChat[i].strChat, rc, color);
 	}
+
+
 	pSprite->End();
 	cUIObject::Render(pSprite);
 }

@@ -53,9 +53,9 @@ void cMainGame::Setup()
 		m_pCharacter = new CharacterManager;
 		m_pCharacter->Setup();
 
-		//interact
-		m_pInteract = new cInteract;
-		m_pInteract->Setup();
+		////interact
+		//m_pInteract = new cInteract;
+		//m_pInteract->Setup();
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
@@ -71,16 +71,16 @@ void cMainGame::Setup()
 	g_pD3DDevice->LightEnable(0, true);
 	m_pCamera->SetCameraDistance(50.0f);*/
 
-	g_pSocketmanager->Setup_CHAT();
-	g_pSocketmanager->Setup_DATA();
+	/*g_pSocketmanager->Setup_CHAT();
+	g_pSocketmanager->Setup_DATA();*/
 }
 
 void cMainGame::Update()
 {
 
 	g_pTimeManager->Update();
-	g_pSocketmanager->Update();
-	g_pSocketmanager->Update_DATA();
+	//g_pSocketmanager->Update();
+	//g_pSocketmanager->Update_DATA();
 
 	if (m_pCamera) m_pCamera->Update();
 	{
@@ -96,7 +96,7 @@ void cMainGame::Update()
 		}
 
 		//interact
-		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
+		//if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
@@ -118,7 +118,7 @@ void cMainGame::Render()
 		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
 
 		//interact stuff
-		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
+		//if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
