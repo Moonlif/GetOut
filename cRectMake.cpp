@@ -11,13 +11,15 @@ cRectMake::cRectMake()
 
 cRectMake::~cRectMake()
 {
-	SAFE_RELEASE(m_pTexture);
+	//SAFE_RELEASE(m_pTexture);
 }
 
 void cRectMake::Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, char * szFile)
 {
+	
 	// 2 3
 	// 0 1
+	
 	ST_PNT_VERTEX _verTex;
 	D3DXVECTOR3 n;
 	D3DXVec3Normalize(&n, &n);

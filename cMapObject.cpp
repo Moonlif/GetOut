@@ -17,11 +17,15 @@ cMapObject::~cMapObject()
 	}
 }
 
+
+
 void cMapObject::Setup(char* folder, char* fileName)
 {
 	cObjLoader loadMesh;
+	
 	loadMesh.Load(m_vecGroup, folder, fileName);
 }
+
 
 
 
@@ -32,7 +36,7 @@ void cMapObject::Render(float size, float x, float y, float z , float rotY)
 	g_pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x80);
 	//알파테스트의 기능(D3DRS_ALPHAFUNC)를
 	//D3DCMP_GREATEREQUAL(알파값이 기준값보다 크거나 같으면 텍스쳐 출력)으로 설정
-//	g_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	//g_pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	D3DXMATRIXA16 matWorld, matS, matR, matT;
 	D3DXMatrixScaling(&matS, size, size, size);
 	D3DXMatrixRotationY(&matR, D3DX_PI * rotY);
@@ -46,3 +50,4 @@ void cMapObject::Render(float size, float x, float y, float z , float rotY)
 	}
 	
 }
+

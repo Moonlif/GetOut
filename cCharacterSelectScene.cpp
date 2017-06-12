@@ -66,7 +66,6 @@ void cCharacterSelectScene::Render()
 
 }
 
-
 void cCharacterSelectScene::UpdateSetFirstBackground()
 {
 	static int nAlpha = 0;

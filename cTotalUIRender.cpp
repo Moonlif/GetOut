@@ -57,10 +57,6 @@ void cTotalUIRender::Update(cCamera* camera)
 		}
 	}
 
-
-
-
-
 	//테스트용
 	if (GetAsyncKeyState('0') & 0x0001)
 	{
@@ -97,6 +93,11 @@ void cTotalUIRender::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 void cTotalUIRender::SetItem(StuffCode ItemName)
 {
 	m_pInventory->SetItem(ItemName);
+}
+
+StuffCode cTotalUIRender::GetPreparedUsingItem()
+{	
+	return m_pInventory->GetPreparedUsingItem();
 }
 
 void cTotalUIRender::SetupChaSelectScene()

@@ -5,6 +5,8 @@
 #include "cTotalUIRender.h"
 #include "cInteract.h"
 #include "CharacterManager.h"
+#include "MonsterManager.h"
+#include "SkyBox.h"
 
 class cMainGame
 {
@@ -20,6 +22,8 @@ private:
 
 	//character
 	CharacterManager* m_pCharacter;
+	MonsterManager* m_pMonsterManager;
+	SkyBox* m_pSkybox;
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;

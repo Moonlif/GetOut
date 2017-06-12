@@ -412,6 +412,12 @@ eUITAG cInventory::CarcCuruntPtInven()
 	}
 }
 
+StuffCode cInventory::GetPreparedUsingItem()
+{
+	cUIInvenItem* item = (cUIInvenItem*)m_pInven->FindChildByTag(eUITAG::INVENTORY_USINGITEM);
+	return item->GetItemCode();
+}
+
 void cInventory::OnClick(cUIButton * pSender)
 {
 	if (pSender->GetTag() == eUITAG::INVENTORY_BUTTON_COMBINE)
