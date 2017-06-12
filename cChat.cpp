@@ -83,8 +83,8 @@ void cChat::ChatOnOff()
 			g_pData->Chat(m_strChat);
 
 			//현재 채팅 푸쉬
-			chat->PushChat(m_strChat);
-			g_pData->m_listChat_RECV.pop_front();
+			//chat->PushChat(m_strChat);
+			//g_pData->m_listChat_RECV.pop_front();
 
 		}
 		//채팅 켰을 때
