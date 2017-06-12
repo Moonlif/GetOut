@@ -109,7 +109,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			m_Player1_Number = 1;
-			g_pData->m_nPlayerNum = 1;
+			g_pData->m_nPlayerNum1P = 1;
 		}
 		//플레이어 2번 선택시
 		else if ((PtInRect(&Player2->Getrc(), g_ptMouse)))
@@ -126,7 +126,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			m_Player1_Number = 2;
-			g_pData->m_nPlayerNum = 2;
+			g_pData->m_nPlayerNum1P = 2;
 		}
 	}
 

@@ -24,7 +24,7 @@ void CharacterManager::Setup()
 
 void CharacterManager::Update()
 {
-	if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum == 1)
+	if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum1P == 1)
 	{
 		if (m_p1Player) m_p1Player->Update(NULL);
 		if (m_p2Player) m_p2Player->Update(g_pData->m_vPosition2P,
@@ -32,7 +32,7 @@ void CharacterManager::Update()
 			g_pData->m_eAnimState2P,
 			NULL);
 	}
-	else if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum == 2)
+	else if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum1P == 2)
 	{
 		if (m_p2Player) m_p2Player->Update(NULL);
 		if (m_p1Player) m_p1Player->Update(g_pData->m_vPosition2P,
@@ -49,6 +49,6 @@ void CharacterManager::Render()
 
 D3DXVECTOR3& CharacterManager::GetTargetPos()
 {
-	if (g_pData->m_nPlayerNum == 1) return m_p1Player->GetheadPosition();
-	else if (g_pData->m_nPlayerNum == 2) return m_p2Player->GetheadPosition();
+	if (g_pData->m_nPlayerNum1P == 1) return m_p1Player->GetheadPosition();
+	else if (g_pData->m_nPlayerNum1P == 2) return m_p2Player->GetheadPosition();
 }

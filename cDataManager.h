@@ -14,6 +14,7 @@ private:
 	//영현
 	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
+	SYNTHESIZE(bool, m_IsOnChat, IsOnChat)
 
 public:
 	//정훈 - 오브젝트용
@@ -27,7 +28,8 @@ public:
 	list<string> m_listChat_RECV;
 
 	//균영
-	int m_nPlayerNum;
+	int m_nPlayerNum1P;
+	int m_nPlayerNum2P;
 	D3DXVECTOR3 m_vPosition1P;
 	D3DXVECTOR3 m_vPosition2P;
 	float m_vRotation1P;

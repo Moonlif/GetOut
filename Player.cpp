@@ -71,86 +71,96 @@ void Player::Update(cMap* pMap)
 		break;
 	}
 
-	//앞,뒤 이동
-	if (g_pKeyManager->isStayKeyDown('W'))
+	//채팅꺼진 상태에서만 작동
+	if (!g_pData->GetIsOnChat())
 	{
-		if (playerType == MALE_WEAPON)
+		//앞,뒤 이동
+		if (g_pKeyManager->isStayKeyDown('W'))
 		{
-			aniState = ANIM_WALK;
-			vPosition -= (player_Weapon->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
+			if (playerType == MALE_WEAPON)
+			{
+				aniState = ANIM_WALK;
+				vPosition -= (player_Weapon->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+			else
+			{
+				aniState = ANIM_WALK;
+				vPosition -= (player->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+
 		}
-		else
+		else if (g_pKeyManager->isStayKeyDown('S'))
 		{
-			aniState = ANIM_WALK;
-			vPosition -= (player->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
+			if (playerType == MALE_WEAPON)
+			{
+				aniState = ANIM_WALK;
+				vPosition += (player_Weapon->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+			else
+			{
+				aniState = ANIM_WALK;
+				vPosition += (player->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
 		}
-		
+		//좌,우 이동
+		if (g_pKeyManager->isStayKeyDown('A'))
+		{
+			if (playerType == MALE_WEAPON)
+			{
+				aniState = ANIM_WALK;
+
+				D3DXVECTOR3 m_vUp, m_vCross;
+				m_vUp = D3DXVECTOR3(0, 1, 0);
+				D3DXVec3Cross(&m_vCross, &player_Weapon->GetDirection(), &m_vUp);
+				//D3DXVec3Normalize(&m_vCross, &m_vCross);
+
+				vPosition -= (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+			else
+			{
+				aniState = ANIM_WALK;
+
+				D3DXVECTOR3 m_vUp, m_vCross;
+				m_vUp = D3DXVECTOR3(0, 1, 0);
+				D3DXVec3Cross(&m_vCross, &player->GetDirection(), &m_vUp);
+				//D3DXVec3Normalize(&m_vCross, &m_vCross);
+
+				vPosition -= (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+		}
+		else if (g_pKeyManager->isStayKeyDown('D'))
+		{
+			if (playerType == MALE_WEAPON)
+			{
+				aniState = ANIM_WALK;
+
+				D3DXVECTOR3 m_vUp, m_vCross;
+				m_vUp = D3DXVECTOR3(0, 1, 0);
+				D3DXVec3Cross(&m_vCross, &player_Weapon->GetDirection(), &m_vUp);
+				//D3DXVec3Normalize(&m_vCross, &m_vCross);
+
+				vPosition += (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+			else
+			{
+				aniState = ANIM_WALK;
+
+				D3DXVECTOR3 m_vUp, m_vCross;
+				m_vUp = D3DXVECTOR3(0, 1, 0);
+				D3DXVec3Cross(&m_vCross, &player->GetDirection(), &m_vUp);
+				//D3DXVec3Normalize(&m_vCross, &m_vCross);
+
+				vPosition += (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
+			}
+		}
 	}
-	else if (g_pKeyManager->isStayKeyDown('S'))
+
+	//채팅켜지면 IDLE 상태로 변경
+	if (g_pData->GetIsOnChat())
 	{
-		if (playerType == MALE_WEAPON)
-		{
-			aniState = ANIM_WALK;
-			vPosition += (player_Weapon->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
-		}
-		else
-		{
-			aniState = ANIM_WALK;
-			vPosition += (player->GetDirection() * 2.0f * g_pTimeManager->GetElapsedTime());
-		}
+		if (playerType == MALE_WEAPON) aniState = ANIM_IDLE;
+		else aniState = ANIM_IDLE;
 	}
-	//좌,우 이동
-	if (g_pKeyManager->isStayKeyDown('A'))
-	{
-		if (playerType == MALE_WEAPON)
-		{
-			aniState = ANIM_WALK;
-
-			D3DXVECTOR3 m_vUp, m_vCross;
-			m_vUp = D3DXVECTOR3(0, 1, 0);
-			D3DXVec3Cross(&m_vCross, &player_Weapon->GetDirection(), &m_vUp);
-			//D3DXVec3Normalize(&m_vCross, &m_vCross);
-
-			vPosition -= (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
-		}
-		else
-		{
-			aniState = ANIM_WALK;
-
-			D3DXVECTOR3 m_vUp, m_vCross;
-			m_vUp = D3DXVECTOR3(0, 1, 0);
-			D3DXVec3Cross(&m_vCross, &player->GetDirection(), &m_vUp);
-			//D3DXVec3Normalize(&m_vCross, &m_vCross);
-
-			vPosition -= (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
-		}
-	}
-	else if (g_pKeyManager->isStayKeyDown('D'))
-	{
-		if (playerType == MALE_WEAPON)
-		{
-			aniState = ANIM_WALK;
-
-			D3DXVECTOR3 m_vUp, m_vCross;
-			m_vUp = D3DXVECTOR3(0, 1, 0);
-			D3DXVec3Cross(&m_vCross, &player_Weapon->GetDirection(), &m_vUp);
-			//D3DXVec3Normalize(&m_vCross, &m_vCross);
-
-			vPosition += (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
-		}
-		else
-		{
-			aniState = ANIM_WALK;
-
-			D3DXVECTOR3 m_vUp, m_vCross;
-			m_vUp = D3DXVECTOR3(0, 1, 0);
-			D3DXVec3Cross(&m_vCross, &player->GetDirection(), &m_vUp);
-			//D3DXVec3Normalize(&m_vCross, &m_vCross);
-
-			vPosition += (m_vCross * 2.0f * g_pTimeManager->GetElapsedTime());
-		}
-	}
-	
 	//이동키 해제시 IDLE 상태로 변경
 	if(!g_pKeyManager->isStayKeyDown('W') && !g_pKeyManager->isStayKeyDown('S') &&
 		!g_pKeyManager->isStayKeyDown('A') && !g_pKeyManager->isStayKeyDown('D'))
@@ -158,7 +168,7 @@ void Player::Update(cMap* pMap)
 		if (playerType == MALE_WEAPON) aniState = ANIM_IDLE;
 		else aniState = ANIM_IDLE;
 	}
-	
+
 	//<< 무기장착 테스트용
 	if (g_pKeyManager->isOnceKeyDown('C') && (playerType == MALE || playerType == MALE_WEAPON))
 	{
@@ -244,31 +254,5 @@ void Player::Render()
 	else
 	{
 		if (player) player->UpdateAndRender();
-	}
-}
-
-bool Player::GetHeight(IN float x, OUT float & y, IN float z, cMap * map)
-{
-	{
-		D3DXVECTOR3 vRayPos(x, 1000, z);
-		D3DXVECTOR3 vRayDir(0, -1, 0);
-		for (size_t i = 0; i < map->getSurface()->GetVecVertex().size(); i += 3) {
-			float u, v, f;
-
-			if (D3DXIntersectTri(
-				&map->getSurface()->GetVecVertex()[i + 0],
-				&map->getSurface()->GetVecVertex()[i + 1],
-				&map->getSurface()->GetVecVertex()[i + 2],
-				&vRayPos,
-				&vRayDir,
-				&u,
-				&v,
-				&f
-			)) {
-				y = 1000 - f;
-				return true;
-			}
-		}
-		return false;
 	}
 }

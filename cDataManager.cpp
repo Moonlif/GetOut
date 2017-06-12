@@ -7,6 +7,7 @@
 cDataManager::cDataManager()
 	:m_IsInvenOpen(false)
 	, m_IsStartedGame(false)
+	, m_IsOnChat(false)
 {
 }
 
