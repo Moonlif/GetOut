@@ -86,7 +86,9 @@ void cSocketManager::Update()
 void cSocketManager::Calc_Position()
 {
 	stCurrent = clock();
-	m_fT = (float)(stCurrent - stStart) / (float)1000.0f;
+	float Devide = stCurrent - stStart;
+	if (Devide == 0) Devide = ONE_SECOND / SEND_PER_SECOND;
+	m_fT = (float)(ONE_SECOND / SEND_PER_SECOND) / (float)(Devide);
 	if (m_fT > 1) m_fT = 1;
 
 	D3DXVECTOR3 interval = nextPosition - prevPosition;

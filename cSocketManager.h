@@ -21,7 +21,7 @@
 #define PORT_DATA 1234
 #define PORT_CHAT 9090
 #define ROOM_NAME_SIZE 50
-#define SEND_PER_SECOND 1
+#define SEND_PER_SECOND 2
 
 
 class cSocketManager
