@@ -190,11 +190,11 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	ST_PLAYER_POSITION RecvData;
 	recv(hSocket, (char*)&RecvData, sizeof(ST_PLAYER_POSITION), 0);
 
-	if(RecvData.nPlayerIndex & IN_PLAYER1)
-		g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
+	//if(RecvData.nPlayerIndex & IN_PLAYER1)
+	//	g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
 
-	if(RecvData.nPlayerIndex & IN_PLAYER2)
-		g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
+	//if(RecvData.nPlayerIndex & IN_PLAYER2)
+	//	g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
 	// << : CRITICAL SECTION ?
 	g_pSocketmanager->stStart = clock();
 	g_pSocketmanager->UpdatePosition(RecvData.fX, RecvData.fY, RecvData.fZ);

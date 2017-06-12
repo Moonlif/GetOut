@@ -79,6 +79,7 @@ void cMainGame::Update()
 {
 
 	g_pTimeManager->Update();
+	g_pSocketmanager->Update();
 	g_pSocketmanager->Update_DATA();
 
 	if (m_pCamera) m_pCamera->Update();
