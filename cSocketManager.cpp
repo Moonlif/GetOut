@@ -11,6 +11,9 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
+	, stStart(clock())
+	, stCurrent(clock())
+	, m_fT(0.0f)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	prevPosition.x = 0;
@@ -75,8 +78,20 @@ void cSocketManager::Update_DATA()
 	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
+void cSocketManager::Update()
+{
+	Calc_Position();
+}
+
 void cSocketManager::Calc_Position()
 {
+	stCurrent = clock();
+	m_fT = (float)(stCurrent - stStart) / (float)1000.0f;
+	if (m_fT > 1) m_fT = 1;
+
+	D3DXVECTOR3 interval = nextPosition - prevPosition;
+
+	g_pData->m_vPosition2P = prevPosition + (interval * m_fT);
 }
 
 void cSocketManager::Destroy()
@@ -90,6 +105,12 @@ void cSocketManager::Destroy()
 	closesocket(hSocket_CHAT);
 	closesocket(hSocket_DATA);
 	WSACleanup();
+}
+
+void cSocketManager::UpdatePosition(float  x, float y, float z)
+{
+	prevPosition = nextPosition;
+	nextPosition = D3DXVECTOR3(x, y, z);
 }
 
 
@@ -174,5 +195,9 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 
 	if(RecvData.nPlayerIndex & IN_PLAYER2)
 		g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
+	// << : CRITICAL SECTION ?
+	g_pSocketmanager->stStart = clock();
+	g_pSocketmanager->UpdatePosition(RecvData.fX, RecvData.fY, RecvData.fZ);
+	// << : CRITICAL SECTINO ?
 	return 0;
 }
