@@ -89,6 +89,7 @@ void cChat::ChatOnOff()
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
 
+			//테스트용
 			chat->PushChat(m_strChat);
 
 		}
