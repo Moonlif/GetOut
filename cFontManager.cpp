@@ -75,13 +75,13 @@ void cFontManager::TextOut3D(IN ID3DXMesh * font, IN D3DXVECTOR3 scailing, IN D3
 	font->DrawSubset(0);
 }
 
-void cFontManager::TextOut2D(IN LPD3DXFONT font, IN string str, IN int ptLeft, IN int ptTop, IN int ptRight, IN int ptBottom)
+void cFontManager::TextOut2D(IN LPD3DXFONT font, IN string str, IN RECT rc, D3DXCOLOR color)
 {
 	string sText(str);
-	RECT rc;
-	SetRect(&rc, ptLeft, ptTop, ptRight, ptBottom);
+
+
 	font->DrawTextA(NULL, sText.c_str(), sText.length(), &rc, DT_LEFT | DT_TOP | DT_NOCLIP,
-		D3DCOLOR_XRGB(255, 255, 0));
+		color);
 }
 
 UINT cFontManager::CarcWeight(UINT weight)

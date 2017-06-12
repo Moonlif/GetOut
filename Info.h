@@ -151,6 +151,8 @@ enum eUITAG
 
 	INVENTORY_BUTTON_COMBINE,
 	INVENTORY_TEXT_COMBINE,
+
+	CHAT_TEXT1,
 };
 
 
@@ -170,6 +172,17 @@ struct ITEMINFO
 	RECT					rc;
 };
 
+struct CHATINFO
+{
+	float		time;
+	float		alpha;
+	string		strChat;
+};
+
+#define CHATSIZE			30
+#define CHATTIME			300
+#define CHATWORDHEIGHT		30
+#define CHATWORDWIDTH		(CHATWORDHEIGHT / 2)
 
 enum animationState
 {

@@ -10,9 +10,18 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
-	: dwUpdateTime(0)
+	: stUpdateTime(clock())
+	, stStart(clock())
+	, stCurrent(clock())
+	, m_fT(0.0f)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
+	prevPosition.x = 0;
+	prevPosition.y = 0;
+	prevPosition.z = 0;
+	nextPosition.x = 0;
+	nextPosition.y = 0;
+	nextPosition.z = 0;
 }
 
 cSocketManager::~cSocketManager()
@@ -63,14 +72,26 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update_DATA()
 {
-	if (g_pData->GetUpdateTick() + (ONE_SECOND / DATA_INTERVAL) > GetTickCount()) return;
+	if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
-	g_pData->SetUpdateTick(GetTickCount());
+	stUpdateTime = clock();
 	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
 void cSocketManager::Update()
 {
+	Calc_Position();
+}
+
+void cSocketManager::Calc_Position()
+{
+	stCurrent = clock();
+	m_fT = (float)(stCurrent - stStart) / (float)1000.0f;
+	if (m_fT > 1) m_fT = 1;
+
+	D3DXVECTOR3 interval = nextPosition - prevPosition;
+
+	g_pData->m_vPosition2P = prevPosition + (interval * m_fT);
 }
 
 void cSocketManager::Destroy()
@@ -84,6 +105,12 @@ void cSocketManager::Destroy()
 	closesocket(hSocket_CHAT);
 	closesocket(hSocket_DATA);
 	WSACleanup();
+}
+
+void cSocketManager::UpdatePosition(float  x, float y, float z)
+{
+	prevPosition = nextPosition;
+	nextPosition = D3DXVECTOR3(x, y, z);
 }
 
 
@@ -142,39 +169,37 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	}
 	
 	ST_PLAYER_POSITION SendData;
-	SendData.nPlayerIndex = g_pData->m_nPlayerNum;
-	switch (g_pData->m_nPlayerNum)
-	{
-	case 1:
-		SendData.fAngle = g_pData->m_vRotation1P;
-		SendData.fX = g_pData->m_vPosition1P.x;
-		SendData.fY = g_pData->m_vPosition1P.y;
-		SendData.fZ = g_pData->m_vPosition1P.z;
-		break;
-	case 2:
-		SendData.fAngle = g_pData->m_vRotation2P;
-		SendData.fX = g_pData->m_vPosition2P.x;
-		SendData.fY = g_pData->m_vPosition2P.y;
-		SendData.fZ = g_pData->m_vPosition2P.z;
-		break;
-	}
+
+	SendData.fAngle = g_pData->m_vRotation1P;
+	SendData.fX = g_pData->m_vPosition1P.x;
+	SendData.fY = g_pData->m_vPosition1P.y;
+	SendData.fZ = g_pData->m_vPosition1P.z;
+	SendData.eAnimState = g_pData->m_eAnimState1P;
+
+	if(g_pData->m_nPlayerNum1P == 1)
+		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER1;
+	else if(g_pData->m_nPlayerNum1P == 2)
+		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
+
 	SendData.nFROM_CLIENT = 0;
 	SendData.nFROM_SERVER = 0;
-	//SendData.szRoomName = string("DEFAULT").c_str();
 	sprintf_s(SendData.szRoomName, "%s", "DEFAULT", 7);
-
+	
 	send(hSocket, (char*)&SendData, sizeof(ST_PLAYER_POSITION), 0);
 
 	ST_PLAYER_POSITION RecvData;
 	recv(hSocket, (char*)&RecvData, sizeof(ST_PLAYER_POSITION), 0);
 
-	if (RecvData.nPlayerIndex == 1)
+	if (RecvData.nPlayerIndex & IN_PLAYER1)
 	{
-		g_pData->m_vPosition1P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
+		g_pData->m_nPlayerNum2P = 1;
 	}
-	else if (RecvData.nPlayerIndex == 2)
-	{
-		g_pData->m_vPosition2P = D3DXVECTOR3(RecvData.fX, RecvData.fY, RecvData.fZ);
-	}
+
+	if(RecvData.nPlayerIndex & IN_PLAYER2)
+		g_pData->m_nPlayerNum2P = 2;
+	// << : CRITICAL SECTION ?
+	g_pSocketmanager->stStart = clock();
+	g_pSocketmanager->UpdatePosition(RecvData.fX, RecvData.fY, RecvData.fZ);
+	// << : CRITICAL SECTINO ?
 	return 0;
 }

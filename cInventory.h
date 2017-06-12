@@ -43,7 +43,7 @@ public:
 	void MoveItem();
 	void PickedRender();
 	eUITAG CarcCuruntPtInven();
-
+	StuffCode GetPreparedUsingItem();
 
 	virtual void OnClick(cUIButton* pSender);
 };

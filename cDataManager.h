@@ -12,6 +12,7 @@ private:
 	list<string> m_listChat_SEND;
 
 	//영현
+	SYNTHESIZE(bool, m_IsOnChat, IsOnChat)
 	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
 
@@ -27,10 +28,10 @@ public:
 
 	//지상 - 채팅
 	list<string> m_listChat_RECV;
-	SYNTHESIZE(DWORD, m_dwUpdateTick, UpdateTick);
 
 	//균영
-	int m_nPlayerNum;
+	int m_nPlayerNum1P;
+	int m_nPlayerNum2P;
 	D3DXVECTOR3 m_vPosition1P;
 	D3DXVECTOR3 m_vPosition2P;
 	float m_vRotation1P;
