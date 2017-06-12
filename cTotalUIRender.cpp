@@ -57,10 +57,6 @@ void cTotalUIRender::Update(cCamera* camera)
 		}
 	}
 
-
-
-
-
 	//테스트용
 	if (GetAsyncKeyState('0') & 0x0001)
 	{

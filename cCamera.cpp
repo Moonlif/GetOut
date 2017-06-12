@@ -57,8 +57,8 @@ void cCamera::Update()
 
 	if (g_pData->GetIsStartedGame() && !isMouseView)
 	{
-		SetCursor(NULL); // 마우스를 나타나지 않게 않다.
-		ClipCursor(&rc);
+		//SetCursor(NULL); // 마우스를 나타나지 않게 않다.
+		//ClipCursor(&rc);
 	}
 
 	D3DXMATRIXA16 matR, matRX, matRY;

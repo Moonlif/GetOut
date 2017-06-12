@@ -57,13 +57,20 @@ void cChat::SetChildWindow()
 void cChat::ChatOnOff()
 {
 	//이름 입력
-	char str[32];
+	char str[256];
 
 	//챗 찾기
 	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
 
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;
+
+	//현재 채팅 푸쉬
+	if (!g_pData->m_listChat_RECV.empty())
+	{
+		chat->PushChat(g_pData->m_listChat_RECV.front());
+		g_pData->m_listChat_RECV.pop_front();
+	}
 
 	if (GetAsyncKeyState(VK_RETURN) & 0x0001)
 	{
@@ -82,10 +89,6 @@ void cChat::ChatOnOff()
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
 
-			//현재 채팅 푸쉬
-			chat->PushChat(m_strChat);
-			g_pData->m_listChat_RECV.pop_front();
-
 		}
 		//채팅 켰을 때
 		else
@@ -100,14 +103,21 @@ void cChat::RenderChat()
 {
 	//이름 렌더
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
-	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f));
+
+	D3DXCOLOR color;
+	if (g_pData->m_nPlayerNum1P == 1) color = D3DXCOLOR(0.8f, 0.1f, 0.1f, 1.0f);
+	else color = D3DXCOLOR(0.1f, 0.1f, 0.8f, 1.0f);
+
+	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void cChat::SetBackground()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-	cUIchat *chatBackground = new cUIchat(D3DXVECTOR3(50, 50, 0));
+	cUIchat *chatBackground = new cUIchat(D3DXVECTOR3(0, WINSIZEY- CHATWORDHEIGHT, 0));
 	chatBackground->SetTag(eUITAG::CHAT_TEXT1);
+	chatBackground->SetScaling(D3DXVECTOR3(0.605f, 0.5f, 0.5f));
+	
 	m_pRoot = chatBackground;
 }

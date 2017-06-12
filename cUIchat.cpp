@@ -18,7 +18,15 @@ cUIchat::cUIchat(D3DXVECTOR3 pos)
 
 	m_vPosition = pos;
 
+	//폰트
 	g_pFontManager->CreateFont2D(m_pFont, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
+
+	//텍스쳐
+	D3DXIMAGE_INFO stImageInfo;
+	m_pTexture = g_pTextureManager->GetTexture("UI/Chat/titlebar_mask.png", &stImageInfo);
+	m_stSize.nWidth = stImageInfo.Width;
+	m_stSize.nHeight = stImageInfo.Height;
+
 }
 
 
@@ -58,6 +66,17 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 	pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 	pSprite->SetTransform(&m_matWorld);
 
+	RECT rc;
+	SetRect(&rc, 0, 0, m_stSize.nWidth, m_stSize.nHeight);
+
+	//채팅배경 채팅일 때만 띄우기
+	if (g_pData->GetIsOnChat())
+	{
+		pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0),
+			D3DCOLOR_ARGB(200, 255, 255, 255));
+	}
+
+	//채팅 텍스트 띄우기
 	for (int i = 0; i < CHATSIZE; ++i)
 	{
 		if (m_vChat[i].strChat == " ") continue;
