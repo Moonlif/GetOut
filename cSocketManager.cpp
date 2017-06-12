@@ -178,7 +178,7 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 
 	if(g_pData->m_nPlayerNum1P == 1)
 		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER1;
-	else if(g_pData->m_nPlayerNum2P == 2)
+	else if(g_pData->m_nPlayerNum1P == 2)
 		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
 
 	SendData.nFROM_CLIENT = 0;
