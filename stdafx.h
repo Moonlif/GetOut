@@ -53,6 +53,7 @@ using namespace std;
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+extern HINSTANCE hInst;
 extern HWND g_hWnd;
 extern POINT g_ptMouse;
 extern bool g_bDebug;

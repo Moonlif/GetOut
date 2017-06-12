@@ -45,7 +45,9 @@ void cInventory::Update()
 void cInventory::Render()
 {
 	if (m_pUIBase) m_pUIBase->Render(m_pSprite);
-	if (m_isWarning) g_pFontManager->TextOut2D(m_pFontWarning, m_strWarningWord, 500, 20, 750, 220);
+	RECT rc{ 500, 20, 750, 220 };
+	if (m_isWarning) g_pFontManager->TextOut2D(m_pFontWarning, m_strWarningWord, rc,
+		D3DXCOLOR(1.0f, 1.0f, 0, 1.0f));
 
 	//무언가를 픽하고 있으면 렌더하기
 	if (m_IsPick) PickedRender();
@@ -67,7 +69,7 @@ void cInventory::SetInventoryBase()
 	//오른쪽, 바텀 위치
 	float Right = MultipleWidth * 64;
 	float Bottom = MultipleHeight * 128;
- 
+
 
 	///-----------------------------------------------------------------
 	//						메인 인벤토리창 이미지
@@ -87,7 +89,7 @@ void cInventory::SetInventoryBase()
 	cUIImageView *RightLine = new cUIImageView("UI/Inventory/inventory_frame_generic_border_r.tga", D3DXVECTOR3(Right, 20, 0), 250);
 	RightLine->SetScaling(D3DXVECTOR3(1.0f, MultipleHeight, 1.0f));
 	upLine->AddChild(RightLine);
-	
+
 	cUIImageView *lu = new cUIImageView("UI/Inventory/inventory_frame_generic_corner_lu.tga", D3DXVECTOR3(-20, 0, 0), 250);
 	upLine->AddChild(lu);
 
@@ -107,14 +109,14 @@ void cInventory::SetInventoryBase()
 	int			nAlpha = 150;
 
 	//아이템창 1번설정	
-	cUIInvenItem *inven = new cUIInvenItem("UI/Inventory/key_laboratory.tga", D3DXVECTOR3(- 55, 15, 0), nAlpha);
+	cUIInvenItem *inven = new cUIInvenItem("UI/Inventory/key_laboratory.tga", D3DXVECTOR3(-55, 15, 0), nAlpha);
 	inven->SetItemTexture(g_pTextureManager->GetTexture("UI/Inventory/inventory_oil_bg.tga"));
 	m_pInven = inven;
 	upLine->AddChild(m_pInven);
 	//이후 설정
 	for (int i = 0; i < 21; ++i)
 	{
-		cUIInvenItem *inven1 = new cUIInvenItem("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3((i % 7) * 95 + 320,(i / 7) * 105 + 50, 0), nAlpha);
+		cUIInvenItem *inven1 = new cUIInvenItem("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3((i % 7) * 95 + 320, (i / 7) * 105 + 50, 0), nAlpha);
 		inven1->SetScaling(InveSize);
 		inven1->SetTag(eUITAG::INVENTORY_1 + i);
 		m_pInven->AddChild(inven1);
@@ -310,7 +312,7 @@ void cInventory::MoveItem()
 					m_strWarningWord = "사용 불가능한 아이템입니다.";
 					return;
 				}
-				
+
 			}
 
 			//한 곳 좌표 저장
@@ -352,7 +354,7 @@ void cInventory::MoveItem()
 				FirstClick->SetrcItem(g_pUIvarius->m_mapItemInfo[SecondCode].rc);
 				FirstClick->SetItemCode(SecondCode);
 			}
-			
+
 			//마우스에 렌더하는 값 초기화
 			m_IsPick = false;
 			m_pTexture = NULL;
@@ -379,12 +381,12 @@ void cInventory::PickedRender()
 		FirstCode == StuffCode::STUFF_PAPER3)
 	{
 		//스케일링
-		D3DXMatrixScaling(&matS, 1.40f, 1.2f, 1.0f);	
+		D3DXMatrixScaling(&matS, 1.40f, 1.2f, 1.0f);
 	}
 	else
 	{
 		//스케일링
-		D3DXMatrixScaling(&matS, 1.60f, 1.8f, 1.0f);		
+		D3DXMatrixScaling(&matS, 1.60f, 1.8f, 1.0f);
 	}
 
 	//트렌스레이션
@@ -428,7 +430,7 @@ void cInventory::OnClick(cUIButton * pSender)
 			//세개의 조합아이템들이 다 다르고, 한 개라도 빠지지 않았을 때
 			if ((combine1->GetItemCode() != combine2->GetItemCode() &&
 				combine1->GetItemCode() != combine3->GetItemCode() &&
-				combine2->GetItemCode() != combine3->GetItemCode()) &&		
+				combine2->GetItemCode() != combine3->GetItemCode()) &&
 				(combine1->GetItemTexture() != NULL && combine2->GetItemTexture() != NULL &&
 					combine3->GetItemTexture() != NULL))
 			{

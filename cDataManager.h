@@ -12,6 +12,7 @@ private:
 	list<string> m_listChat_SEND;
 
 	//¿µÇö
+	SYNTHESIZE(bool, m_IsOnChat, IsOnChat)
 	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
 
