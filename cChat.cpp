@@ -89,6 +89,8 @@ void cChat::ChatOnOff()
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
 
+			chat->PushChat(m_strChat);
+
 		}
 		//채팅 켰을 때
 		else
@@ -105,10 +107,10 @@ void cChat::RenderChat()
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
 	D3DXCOLOR color;
-	if (g_pData->m_nPlayerNum1P == 1) color = D3DXCOLOR(0.8f, 0.1f, 0.1f, 1.0f);
-	else color = D3DXCOLOR(0.1f, 0.1f, 0.8f, 1.0f);
+	if (g_pData->m_nPlayerNum1P == 1) color = D3DXCOLOR(0.5f, 0.1f, 0.1f, 1.0f);
+	else color = D3DXCOLOR(0.1f, 0.1f, 0.5f, 1.0f);
 
-	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 }
 
 void cChat::SetBackground()

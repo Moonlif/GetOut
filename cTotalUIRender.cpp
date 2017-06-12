@@ -95,6 +95,11 @@ void cTotalUIRender::SetItem(StuffCode ItemName)
 	m_pInventory->SetItem(ItemName);
 }
 
+StuffCode cTotalUIRender::GetPreparedUsingItem()
+{	
+	return m_pInventory->GetPreparedUsingItem();
+}
+
 void cTotalUIRender::SetupChaSelectScene()
 {
 	m_pChaSelectScene = new cCharacterSelectScene;

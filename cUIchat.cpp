@@ -72,8 +72,8 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 	//채팅배경 채팅일 때만 띄우기
 	if (g_pData->GetIsOnChat())
 	{
-		pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0),
-			D3DCOLOR_ARGB(200, 255, 255, 255));
+		pSprite->Draw(m_pTexture, &rc, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 1.0f),
+			D3DCOLOR_ARGB(100, 255, 255, 255));
 	}
 
 	//채팅 텍스트 띄우기
@@ -85,8 +85,8 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 
 		//컬러 설정(1P = 빨강, 2P = 녹색)
 		D3DXCOLOR color;
-		if (g_pData->m_nPlayerNum1P == 1) color = D3DXCOLOR(0.8f, 0.1f, 0.1f, m_vChat[i].alpha);
-		else color = D3DXCOLOR(0.1f, 0.1f, 0.8f, m_vChat[i].alpha);
+		if (g_pData->m_nPlayerNum1P == 1) color = D3DXCOLOR(0.5f, 0.1f, 0.1f, m_vChat[i].alpha);
+		else color = D3DXCOLOR(0.1f, 0.1f, 0.5f, m_vChat[i].alpha);
 
 		g_pFontManager->TextOut2D(m_pFont, m_vChat[i].strChat, rc, color);
 	}
@@ -99,10 +99,12 @@ void cUIchat::PushChat(string str)
 
 	for (int i = CHATSIZE - 1; i > 0; --i)
 	{
+		if (m_vChat[i - 1].strChat == " ") continue;
 		m_vChat[i] = m_vChat[i - 1];
 	}
 
 	m_vChat[0].strChat = str;
 	m_vChat[0].time = CHATTIME;
 	m_vChat[0].alpha = 1.0f;
+
 }

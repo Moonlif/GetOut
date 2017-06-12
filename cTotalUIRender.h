@@ -27,6 +27,7 @@ public:
 
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void SetItem(StuffCode ItemName);
+	StuffCode GetPreparedUsingItem();
 	void SetupChaSelectScene();
 };
 

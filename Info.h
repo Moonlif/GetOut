@@ -147,7 +147,7 @@ struct CHATINFO
 	string		strChat;
 };
 
-#define CHATSIZE			5
+#define CHATSIZE			30
 #define CHATTIME			300
 #define CHATWORDHEIGHT		30
 #define CHATWORDWIDTH		(CHATWORDHEIGHT / 2)
