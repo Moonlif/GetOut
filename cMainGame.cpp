@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
+
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
@@ -44,11 +45,7 @@ void cMainGame::Setup()
 	//코드 추가
 	{
 		g_pData->Setup();
-
-		//map
-		m_pMap = new cMap;
-		m_pMap->Setup();
-
+		
 		//character
 		m_pCharacter = new CharacterManager;
 		m_pCharacter->Setup();
@@ -56,7 +53,10 @@ void cMainGame::Setup()
 		//interact
 		m_pInteract = new cInteract;
 		m_pInteract->Setup();
-
+		//map
+		m_pMap = new cMap;
+		m_pMap->Setup();
+		
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();
@@ -85,7 +85,7 @@ void cMainGame::Update()
 	if (m_pCamera) m_pCamera->Update();
 	{
 		//map
-
+		m_pMap->Update(7, true);
 		//character
 		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update();
 		static bool start = false;
