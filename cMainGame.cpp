@@ -67,15 +67,9 @@ void cMainGame::Setup()
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
-<<<<<<< HEAD
 	g_pData->SetIsStartedGame(true);
 	g_pD3DDevice->LightEnable(0, true);
 	m_pCamera->SetCameraDistance(50.0f);
-=======
-	/*g_pData->SetIsStartedGame(true);
-	g_pD3DDevice->LightEnable(0, true);
-	m_pCamera->SetCameraDistance(50.0f);*/
->>>>>>> 66c95dc955c50f8ac3374bf5427644f25af72bbf
 
 	g_pSocketmanager->Setup_CHAT();
 	g_pSocketmanager->Setup_DATA();

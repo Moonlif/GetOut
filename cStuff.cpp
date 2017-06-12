@@ -153,14 +153,12 @@ void cStuff::Render()
 
 	if (g_bDebug)
 	{
+		if (m_pMeshSphere == NULL) return;
 		//g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
 		D3DXMATRIXA16 matDebug;
 		D3DXMatrixTranslation(&matDebug, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matDebug);
 		m_pMeshSphere->DrawSubset(0);
-
 		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	}
 }

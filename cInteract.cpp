@@ -95,8 +95,8 @@ void cInteract::Update()
 	//캐릭터 행동에 따른 변화
 	m_n2FButtonCount = 0;
 	D3DXVECTOR3 vPlayerPos;
-	if (g_pData->m_nPlayerNum == 1) vPlayerPos = g_pData->m_vPosition1P;
-	else if (g_pData->m_nPlayerNum == 2) vPlayerPos = g_pData->m_vPosition2P;
+	if (g_pData->m_nPlayerNum1P == 1) vPlayerPos = g_pData->m_vPosition1P;
+	else if (g_pData->m_nPlayerNum1P == 2) vPlayerPos = g_pData->m_vPosition2P;
 	float dis = D3DXVec3Length(&(vPlayerPos - m_vecStuff[26]->GetPosition()));
 	if (dis <= 1.0f) m_n2FButtonCount += 5;
 
