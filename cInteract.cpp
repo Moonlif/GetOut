@@ -23,7 +23,6 @@ cInteract::~cInteract()
 
 void cInteract::Setup()
 {
-<<<<<<< HEAD
 	for (int i = 0; i < STUFF_LASTNUM; ++i)
 	{
 		m_vecStuff.push_back(new cStuff);
@@ -60,76 +59,6 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_WOODBOARD2]->Setup(STUFF_WOODBOARD2, D3DXVECTOR3(-6, 12.3f, 18.5f), D3DXVECTOR3(0.07f, 2.3f, 0), D3DXVECTOR3(0, 0, 0), 3.0f, 0.20f, true);
 	m_vecStuff[STUFF_BUTTON1]->Setup(STUFF_BUTTON1, D3DXVECTOR3(-9.5f, 24.5f, 14), D3DXVECTOR3(D3DX_PI, 0, 0), D3DXVECTOR3(0, 0, 0), 2.0f, 0.25f, true);
 	m_vecStuff[STUFF_BUTTON2]->Setup(STUFF_BUTTON2, D3DXVECTOR3(-9.5f, 24.5f, 14), D3DXVECTOR3(D3DX_PI, 0, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.25f, true);
-=======
-	cStuff* stuff = new cStuff;
-	stuff->Setup(STUFF_BOARDBLOCK, D3DXVECTOR3(-28, 17.0f, -2.8f), D3DXVECTOR3(0, 0, D3DX_PI / 2.0f), D3DXVECTOR3(0, 0, 0), 3.5f, 0.4f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_BOX1, D3DXVECTOR3(-7.1f, 3.5f, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f , D3DX_PI / 2.0f), D3DXVECTOR3(0, 0, 1.7f), 3.5f, 0.2f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_BRICKPILE, D3DXVECTOR3(12, 12, 19), D3DXVECTOR3(0, 1.2f, 0), D3DXVECTOR3(0, 0, 0), 3.0f, 0.1f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_CHEST2, D3DXVECTOR3(10, 0, 18), D3DXVECTOR3(0, -D3DX_PI/2.0f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.1f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_CHEST3, D3DXVECTOR3(10, 0, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 3.0f, 0.1f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_CROWBAR, D3DXVECTOR3(-40, 12, 12), D3DXVECTOR3(0, D3DX_PI / 2.2f, 0), D3DXVECTOR3(0, 0, 0), 2.0f, 0.2f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_TRAP, D3DXVECTOR3(-38, 12.1, 18.5f), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 5.0f, 5.0f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_WOODBOARD1, D3DXVECTOR3(-7, 12, 19.5f), D3DXVECTOR3(0, D3DX_PI/2.0f, 0), D3DXVECTOR3(0, 0, 0), 4.0f, 0.22f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_WOODBOARD2, D3DXVECTOR3(-6, 12.3f, 18.5f), D3DXVECTOR3(0.07f, 2.3f, 0), D3DXVECTOR3(0, 0, 0), 3.0f, 0.20f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD1, D3DXVECTOR3(-6, 15.8f, 22.5f), D3DXVECTOR3(D3DX_PI/1.6f, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.08f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD2, D3DXVECTOR3(-13, 12.3f, 16.5f), D3DXVECTOR3(0, 1.0f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD3, D3DXVECTOR3(3, 12.3f, 16.5f), D3DXVECTOR3(0.0f, 1.3f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_WOOD3, D3DXVECTOR3(1, 12.5f, 13.5f), D3DXVECTOR3(-0.1f, 2.3f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.07f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_EMPTYBOX, D3DXVECTOR3(-38, 13.0f, -6), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0), 2.5f, 0.15f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_VALVE1, D3DXVECTOR3(-4.67f, 30, 0), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 1.5f, 0.2f, true);
-	m_vecStuff.push_back(stuff);
-
-	stuff = new cStuff;
-	stuff->Setup(STUFF_VALVE2, D3DXVECTOR3(-4.67f, 30, -8), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 1.5f, 0.2f, true);
-	m_vecStuff.push_back(stuff);
-
-	//º®µ¹
-	//stuff = new cStuff;
-	//stuff->Setup(STUFF_BRICK, D3DXVECTOR3(7, 0, 5), D3DXVECTOR3(0, 0.5f, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.2f, true);
-	//m_vecStuff.push_back(stuff);
->>>>>>> fcb30c6f6c6a7729011fe3b1f845809123558a04
 }
 
 void cInteract::Update()

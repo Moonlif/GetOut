@@ -85,7 +85,7 @@ void cMainGame::Update()
 	if (m_pCamera) m_pCamera->Update();
 	{
 		//map
-		m_pMap->Update(7, true);
+
 		//character
 		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update();
 		static bool start = false;
