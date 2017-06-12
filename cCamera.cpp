@@ -12,6 +12,7 @@ cCamera::cCamera()
 	, m_vCamRotAngle(0, 0, 0)
 	, m_fCameraHeight(0)
 	, isMouseView(false)
+	, isMouseInit(false)
 {
 	m_ptPrevMouse.x = 0;
 	m_ptPrevMouse.y = 0;
@@ -52,16 +53,8 @@ void cCamera::Update()
 	if (g_pData->GetIsStartedGame() && !isMouseView) SetCursor(NULL); // 마우스를 나타나지 않게 않다.
 	if (g_pKeyManager->isStayKeyDown('I'))
 	{
-		if (isMouseView == true) isMouseView = false;
-		else if (isMouseView == false)
-		{
-			POINT   setMouse;
-			setMouse.x = (rc.right - rc.left) / 2;
-			setMouse.y = (rc.bottom - rc.top) / 2;
-			ClientToScreen(g_hWnd, &setMouse);
-			SetCursorPos(setMouse.x, setMouse.y);
-			isMouseView = true;
-		}
+		SetCursor(NULL); // 마우스를 나타나지 않게 한다.
+		//ClipCursor(&rc); //마우스 가두기
 	}
 
 	D3DXMATRIXA16 matR, matRX, matRY;
@@ -82,6 +75,24 @@ void cCamera::Update()
 	D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &m_vUp);
 
 	g_pD3DDevice->SetTransform(D3DTS_VIEW, &matView);
+
+	//마우스가 화면밖으로 나가면 && 게임시작 && 마우스커서 꺼진상태
+	if ((g_ptMouse.x <= (rc.left + 50) || (rc.right - 50) <= g_ptMouse.x ||
+		g_ptMouse.y <= (rc.top + 50) || (rc.bottom - 50) <= g_ptMouse.y) && 
+		g_pData->GetIsStartedGame() && !isMouseView)
+	{
+		// 마우스를 윈도우의 중앙으로 초기화
+		POINT	setMouse;
+		setMouse.x = (rc.right - rc.left) / 2;
+		setMouse.y = (rc.bottom - rc.top) / 2;
+		ClientToScreen(g_hWnd, &setMouse);
+		SetCursorPos(setMouse.x, setMouse.y);
+
+		//마우스 위치 초기화시 회전방지
+		g_ptMouse = setMouse;
+		m_ptPrevMouse = setMouse;
+		isMouseInit = true;
+	}
 }
 
 void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -109,6 +120,11 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_MOUSEMOVE:
 		if (!g_pData->GetIsStartedGame()) return;
+		if (isMouseInit)
+		{
+			isMouseInit = false;
+			return;
+		}
 
 		if (m_isLButtonDown)
 		{
@@ -119,7 +135,7 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			m_vCamRotAngle.x -= (fDeltaY / 100.f);
 
 			if (m_vCamRotAngle.x > D3DX_PI / 3.0f)  m_vCamRotAngle.x = D3DX_PI / 3.0f;
-			if (m_vCamRotAngle.x < -D3DX_PI / 2.0f)  m_vCamRotAngle.x = -D3DX_PI / 2.0f;
+			if (m_vCamRotAngle.x < -D3DX_PI / 3.4f)  m_vCamRotAngle.x = -D3DX_PI / 3.4f;
 
 			m_ptPrevMouse = g_ptMouse;
 		}

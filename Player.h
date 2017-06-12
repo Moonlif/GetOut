@@ -36,6 +36,5 @@ public:
 	inline D3DXVECTOR3& GetDirection() { return direction; }
 
 	void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
-	bool GetHeight(IN float x, OUT float & y, IN float z, cMap* map);
 };
 

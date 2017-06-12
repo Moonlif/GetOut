@@ -17,7 +17,9 @@ private:
 	SYNTHESIZE(float, m_fCameraHeight, CameraHeight);
 	D3DXVECTOR3         m_vCamRotAngle;
 
-	bool            isMouseView;
+	bool				isMouseView;
+	bool				isMouseInit;
+
 public:
 	void Setup(D3DXVECTOR3* pvTarget);
 	void Update();
