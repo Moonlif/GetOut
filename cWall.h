@@ -7,6 +7,9 @@ private:
 	/********************
 		지하
 	*********************/
+	std::vector<cRectMake*> m_vecB1F;
+	std::vector<cRectMake*> m_vecFF;
+	std::vector<cRectMake*> m_vecSF;
 	//위쪽 왼쪽 아래쪽 오른쪽 벽
 	cRectMake* m_pB1Up;
 	cRectMake* m_pB1Up_1;
@@ -84,6 +87,11 @@ private:
 	cRectMake* m_pFFStairs2;
 	cRectMake* m_pFFStairs2_1;
 	cRectMake* m_pFFStairs3;
+	cRectMake* m_pFFStairs3_1;
+	cRectMake* m_pFFStairs4;
+	cRectMake* m_pFFStairs4_1;
+	cRectMake* m_pFFStairs5;
+	cRectMake* m_pFFStairs5_1;
 	/********************
 		2층
 	*********************/
@@ -93,6 +101,7 @@ private:
 	cRectMake* m_pSFRight;
 	cRectMake* m_pSFLeftPrint;
 	cRectMake* m_pSFRightPrint;
+	cRectMake* m_pSFRightPrint_1;
 
 	cRectMake* m_pSFLRoom1;
 	cRectMake* m_pSFLRoom1_1;

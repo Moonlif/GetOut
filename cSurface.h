@@ -5,29 +5,39 @@ struct PassSurface
 {
 	D3DXVECTOR3 p;
 	int nindex;
+
+};
+/*
+struct Check
+{
+	int nIndex;
 	bool isOpen;
 };
-
+*/
 class cSurface
 {
 private:
 	SYNTHESIZE(std::vector<D3DXVECTOR3>, vecVertex, VecVertex);
 	SYNTHESIZE(std::vector<PassSurface>, passVertex, PassVertex);
+	
+	
 private:
 	//ÁöÇÏ
 	cRectMake* m_pB1StartRoom;
 	cRectMake* m_pB1Prison;
 	cRectMake* m_pB1StartSpace;
 	cRectMake* m_pB1NextRoom;
-	cRectMake* m_pB1Stair[10];
+	cRectMake* m_pB1StairSurface;
+	
 	//1Ãþ
 	cRectMake* m_pFFPassage;
 	cRectMake* m_pFFPassage2;
 	cRectMake* m_pFFLivingRoom;
 	cRectMake* m_pFFLivingRoom2;
 	cRectMake* m_pFFRoom;
-	cRectMake* m_pFBathRoom;
-	cRectMake* m_pB1Stair2[10];
+	cRectMake* m_pFFRoom1;
+	cRectMake* m_pFFBathRoom;
+	cRectMake* m_pFFStairSurface;
 	//2Ãþ
 	cRectMake* m_pSFPassage;
 	cRectMake* m_pSFRoom;
@@ -35,7 +45,7 @@ private:
 	
 
 
-	//Åë·Î
+	//¹® Åë·Î
 	cRectMake* m_pB1PrisonDoor;
 	cRectMake* m_pB1Door;
 	cRectMake* m_pBathRoomWall;
@@ -43,8 +53,11 @@ private:
 	cRectMake* m_pFFRoomDoor;
 	cRectMake* m_pSFRoomDoor1;
 	cRectMake* m_pSFRoomDoor2;
-
-
+	cRectMake* m_pFFCollision;
+	cRectMake* m_pWoodWay;
+	
+	
+	//Check m_pCheked[8];
 
 	LPDIRECT3DTEXTURE9		   m_pTexture;
 	D3DMATERIAL9			   m_stMtl;
@@ -54,5 +67,8 @@ public:
 	void Setup();
 	void Render();
 	void PassSetup();
+	void PassInput(PassSurface v0, PassSurface v1, PassSurface v2, PassSurface v3, int index);
+//	bool getCheckOpen(int index) { return m_pCheked[index].isOpen; }
+//	void setCheckOpen(int index, bool isOpen) { m_pCheked[index].isOpen = isOpen; }
 };
 
