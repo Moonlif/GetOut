@@ -84,6 +84,13 @@ void cStuff::Reposition(D3DXVECTOR3 deltaPosition)
 
 void cStuff::Update()
 {
+	if (m_eStuffCode >= STUFF_CROWBAR && m_eStuffCode <= STUFF_BRICK5)
+	{
+		m_IsOnMap = g_pData->m_bStuffSwitch[m_eStuffCode];
+		m_vPosition = m_vRenderPosition = g_pData->m_vStuffPosition[m_eStuffCode];
+		m_vRotation = m_vRenderRotation = g_pData->m_vStuffRotation[m_eStuffCode];
+	}
+
 	if (m_bSwitch)
 	{
 		m_fSwitchValue += m_fSwitchValueIntensity;

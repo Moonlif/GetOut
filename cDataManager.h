@@ -21,7 +21,7 @@ public:
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
-	bool m_bStuffSwitch[10];
+	bool m_bStuffSwitch[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
@@ -44,5 +44,8 @@ public:
 	
 	void Chat(string Text);
 	string GetText();
+
+	void DropItem(StuffCode itemCode, D3DXVECTOR3 position, D3DXVECTOR3 rotation = D3DXVECTOR3(0, 0, 0));
+	void GetItem(StuffCode itemCode);
 };
 
