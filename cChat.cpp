@@ -65,7 +65,9 @@ void cChat::ChatOnOff()
 	if (!g_pData->m_listChat_RECV.empty())
 	{
 		chat->PushChat(m_strChat);
+		WaitForSingleObject(g_hMutex_CHAT, INFINITE);	// << : Wait Mutex
 		g_pData->m_listChat_RECV.pop_front();
+		ReleaseMutex(g_hMutex_CHAT);
 	}
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;

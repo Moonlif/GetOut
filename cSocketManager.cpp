@@ -144,7 +144,9 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
 			continue;
 
 		string Output(RecvData.TEXT);
+		WaitForSingleObject(g_hMutex_CHAT, INFINITE);	// << : Wait Mutex
 		g_pData->m_listChat_RECV.push_back(Output);
+		ReleaseMutex(g_hMutex_CHAT);					// << : ReleaseMutex
 
 		fputs(RecvData.TEXT, stdout);
 	} /// << : while

@@ -59,6 +59,7 @@ extern POINT g_ptMouse;
 extern bool g_bDebug;
 extern int g_nFps;
 extern int g_nCountFps;
+extern HANDLE g_hMutex_CHAT;
 
 #define SAFE_RELEASE(p) {if(p) p->Release(); p = NULL;}
 #define SAFE_DELETE(p) {if(p) delete p; p = NULL;}
