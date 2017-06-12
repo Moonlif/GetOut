@@ -1,8 +1,9 @@
 #pragma once
 class cUIObject;
 class cUIInvenItem;
+#include "cUIButton.h"
 
-class cInventory
+class cInventory : public iButtonDelegate
 {
 public:
 	cInventory();
@@ -15,8 +16,10 @@ private:
 	LPD3DXSPRITE			m_pSprite;
 	
 	//가방 꽉 찾을 때
+	bool					m_isWarning;
+	string					m_strWarningWord;
 	int						m_nBagIsFullTextOutCount;
-	LPD3DXFONT				m_pFontBagFull;
+	LPD3DXFONT				m_pFontWarning;
 
 	//인벤 내에서 아이템 이동시
 	bool					m_IsPick;
@@ -26,6 +29,7 @@ private:
 	//마우스 포인터에 옮길 아이템 렌더
 	LPDIRECT3DTEXTURE9		m_pTexture;
 	RECT					m_rcItem;
+
 public:
 	void Setup();
 	void Update();
@@ -33,10 +37,14 @@ public:
 
 	void SetInventoryBase();
 	void SetItem(StuffCode ItemName);
-	void BagIsFull();
+
+	void LimitWarningTextOutTime();
 
 	void MoveItem();
 	void PickedRender();
 	eUITAG CarcCuruntPtInven();
+
+
+	virtual void OnClick(cUIButton* pSender);
 };
 

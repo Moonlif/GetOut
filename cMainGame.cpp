@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
+
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
@@ -44,11 +45,7 @@ void cMainGame::Setup()
 	//코드 추가
 	{
 		g_pData->Setup();
-
-		//map
-		m_pMap = new cMap;
-		m_pMap->Setup();
-
+		
 		//character
 		m_pCharacter = new CharacterManager;
 		m_pCharacter->Setup();
@@ -56,32 +53,38 @@ void cMainGame::Setup()
 		//interact
 		m_pInteract = new cInteract;
 		m_pInteract->Setup();
-
+		//map
+		m_pMap = new cMap;
+		m_pMap->Setup();
+		
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();
 
 		//test light
 		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
-			D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXVECTOR3(0, 1, 1));
+		D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(-1, -1, -1));
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
+	g_pData->SetIsStartedGame(true);
+	g_pD3DDevice->LightEnable(0, true);
+	m_pCamera->SetCameraDistance(50.0f);
 
-	//g_pSocketmanager->Setup();
-	//g_pSocketmanager->Setup_Chat();
+	//g_pSocketmanager->Setup_CHAT();
+	//g_pSocketmanager->Setup_DATA();
 }
 
 void cMainGame::Update()
 {
 
 	g_pTimeManager->Update();
-
+	g_pSocketmanager->Update_DATA();
 
 	if (m_pCamera) m_pCamera->Update();
 	{
 		//map
-
+		m_pMap->Update(7, true);
 		//character
 		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update();
 		static bool start = false;

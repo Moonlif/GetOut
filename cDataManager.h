@@ -21,18 +21,22 @@ public:
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
-	bool m_BasementSwitch1;
+	bool m_bStuffSwitch[10];
+	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
+	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
 	//Áö»ó - Ã¤ÆÃ
 	list<string> m_listChat_RECV;
+	SYNTHESIZE(DWORD, m_dwUpdateTick, UpdateTick);
 
 	//±Õ¿µ
 	int m_nPlayerNum;
 	D3DXVECTOR3 m_vPosition1P;
 	D3DXVECTOR3 m_vPosition2P;
-	D3DXVECTOR3 m_vRotation1P;
-	D3DXVECTOR3 m_vRotation2P;
-	animationState m_eOtherPlayerAnimState;
+	float m_vRotation1P;
+	float m_vRotation2P;
+	animationState m_eAnimState1P;
+	animationState m_eAnimState2P;
 
 public:
 	void Setup();

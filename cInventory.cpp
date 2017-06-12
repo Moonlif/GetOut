@@ -9,6 +9,7 @@ cInventory::cInventory()
 	, m_IsPick(false)
 	, m_FirstInvenItemNum(0)
 	, m_SecondInvenItemNum(0)
+	, m_isWarning(false)
 {
 }
 
@@ -17,7 +18,7 @@ cInventory::~cInventory()
 {
 	m_pUIBase->Destroy();
 	SAFE_RELEASE(m_pSprite);
-	SAFE_RELEASE(m_pFontBagFull);
+	SAFE_RELEASE(m_pFontWarning);
 	SAFE_RELEASE(m_pSprite);
 	SAFE_RELEASE(m_pTexture);
 
@@ -26,7 +27,7 @@ cInventory::~cInventory()
 void cInventory::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
-	g_pFontManager->CreateFont2D(m_pFontBagFull, 15, 20, 500);
+	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 20, 500);
 	SetInventoryBase();
 }
 
@@ -36,12 +37,15 @@ void cInventory::Update()
 
 	//아이템 이동시
 	MoveItem();
+
+	if (m_isWarning) LimitWarningTextOutTime();
+
 }
 
 void cInventory::Render()
 {
 	if (m_pUIBase) m_pUIBase->Render(m_pSprite);
-	if (g_pUIvarius->GetIsBagFull()) BagIsFull();
+	if (m_isWarning) g_pFontManager->TextOut2D(m_pFontWarning, m_strWarningWord, 500, 20, 750, 220);
 
 	//무언가를 픽하고 있으면 렌더하기
 	if (m_IsPick) PickedRender();
@@ -50,7 +54,7 @@ void cInventory::Render()
 //인벤토리 첫 세팅
 void cInventory::SetInventoryBase()
 {
-	cUIImageView *BlackBackground = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0), 250);
+	cUIImageView *BlackBackground = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0.0f), 250);
 	BlackBackground->SetTag(eUITAG::INVENTORY_IMAGE_BACKGROUND);
 	m_pUIBase = BlackBackground;
 
@@ -68,7 +72,7 @@ void cInventory::SetInventoryBase()
 	///-----------------------------------------------------------------
 	//						메인 인벤토리창 이미지
 	///-----------------------------------------------------------------
-	cUIImageView *upLine = new cUIImageView("UI/Inventory/inventory_frame_generic_border_u.tga", D3DXVECTOR3(320, 50, 0), 250);
+	cUIImageView *upLine = new cUIImageView("UI/Inventory/inventory_frame_generic_border_u.tga", D3DXVECTOR3(270, 50, 0), 250);
 	upLine->SetScaling(D3DXVECTOR3(MultipleWidth, 1.0f, 1.0f));
 	m_pUIBase->AddChild(upLine);
 
@@ -102,15 +106,13 @@ void cInventory::SetInventoryBase()
 	D3DXVECTOR3 InveSize(2.3f, 1.1f, 1.0f);
 	int			nAlpha = 150;
 
-	//아이템창 1번설정
-	
-	cUIInvenItem *inven = new cUIInvenItem("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3(- 5, 15, 0), nAlpha);
-	inven->SetScaling(InveSize);
-	inven->SetTag(eUITAG::INVENTORY_1);
+	//아이템창 1번설정	
+	cUIInvenItem *inven = new cUIInvenItem("UI/Inventory/key_laboratory.tga", D3DXVECTOR3(- 55, 15, 0), nAlpha);
+	inven->SetItemTexture(g_pTextureManager->GetTexture("UI/Inventory/inventory_oil_bg.tga"));
 	m_pInven = inven;
 	upLine->AddChild(m_pInven);
 	//이후 설정
-	for (int i = 1; i < 21; ++i)
+	for (int i = 0; i < 21; ++i)
 	{
 		cUIInvenItem *inven1 = new cUIInvenItem("UI/Inventory/inventory_oil_bg.tga", D3DXVECTOR3((i % 7) * 95 + 320,(i / 7) * 105 + 50, 0), nAlpha);
 		inven1->SetScaling(InveSize);
@@ -122,17 +124,17 @@ void cInventory::SetInventoryBase()
 	//						조합 테두리 이미지
 	///-----------------------------------------------------------------
 
-	cUIInvenItem *combine1 = new cUIInvenItem("UI/Inventory/inventory_slot.tga", D3DXVECTOR3(350, 420, 0), 250);
+	cUIInvenItem *combine1 = new cUIInvenItem("UI/Inventory/inventory_slot.tga", D3DXVECTOR3(325, 420, 0), 250);
 	combine1->SetScaling(D3DXVECTOR3(2.0f, 1.5f, 1.0f));
 	combine1->SetTag(eUITAG::INVENTORY_COMBINE_1);
 	m_pInven->AddChild(combine1);
 
-	cUIInvenItem *combine2 = new cUIInvenItem("UI/Inventory/inventory_slot.tga", D3DXVECTOR3(570, 420, 0), 250);
+	cUIInvenItem *combine2 = new cUIInvenItem("UI/Inventory/inventory_slot.tga", D3DXVECTOR3(565, 420, 0), 250);
 	combine2->SetScaling(D3DXVECTOR3(2.0f, 1.5f, 1.0f));
 	combine2->SetTag(eUITAG::INVENTORY_COMBINE_2);
 	m_pInven->AddChild(combine2);
 
-	cUIInvenItem *combine3 = new cUIInvenItem("UI/Inventory/inventory_slot.tga", D3DXVECTOR3(790, 420, 0), 250);
+	cUIInvenItem *combine3 = new cUIInvenItem("UI/Inventory/inventory_slot.tga", D3DXVECTOR3(805, 420, 0), 250);
 	combine3->SetScaling(D3DXVECTOR3(2.0f, 1.5f, 1.0f));
 	combine3->SetTag(eUITAG::INVENTORY_COMBINE_3);
 	m_pInven->AddChild(combine3);
@@ -140,38 +142,56 @@ void cInventory::SetInventoryBase()
 	///-----------------------------------------------------------------
 	//						조합 텍스트
 	///-----------------------------------------------------------------
-	cUITextView* Text1 = new cUITextView("조합재료1", D3DXVECTOR3(20, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
+	cUITextView* Text1 = new cUITextView("조합재료1", D3DXVECTOR3(-30, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
 		ST_SIZEN(300, 100), 15, 20, 500);
 	combine1->AddChild(Text1);
 
-	cUITextView* Text2 = new cUITextView("조합재료2", D3DXVECTOR3(20, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
+	cUITextView* Text2 = new cUITextView("조합재료2", D3DXVECTOR3(-30, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
 		ST_SIZEN(300, 100), 15, 20, 500);
 	combine2->AddChild(Text2);
 
-	cUITextView* Text3 = new cUITextView("조합재료3", D3DXVECTOR3(20, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
+	cUITextView* Text3 = new cUITextView("조합재료3", D3DXVECTOR3(-30, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
 		ST_SIZEN(300, 100), 15, 20, 500);
 	combine3->AddChild(Text3);
 
 	///-----------------------------------------------------------------
 	//						쓰레기통
 	///-----------------------------------------------------------------
-	cUIImageView *garbageCan = new cUIImageView("UI/Inventory/inventory_tinderboxes.tga", D3DXVECTOR3(-200, 450, 0), 250);
+	cUIImageView *garbageCan = new cUIImageView("UI/Inventory/inventory_tinderboxes.tga", D3DXVECTOR3(-170, 420, 0), 250);
 	garbageCan->SetScaling(D3DXVECTOR3(1.7f, 1.7f, 1.0f));
+	garbageCan->SetTag(eUITAG::INVENTORY_GABAGE);
 	upLine->AddChild(garbageCan);
 
 	///-----------------------------------------------------------------
 	//						사용아이템
 	///-----------------------------------------------------------------
-	cUIInvenItem *UseInven = new cUIInvenItem("UI/Inventory/inventory_oil_fg.tga", D3DXVECTOR3(1020, 400, 0), 250);
+	cUIInvenItem *UseInven = new cUIInvenItem("UI/Inventory/inventory_oil_fg.tga", D3DXVECTOR3(1070, 120, 0), 250);
 	UseInven->SetScaling(D3DXVECTOR3(3.1f, 1.5f, 1.0f));
+	UseInven->SetTag(eUITAG::INVENTORY_USINGITEM);
 	m_pInven->AddChild(UseInven);
 
 	///-----------------------------------------------------------------
 	//						사용 텍스트
 	///-----------------------------------------------------------------
-	cUITextView *UseInvenText = new cUITextView("사용 아이템", D3DXVECTOR3(470, 380, 0), D3DCOLOR_XRGB(255, 255, 255),
+	cUITextView *UseInvenText = new cUITextView("사용 아이템", D3DXVECTOR3(-40, 200, 0), D3DCOLOR_XRGB(255, 255, 255),
 		ST_SIZEN(300, 100), 15, 20, 500);
 	UseInven->AddChild(UseInvenText);
+
+	///-----------------------------------------------------------------
+	//						조합 관련
+	///-----------------------------------------------------------------
+	cUIButton* CombineButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
+		"UI/button/BlackButton_Down.png", D3DXVECTOR3(230, 60, 0));
+	CombineButton->SetAlpha(100);
+	CombineButton->SetScaling(D3DXVECTOR3(1.2f, 0.65f, 0.0f));
+	CombineButton->SetDelegate(this);
+	CombineButton->SetTag(eUITAG::INVENTORY_BUTTON_COMBINE);
+	combine3->AddChild(CombineButton);
+
+	cUITextView* CombineText = new cUITextView("조 합", D3DXVECTOR3(845, 445, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
+		ST_SIZEN(200, 100), 15, 30, 900);
+	CombineText->SetTag(eUITAG::INVENTORY_TEXT_COMBINE);
+	CombineButton->AddChild(CombineText);
 }
 
 //아이템 습득시 부르는 함수
@@ -182,7 +202,8 @@ void cInventory::SetItem(StuffCode ItemName)
 	//가방이 풀일 때
 	if (EmptyInven == NULL)
 	{
-		g_pUIvarius->SetIsBagFull(true);
+		m_isWarning = true;
+		m_strWarningWord = "가방이 꽉 찼습니다.";
 		return;
 	}
 	EmptyInven->SetItemTexture(g_pUIvarius->m_mapItemInfo[ItemName].Texture);
@@ -192,11 +213,21 @@ void cInventory::SetItem(StuffCode ItemName)
 	EmptyInven->SetItemCode(ItemName);
 }
 
-//가방 꽉 찾을 시 텍스트 렌더
-void cInventory::BagIsFull()
-{	 
-	g_pFontManager->TextOut2D(m_pFontBagFull, "Bag is Full",550, 20, 750, 220);
+//가방 꽉찾을 시 텍스트 해당시간 렌더
+void cInventory::LimitWarningTextOutTime()
+{
+	static int countBag = 0;
+
+	countBag++;
+
+	if (countBag > 100)
+	{
+		countBag = 0;
+		m_isWarning = false;
+		m_strWarningWord = " ";
+	}
 }
+
 
 //아이템 옮기기
 void cInventory::MoveItem()
@@ -219,6 +250,9 @@ void cInventory::MoveItem()
 
 			//태그번호로 클릭한 곳의 UIObject찾기
 			FirstClick = (cUIInvenItem*)m_pInven->FindChildByTag(FirstTag);
+
+			//현재 아이템 타입 저장
+			g_pUIvarius->SetCurClickItemType(FirstClick->GetItemType());
 
 			//인벤에 아이템이 없으면 리턴
 			if (FirstClick->GetItemTexture() == NULL) return;
@@ -245,6 +279,40 @@ void cInventory::MoveItem()
 		//클릭된 아이템이 있을 때
 		else if (m_IsPick)
 		{
+			///-------------------------------------------------------
+			//			두번째 클릭한 곳이 쓰레기 통일 때
+			///--------------------------------------------------------
+			cUIObject* gabage = m_pUIBase->FindChildByTag(eUITAG::INVENTORY_GABAGE);
+			if (PtInRect(&gabage->Getrc(), g_ptMouse))
+			{
+				//마우스에 렌더하는 값 초기화
+				m_IsPick = false;
+				m_pTexture = NULL;
+				m_rcItem = { 0,0,0,0 };
+
+				return;
+			}
+			///-------------------------------------------------------
+			//			두번째 클릭한 곳이 사용아이템 일 때
+			///--------------------------------------------------------
+			cUIInvenItem* UsingIven = (cUIInvenItem*)m_pUIBase->FindChildByTag(eUITAG::INVENTORY_USINGITEM);
+			if (PtInRect(&UsingIven->Getrc(), g_ptMouse))
+			{
+				//사용가능한 아이템일 때
+				if (g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_THROW ||
+					g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_KEY)
+				{
+				}
+				//사용불가능한 아이템일 때
+				else
+				{
+					m_isWarning = true;
+					m_strWarningWord = "사용 불가능한 아이템입니다.";
+					return;
+				}
+				
+			}
+
 			//한 곳 좌표 저장
 			SecondTag = CarcCuruntPtInven();
 
@@ -291,50 +359,6 @@ void cInventory::MoveItem()
 			m_rcItem = { 0,0,0,0 };
 		}
 	}
-	////키다운중
-	//if (GetKeyState(VK_LBUTTON) & 0x8000)
-	//{
-	//
-
-	//}
-	//if(GetKeyState(VK_LBUTTON) & 0x8000)
-	//{
-	//	if (m_IsPick)
-	//	{
-	//		//업한 곳 좌표 저장
-	//		UpTag = CarcCuruntPtInven();
-
-	//		//태그번호로 클릭한 곳의 UIObject찾기
-	//		ClickUp = (cUIInvenItem*)m_pInven->FindChildByTag(UpTag);
-
-	//		//클릭한 곳에 아이템이 없다면
-	//		if (ClickUp->GetItemTexture() == NULL)
-	//		{
-	//			//지정된 곳에 이전 클릭한 곳 아이템 정보 저장
-	//			ClickUp->SetItemTexture(g_pUIvarius->m_mapItemInfo[ClickDownCode].Texture);
-	//			ClickUp->SetItemType(g_pUIvarius->m_mapItemInfo[ClickDownCode].ItemType);
-	//			ClickUp->SetItemNum(m_ClickDownItemNum);
-	//		}
-	//		//업한곳에 아이템이 있다면
-	//		else
-	//		{
-	//			//업한곳 정보 저장
-	//			ClickUpCode = ClickUp->GetItemCode();
-	//			m_ClickUpItemNum = ClickUp->GetItemNum();
-
-	//			//다운한곳에 업한곳의 정보 넣어주기
-	//			ClickDown->SetItemTexture(g_pUIvarius->m_mapItemInfo[ClickUpCode].Texture);
-	//			ClickDown->SetItemType(g_pUIvarius->m_mapItemInfo[ClickUpCode].ItemType);
-	//			ClickDown->SetItemNum(m_ClickUpItemNum);
-	//		}
-
-	//		
-
-	//		m_IsPick = false;
-	//	}
-	//
-	//}
-
 }
 
 //아이템 픽 했을 때 마우스에 렌더
@@ -349,16 +373,27 @@ void cInventory::PickedRender()
 	D3DXMatrixIdentity(&matS);
 	D3DXMatrixIdentity(&matT);
 	D3DXMatrixIdentity(&matWorld);
-	//스케일링
-	D3DXMatrixScaling(&matS, 1.60f, 1.8f, 1.0f);
+
+	//이미지 크기에 따른 렌더
+	if (FirstCode == StuffCode::STUFF_PAPER1 || FirstCode == StuffCode::STUFF_PAPER2 ||
+		FirstCode == StuffCode::STUFF_PAPER3)
+	{
+		//스케일링
+		D3DXMatrixScaling(&matS, 1.40f, 1.2f, 1.0f);	
+	}
+	else
+	{
+		//스케일링
+		D3DXMatrixScaling(&matS, 1.60f, 1.8f, 1.0f);		
+	}
+
 	//트렌스레이션
-	D3DXMatrixTranslation(&matT, g_ptMouse.x - width/ 2, g_ptMouse.y - height, 0.0f);
+	D3DXMatrixTranslation(&matT, g_ptMouse.x - width / 2, g_ptMouse.y - height, 0.0f);
 	//월드 구하기
 	matWorld = matS * matT;
 	m_pSprite->SetTransform(&matWorld);
-
 	m_pSprite->Draw(m_pTexture, &m_rcItem, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 0, 0),
-		D3DCOLOR_ARGB(200, 255, 255, 255));
+		D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	m_pSprite->End();
 }
@@ -366,75 +401,78 @@ void cInventory::PickedRender()
 //현재 어떤 인벤을 클릭했는지
 eUITAG cInventory::CarcCuruntPtInven()
 {
-	
-
-	int left = 314;
-	int top = 64;
-
-	//인벤 밖을 클릭했다면 리턴
-	if (g_ptMouse.x < left || g_ptMouse.x > left + 7 * 95) return eUITAG::EMPTY;
-	if (g_ptMouse.y < top || g_ptMouse.y > top + 3 * 105) return eUITAG::EMPTY;
-
-	//인벤토리 내 검사
-	for (int i = 0; i < 21; ++i)
+	for (int i = 0; i < m_pInven->GetChild().size(); ++i)
 	{
-		if (g_ptMouse.x >= left + 95 * (i % 7) &&
-			g_ptMouse.x < left + 95 * (i % 7) + 95 &&
-			g_ptMouse.y >= top + 105 * (i / 7) &&
-			g_ptMouse.y < top + 105 * (i / 7) + 105)
+		if (PtInRect(&m_pInven->GetChild()[i]->Getrc(), g_ptMouse))
 		{
-			switch (i)
+			return (eUITAG)m_pInven->GetChild()[i]->GetTag();
+		}
+	}
+}
+
+void cInventory::OnClick(cUIButton * pSender)
+{
+	if (pSender->GetTag() == eUITAG::INVENTORY_BUTTON_COMBINE)
+	{
+		cUIInvenItem* combine1 = (cUIInvenItem*)m_pInven->FindChildByTag(eUITAG::INVENTORY_COMBINE_1);
+		cUIInvenItem* combine2 = (cUIInvenItem*)m_pInven->FindChildByTag(eUITAG::INVENTORY_COMBINE_2);
+		cUIInvenItem* combine3 = (cUIInvenItem*)m_pInven->FindChildByTag(eUITAG::INVENTORY_COMBINE_3);
+
+		//조합 가능할 때
+		if (combine1->GetItemType() == eITEMTYPE::ITEMTYPE_COMBINE ||
+			combine2->GetItemType() == eITEMTYPE::ITEMTYPE_COMBINE ||
+			combine3->GetItemType() == eITEMTYPE::ITEMTYPE_COMBINE)
+		{
+
+			//조합가능할 때
+			//세개의 조합아이템들이 다 다르고, 한 개라도 빠지지 않았을 때
+			if ((combine1->GetItemCode() != combine2->GetItemCode() &&
+				combine1->GetItemCode() != combine3->GetItemCode() &&
+				combine2->GetItemCode() != combine3->GetItemCode()) &&		
+				(combine1->GetItemTexture() != NULL && combine2->GetItemTexture() != NULL &&
+					combine3->GetItemTexture() != NULL))
 			{
-			case 0:
-				return eUITAG::INVENTORY_1;
-			case 1:
-				return eUITAG::INVENTORY_2;
-			case 2:
-				return eUITAG::INVENTORY_3;
-			case 3:
-				return eUITAG::INVENTORY_4;
-			case 4:
-				return eUITAG::INVENTORY_5;
-			case 5:
-				return eUITAG::INVENTORY_6;
-			case 6:
-				return eUITAG::INVENTORY_7;
-			case 7:
-				return eUITAG::INVENTORY_8;
-			case 8:
-				return eUITAG::INVENTORY_9;
-			case 9:
-				return eUITAG::INVENTORY_10;
-			case 10:
-				return eUITAG::INVENTORY_11;
-			case 11:
-				return eUITAG::INVENTORY_12;
-			case 12:
-				return eUITAG::INVENTORY_13;
-			case 13:
-				return eUITAG::INVENTORY_14;
-			case 14:
-				return eUITAG::INVENTORY_15;
-			case 15:
-				return eUITAG::INVENTORY_16;
-			case 16:
-				return eUITAG::INVENTORY_17;
-			case 17:
-				return eUITAG::INVENTORY_18;
-			case 18:
-				return eUITAG::INVENTORY_19;
-			case 19:
-				return eUITAG::INVENTORY_20;
-			case 20:
-				return eUITAG::INVENTORY_21;
-			default:
-				return eUITAG::EMPTY;
+				m_isWarning = true;
+				m_strWarningWord = "조합이 가능.";
+
+				//조합 아이템 초기화
+				combine1->SetItemTexture(NULL);
+				combine1->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
+				combine1->SetItemNum(0);
+				combine1->SetrcItem(RECT{ 0,0,0,0 });
+				combine1->SetItemCode(StuffCode::STUFF_NONE);
+
+				//조합 아이템 초기화
+				combine2->SetItemTexture(NULL);
+				combine2->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
+				combine2->SetItemNum(0);
+				combine2->SetrcItem(RECT{ 0,0,0,0 });
+				combine2->SetItemCode(StuffCode::STUFF_NONE);
+
+				//조합 아이템 초기화
+				combine3->SetItemTexture(NULL);
+				combine3->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
+				combine3->SetItemNum(0);
+				combine3->SetrcItem(RECT{ 0,0,0,0 });
+				combine3->SetItemCode(StuffCode::STUFF_NONE);
+
+				//아이템 생성
+				SetItem(StuffCode::STUFF_KEY1);
+				return;
 			}
+			else
+			{
+				m_isWarning = true;
+				m_strWarningWord = "조합이 불가능 합니다.";
+				return;
+			}
+		}
+		else
+		{
+			m_isWarning = true;
+			m_strWarningWord = "조합이 불가능 합니다.";
+			return;
 		}
 
 	}
-
-
-	
-
 }

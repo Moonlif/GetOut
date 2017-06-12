@@ -12,10 +12,7 @@ class cUI_globalVarius
 private:
 	SINGLETONE(cUI_globalVarius);
 
-
-	
-	SYNTHESIZE(bool, m_IsBagFull, IsBagFull)
-
+	SYNTHESIZE(eITEMTYPE,		m_CurClickItemType, CurClickItemType)
 public:
 	map<StuffCode, ITEMINFO>	m_mapItemInfo;
 

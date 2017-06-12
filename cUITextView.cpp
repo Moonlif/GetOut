@@ -34,8 +34,3 @@ void cUITextView::Render(LPD3DXSPRITE pSprite)
 	
 	cUIObject::Render(pSprite);
 }
-
-cUITextView * cUITextView::FindEmptyInvene()
-{
-	return nullptr;
-}
