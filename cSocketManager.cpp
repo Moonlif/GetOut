@@ -118,38 +118,35 @@ unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam)
 {
 	SOCKET hSock = *((SOCKET*)lpParam);
 	char nameMsg[NAME_SIZE + BUF_SIZE];
+	ST_CHAT SendData;
 	while (true)
 	{
 		EnterCriticalSection(&cs);	// << : Begin CRITICAL SECTION 
-		string sText = g_pData->GetText();
-		if (sText.size() < 2) continue;
+		string Data = g_pData->GetText();
+		sprintf_s(SendData.TEXT, "%s", Data.c_str(),NAME_SIZE + BUF_SIZE);
+		if (Data.size() < 2) continue;
 		//sText.resize(BUF_SIZE);
-		sprintf_s(nameMsg, "%s", sText.c_str(), NAME_SIZE + BUF_SIZE);
 		LeaveCriticalSection(&cs);	// << : End CRITICAL SECTION
-
-		send(hSock, nameMsg, strlen(nameMsg), 0);
+		send(hSock, (char*)&SendData, sizeof(ST_CHAT), 0);
 	}
 	return 0;
 }
 
 unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
 {
-	int hSock = *((SOCKET*)lpParam);
-	char nameMsg[NAME_SIZE + BUF_SIZE];
+	SOCKET hSock = *((SOCKET*)lpParam);
+	ST_CHAT RecvData;
 	int strLen;
 	while (true)
 	{
-		strLen = recv(hSock, nameMsg, NAME_SIZE + BUF_SIZE - 1, 0);
-		if (strLen == -1) // << : connect Error
-			return -1;
+		strLen = recv(hSock, (char*)&RecvData, sizeof(ST_CHAT), 0);
+		if (strLen == -1 || strLen == 0) // << : connect Error
+			continue;
 
-		EnterCriticalSection(&cs);	// << : Begin CRITICAL SECTION
-		nameMsg[strLen] = 0;
-		string Output(nameMsg);
+		string Output(RecvData.TEXT);
 		g_pData->m_listChat_RECV.push_back(Output);
-		LeaveCriticalSection(&cs);	// << : End CRITICAL SECTION
 
-		fputs(nameMsg, stdout);
+		fputs(RecvData.TEXT, stdout);
 	} /// << : while
 	return 0;
 }

@@ -62,6 +62,11 @@ void cChat::ChatOnOff()
 	//Ãª Ã£±â
 	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
 
+	if (!g_pData->m_listChat_RECV.empty())
+	{
+		chat->PushChat(m_strChat);
+		g_pData->m_listChat_RECV.pop_front();
+	}
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;
 
@@ -83,8 +88,6 @@ void cChat::ChatOnOff()
 			g_pData->Chat(m_strChat);
 
 			//ÇöÀç Ã¤ÆÃ Çª½¬
-			//chat->PushChat(m_strChat);
-			//g_pData->m_listChat_RECV.pop_front();
 
 		}
 		//Ã¤ÆÃ Ä×À» ¶§
