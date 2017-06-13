@@ -44,7 +44,7 @@ void cSocketManager::Setup_DATA()
 	memset(&ServAdr_DATA, 0, sizeof(ServAdr_DATA));
 	ServAdr_DATA.sin_family = AF_INET;
 	ServAdr_DATA.sin_addr.s_addr = inet_addr(HOSTIP);
-	ServAdr_DATA.sin_port = PORT_DATA;
+	ServAdr_DATA.sin_port = PORT_DATA_SERVER;
 
 	if (connect(hSocket_DATA, (SOCKADDR*)&ServAdr_DATA, sizeof(ServAdr_DATA)) == SOCKET_ERROR)
 		cout << "DATA connect() error" << endl;
@@ -53,26 +53,33 @@ void cSocketManager::Setup_DATA()
 
 void cSocketManager::Setup_CHAT()
 {
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT) != 0)	/// Init Socket
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT) != 0)	
 		cout << "CHAT WSAStartup() error!" << endl;
 
-	//sprintf(name, "[DEFAULT]");						/// 플레이어 이름 초기화
-	hSocket_CHAT = socket(PF_INET, SOCK_STREAM, 0);	/// 채팅 소켓 할당
+	hSocket_CHAT = socket(PF_INET, SOCK_STREAM, 0);		/// 채팅 소켓 할당
+	clock_t prevTime = clock();
 
 	memset(&ServAdr_CHAT, 0, sizeof(ServAdr_CHAT));
 	ServAdr_CHAT.sin_family = AF_INET;
 	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HOSTIP);
-	ServAdr_CHAT.sin_port = PORT_CHAT;
+	ServAdr_CHAT.sin_port = PORT_CHAT_SERVER;
 
+	int result = connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT));
 
-	if (connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT)) == SOCKET_ERROR)
-		cout << "CHAT connect() error" << endl;
-
-
-	if (hSocket_CHAT != SOCKET_ERROR)		/// 소켓의 연결이 정상이라면
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result != SOCKET_ERROR)
 	{
-		hSndThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))SEND_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 발신 스레드 함수
-		hRcvThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))RECV_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 수신 스레드 함수
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "CHAT 서버에 재연결 합니다" << endl;
+		result = connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT));
+	}
+
+	/* 소켓의 연결이 정상이라면 스레드를 동작시킵니다. */
+	if (hSocket_CHAT != SOCKET_ERROR)
+	{
+		hChatSend = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))SEND_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 발신 스레드 함수
+		hChatRecv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))RECV_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 수신 스레드 함수
 	}
 }
 
@@ -80,7 +87,8 @@ void cSocketManager::Update_DATA()
 {
 	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
 	{
-		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_DATA_TO_SERVER, (void*)&hSocket_DATA, 0, NULL);
+		hDataRecv_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_DATA_TO_SERVER, (void*)&hSocket_DATA, 0, NULL);
+		hDataSend_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) RECV_DATA_FROM_SERVER, (void*)&hSocket_DATA, 0, NULL);
 	}
 	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
@@ -108,11 +116,11 @@ void cSocketManager::Calc_Position()
 
 void cSocketManager::Destroy()
 {
-	WaitForSingleObject(hSndThread, INFINITE);	/// 스레드 종료 대기
-	WaitForSingleObject(hRcvThread, INFINITE);	/// 스레드 종료 대기
+	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
+	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
 
-	CloseHandle(hSndThread);
-	CloseHandle(hRcvThread);
+	CloseHandle(hChatSend);
+	CloseHandle(hChatRecv);
 
 	closesocket(hSocket_CHAT);
 	closesocket(hSocket_DATA);
@@ -171,25 +179,27 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_CLIENT;
+	addr.sin_port = PORT_DATA_SERVER;
+
 	clock_t prevTime = clock();
 	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
 	while (result == SOCKET_ERROR)
 	{
-		if (prevTime + (ONE_SECOND * 2) > clock()) continue;	// << : 2초에 한번 연결합니다.
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
 		prevTime = clock();
 		cout << "DATA connect Error()" << endl;
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
 	}
 
+	/* 어떤 데이터를 보낼지 먼저 알려줍니다. 그뒤 해당하는 데이터를 전송합니다. */
 	while (true)
 	{
 		if (prevTime + (ONE_SECOND) > clock()) continue;
 		prevTime = clock();
 
-		// << : DataManager에서 플래그를 받아서 날리는 식으로 해야되나.
-		int length = FLAG_POSITION;
-		send(hSocket, (char*)&length, sizeof(int), 0);
+		int flag = FLAG_POSITION;
+		send(hSocket, (char*)&flag, sizeof(int), 0);
 
 		ST_PLAYER_POSITION st;
 		st.fX = 1.0f;
@@ -203,6 +213,44 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 }
 unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
 {
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_DATA_SERVER;
+	clock_t prevTime = clock();
+	char szBuffer[BUF_SIZE * 10] = { 0, };
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;	// << : 2초에 한번 연결합니다.
+		prevTime = clock();
+		cout << "DATA connect Error()" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	}
+
+	int strLen, i;
+	while ((strLen = recv(hSocket, (char*)&szBuffer, sizeof(int), 0)) != 0)
+	{
+		if (strLen == -1) break;
+		int nFlag = *(char*)szBuffer;
+
+		switch (nFlag)	// << : g_pDataManager에 그대로 넣어준다 ?
+		{
+		case FLAG_NONE:
+			break;
+		case FLAG_IP:
+			break;
+		case FLAG_POSITION:
+			break;
+		case FLAG_OBJECT_DATA:
+			break;
+		case FLAG_ALL:
+			break;
+		}
+	}
+
 	return 0;
 }
 unsigned int _stdcall SEND_DATA_TO_CLIENT(LPVOID lpParam)

@@ -18,9 +18,9 @@
 #define ONE_SECOND 1000
 #define OUT_PLAYER1 1 << 4
 #define OUT_PLAYER2 1 << 5
-#define PORT_DATA 1234
-#define PORT_CHAT 9090
-#define PORT_CLIENT 10111
+#define PORT_DATA_SERVER 1234
+#define PORT_DATA_CLIENT 10111
+#define PORT_CHAT_SERVER 9090
 #define ROOM_NAME_SIZE 50
 #define SEND_PER_SECOND 2
 
@@ -32,8 +32,8 @@ private:
 
 	WSADATA wsaData_CHAT, wsaData_DATA;
 	SOCKET hSocket_CHAT, hSocket_DATA;
-	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA;
-	HANDLE hSndThread, hRcvThread, hDataThread;
+	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA, ClntAdr_DATA;
+	HANDLE hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
 
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
@@ -56,15 +56,13 @@ public:
 struct ST_PLAYER_POSITION
 {
 	char  szRoomName[50] = { 0, };	// << : Key
-	int	  nFROM_SERVER;				// << : Server Flag
-	int   nFROM_CLIENT;				// << :	Client Flag
 	int	  nPlayerIndex;				// << : Player Index
 	animationState eAnimState;		// << : Animation index
 	float fX;
 	float fY;
 	float fZ;
 	float fAngle;
-	ST_PLAYER_POSITION() :nFROM_SERVER(0), nFROM_CLIENT(0), nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
+	ST_PLAYER_POSITION() : nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 
@@ -72,8 +70,6 @@ struct ST_ALL_DATA
 {
 	// << : Player Data
 	char  szRoomName[50] = { 0, };	// << : Key
-	int	  nFROM_SERVER;				// << : SERVER FLAG
-	int   nFROM_CLIENT;				// << : CLIENT FLAG
 	int	  nPlayerIndex;				// << : Current Player Index
 	animationState eAnimState;		// << : Animation index
 	float fX;
@@ -100,7 +96,8 @@ struct ST_CHAT
 enum FLAG
 {
 	FLAG_NONE = 1 << 0,
-	FLAG_POSITION = 1 << 1,
-	FLAG_OBJECT_DATA = 1 << 2,
-	FLAG_ALL = 1 << 3,
+	FLAG_IP = 1 << 1,
+	FLAG_POSITION = 1 << 2,
+	FLAG_OBJECT_DATA = 1 << 3,
+	FLAG_ALL = 1 << 4,
 };
