@@ -6,11 +6,12 @@
 
 CRITICAL_SECTION cs;
 CRITICAL_SECTION cs2;
-unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam);
-unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
-unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
-unsigned int _stdcall SEND_ADR(LPVOID lpParam);
-unsigned int _stdcall SEND_POSITION(LPVOID lpParam);
+unsigned int _stdcall SEND_CHAT(LPVOID lpParam);
+unsigned int _stdcall RECV_CHAT(LPVOID lpParam);
+unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam);
+unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam);
+unsigned int _stdcall SEND_DATA_TO_CLIENT(LPVOID lpParam);
+unsigned int _stdcall RECV_DATA_FROM_CLIENT(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
@@ -70,8 +71,8 @@ void cSocketManager::Setup_CHAT()
 
 	if (hSocket_CHAT != SOCKET_ERROR)		/// 소켓의 연결이 정상이라면
 	{
-		hSndThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))PROCESS_CHAT_Send, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 발신 스레드 함수
-		hRcvThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))PROCESS_CHAT_Recv, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 수신 스레드 함수
+		hSndThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))SEND_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 발신 스레드 함수
+		hRcvThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))RECV_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 수신 스레드 함수
 	}
 }
 
@@ -79,7 +80,7 @@ void cSocketManager::Update_DATA()
 {
 	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
 	{
-		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_POSITION, (void*)&hSocket_DATA, 0, NULL);
+		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_DATA_TO_SERVER, (void*)&hSocket_DATA, 0, NULL);
 	}
 	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
@@ -124,8 +125,7 @@ void cSocketManager::UpdatePosition(float  x, float y, float z)
 	nextPosition = D3DXVECTOR3(x, y, z);
 }
 
-
-unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam)
+unsigned int _stdcall SEND_CHAT(LPVOID lpParam)
 {
 	SOCKET hSock = *((SOCKET*)lpParam);
 	char nameMsg[NAME_SIZE + BUF_SIZE];
@@ -143,7 +143,7 @@ unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam)
 	return 0;
 }
 
-unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
+unsigned int _stdcall RECV_CHAT(LPVOID lpParam)
 {
 	SOCKET hSock = *((SOCKET*)lpParam);
 	ST_CHAT RecvData;
@@ -164,81 +164,7 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
 	return 0;
 }
 
-unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
-{
-	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN addr;
-	memset(&addr, 0, sizeof(SOCKADDR_IN));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_DATA;
-
-	if (connect(hSocket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR)
-	{
-		cout << "DATA connect Error()" << endl;
-	}
-	
-	ST_PLAYER_POSITION SendData;
-
-	SendData.fAngle = g_pData->m_vRotation1P;
-	SendData.fX = g_pData->m_vPosition1P.x;
-	SendData.fY = g_pData->m_vPosition1P.y;
-	SendData.fZ = g_pData->m_vPosition1P.z;
-	SendData.eAnimState = g_pData->m_eAnimState1P;
-
-	if(g_pData->m_nPlayerNum1P == 1)
-		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER1;
-	else if(g_pData->m_nPlayerNum1P == 2)
-		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
-
-	SendData.nFROM_CLIENT = g_pSocketmanager->GetFlagNum();
-	g_pSocketmanager->SetFlagNum(++SendData.nFROM_CLIENT);
-	SendData.nFROM_SERVER = 0;
-	sprintf_s(SendData.szRoomName, "%s", "DEFAULT", 7);
-	
-	send(hSocket, (char*)&SendData, sizeof(ST_PLAYER_POSITION), 0);
-
-	ST_PLAYER_POSITION RecvData;
-	recv(hSocket, (char*)&RecvData, sizeof(ST_PLAYER_POSITION), 0);
-
-	if (RecvData.nPlayerIndex & IN_PLAYER1)
-		g_pData->m_nPlayerNum2P = 1;
-
-	if(RecvData.nPlayerIndex & IN_PLAYER2)
-		g_pData->m_nPlayerNum2P = 2;
-
-	// << : CRITICAL SECTION ?
-	g_pSocketmanager->stStart = clock();
-	g_pSocketmanager->UpdatePosition(RecvData.fX, RecvData.fY, RecvData.fZ);
-	// << : CRITICAL SECTION ?
-	return 0;
-}
-
-unsigned int _stdcall SEND_ADR(LPVOID lpParam)
-{
-	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN addr;
-	memset(&addr, 0, sizeof(SOCKADDR_IN));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_CLIENT;
-	clock_t prevTime = clock();
-	if (connect(hSocket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR)
-	{
-		cout << "DATA connect Error()" << endl;
-	}
-	while (true)
-	{
-		if (prevTime + 5000 > clock()) continue;
-		prevTime = clock();
-		send(hSocket, (char*)&addr, sizeof(SOCKADDR_IN), 0);
-		cout << inet_ntoa(addr.sin_addr) << endl;
-	}
-
-	return 0;
-}
-
-unsigned int _stdcall SEND_POSITION(LPVOID lpParam)
+unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN addr;
@@ -262,7 +188,7 @@ unsigned int _stdcall SEND_POSITION(LPVOID lpParam)
 		prevTime = clock();
 
 		// << : DataManager에서 플래그를 받아서 날리는 식으로 해야되나.
-		int length = sizeof(ST_PLAYER_POSITION);
+		int length = FLAG_POSITION;
 		send(hSocket, (char*)&length, sizeof(int), 0);
 
 		ST_PLAYER_POSITION st;
@@ -274,4 +200,16 @@ unsigned int _stdcall SEND_POSITION(LPVOID lpParam)
 		LeaveCriticalSection(&cs2);
 		cout << "좌표 전송" << endl;
 	}
+}
+unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
+{
+	return 0;
+}
+unsigned int _stdcall SEND_DATA_TO_CLIENT(LPVOID lpParam)
+{
+	return 0;
+}
+unsigned int _stdcall RECV_DATA_FROM_CLIENT(LPVOID lpParam)
+{
+	return 0;
 }

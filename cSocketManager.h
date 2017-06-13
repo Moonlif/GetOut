@@ -90,8 +90,17 @@ struct ST_ALL_DATA
 	StuffCode objectType[SWITCH_LASTNUM];	// << : objectType
 	bool objectRunning[SWITCH_LASTNUM];		// << : Is Object Run?
 };
+
 struct ST_CHAT
 {
 	char ROOM_NAME[ROOM_NAME_SIZE] = { 0, };
 	char TEXT[NAME_SIZE + BUF_SIZE] = { 0, };
+};
+
+enum FLAG
+{
+	FLAG_NONE = 1 << 0,
+	FLAG_POSITION = 1 << 1,
+	FLAG_OBJECT_DATA = 1 << 2,
+	FLAG_ALL = 1 << 3,
 };
