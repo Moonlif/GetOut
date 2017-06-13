@@ -14,7 +14,7 @@ private:
 	cSurface*		m_pSurface;
 	cWall*			m_pWall;
 	cCeiling*		m_pCeiling;
-	cObjectSurface* m_pOjbSurface;
+	cObjectSurface* m_pObjSurface;
 
 
 	//::vector<cMapObject*> vecMapObj;
@@ -49,7 +49,11 @@ public:
 	void Render();
 	void RenderObject();
 	cSurface* getSurface() { return m_pSurface; };
-	cObjectSurface* getObjSurface(){ return m_pOjbSurface; };
+	cObjectSurface* getObjSurface(){ return m_pObjSurface; };
+	bool GetSurfaceHeight(IN float x, OUT float & y, IN float z);
+	bool GetObjectSurface(IN float x, OUT float & y, IN float z);
+	bool GetPassSurface(IN float x, OUT float & y, IN float z);
+	bool GetMovePossible(IN float x, OUT float & y, IN float z);
 	//int getIndex{return m_pSurface.}
 };
 
