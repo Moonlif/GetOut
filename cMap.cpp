@@ -7,7 +7,7 @@ cMap::cMap()
 	, m_pWall(NULL)
 	, m_pSurface(NULL)
 	, m_pCeiling(NULL)
-	, m_pOjbSurface(NULL)
+	, m_pObjSurface(NULL)
 	, m_pObjShackles(NULL)
 	, m_pObjPiano(NULL)
 	, m_pObjShelf(NULL)
@@ -39,7 +39,7 @@ cMap::~cMap()
 	SAFE_DELETE(m_pWall);
 	SAFE_DELETE(m_pSurface);
 	SAFE_DELETE(m_pCeiling);
-	SAFE_DELETE(m_pOjbSurface);
+	SAFE_DELETE(m_pObjSurface);
 
 
 
@@ -75,7 +75,7 @@ void cMap::Setup()
 	m_pSurface->Setup();
 	m_pCeiling = new cCeiling;
 	m_pCeiling->Setup();
-	m_pOjbSurface = new cObjectSurface;
+	m_pObjSurface = new cObjectSurface;
 	SetupObject();
 }
 
@@ -94,7 +94,7 @@ void cMap::SetupObject()
 	//지하실 선반
 	m_pObjShelf = new cMapObject;
 	m_pObjShelf->Setup("Objects/map", "shelf_no_back.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 0)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 0)
 		, D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 1.5)
 		, D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 1.5)
 		, D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 0));
@@ -102,7 +102,7 @@ void cMap::SetupObject()
 	//지하실 와인 베럴
 	m_pObjWinebarrel = new cMapObject;
 	m_pObjWinebarrel->Setup("Objects/map", "big_wine_barrel.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 10.7, B1F, CENTERZ + 0)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 10.7, B1F, CENTERZ + 0)
 		, D3DXVECTOR3(CENTERX + 10.7, B1F, CENTERZ + 1.5)
 		, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 1.5)
 		, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 0));
@@ -110,7 +110,7 @@ void cMap::SetupObject()
 	//박스
 	m_pObjBox = new cMapObject;
 	m_pObjBox->Setup("Objects", "box.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.4, B1F, CENTERZ + 3.5)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.4, B1F, CENTERZ + 3.5)
 		, D3DXVECTOR3(CENTERX + 9.4, B1F, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 11, B1F, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 11, B1F, CENTERZ + 3.5));
@@ -118,7 +118,7 @@ void cMap::SetupObject()
 	//피아노
 	m_pObjPiano = new cMapObject;
 	m_pObjPiano->Setup("Objects/map", "piano.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 0.3)
 		, D3DXVECTOR3(CENTERX + 8, FF, CENTERZ + 0.3)
 		, D3DXVECTOR3(CENTERX + 8, FF, CENTERZ - 0.5));
@@ -126,7 +126,7 @@ void cMap::SetupObject()
 	//서랍
 	m_pDrawers = new cMapObject;
 	m_pDrawers->Setup("Objects/map", "chest_of_drawers_nice.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 8, FF, CENTERZ - 0.5)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 8, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 8, FF, CENTERZ + 0.3)
 		, D3DXVECTOR3(CENTERX + 8.8, FF, CENTERZ + 0.3)
 		, D3DXVECTOR3(CENTERX + 8.8, FF, CENTERZ - 0.5));
@@ -134,7 +134,7 @@ void cMap::SetupObject()
 	//침대
 	m_pObjBed = new cMapObject;
 	m_pObjBed->Setup("Objects/map", "bed_nice.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.5)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 1.7)
 		, D3DXVECTOR3(CENTERX + 4.6, FF, CENTERZ + 1.7)
 		, D3DXVECTOR3(CENTERX + 4.6, FF, CENTERZ - 0.5));
@@ -142,7 +142,7 @@ void cMap::SetupObject()
 	//선반
 	m_pObjShelfHigh = new cMapObject;
 	m_pObjShelfHigh->Setup("Objects/map", "shelf_high01.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5)
 		, D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3)
 		, D3DXVECTOR3(CENTERX + 6.5, SF, CENTERZ + 3)
 		, D3DXVECTOR3(CENTERX + 6.5, SF, CENTERZ - 0.5));
@@ -154,7 +154,7 @@ void cMap::SetupObject()
 	//책상
 	m_pObjDesk = new cMapObject;
 	m_pObjDesk->Setup("Objects/map", "work_desk.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ - 2.2)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ - 2.2)
 		, D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ - 1.5)
 		, D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ - 1.5)
 		, D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ - 2.2));
@@ -162,7 +162,7 @@ void cMap::SetupObject()
 	//아이언메이든
 	m_pIronmaiden = new cMapObject;
 	m_pIronmaiden->Setup("Objects/map", "iron_maiden.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.3, SF, CENTERZ + 2)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.3, SF, CENTERZ + 2)
 		, D3DXVECTOR3(CENTERX + 9.3, SF, CENTERZ + 3)
 		, D3DXVECTOR3(CENTERX + 10.5, SF, CENTERZ + 3)
 		, D3DXVECTOR3(CENTERX + 10.5, SF, CENTERZ + 2));
@@ -171,12 +171,12 @@ void cMap::SetupObject()
 	m_pTorture = new cMapObject;
 	m_pTorture->Setup("Objects/map", "torture_saw_setup.obj");
 
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 0.3)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 0.3)
 		, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ + 0.7)
 		, D3DXVECTOR3(CENTERX + 11.9, FF, CENTERZ + 0.7)
 		, D3DXVECTOR3(CENTERX + 11.9, FF, CENTERZ - 0.3));
 
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.1, FF, CENTERZ - 0.3)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.1, FF, CENTERZ - 0.3)
 		, D3DXVECTOR3(CENTERX + 9.1, FF, CENTERZ + 0.7)
 		, D3DXVECTOR3(CENTERX + 9.8, FF, CENTERZ + 0.7)
 		, D3DXVECTOR3(CENTERX + 9.8, FF, CENTERZ - 0.3));
@@ -184,7 +184,7 @@ void cMap::SetupObject()
 	//돌 테이블
 	m_pStonetable = new cMapObject;
 	m_pStonetable->Setup("Objects/map", "stone_table.obj");
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 2.8)
+	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 2.8)
 		, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 1.3)
 		, D3DXVECTOR3(CENTERX + 10.9, FF, CENTERZ - 1.3)
 		, D3DXVECTOR3(CENTERX + 10.9, FF, CENTERZ - 2.8));
@@ -213,31 +213,31 @@ void cMap::SetupObject()
 
 	{
 		//1지하 상자
-		m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.4, B1F, CENTERZ + 2.5)
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.4, B1F, CENTERZ + 2.5)
 			, D3DXVECTOR3(CENTERX + 11.4, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 2.5));
 		
 		//지하 움직이는 상자
-		m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 8.8, B1F, CENTERZ + 2.7)
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 8.8, B1F, CENTERZ + 2.7)
 			, D3DXVECTOR3(CENTERX + 8.8, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 10.2, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 10.2, B1F, CENTERZ + 2.7));
 
 		//돌무더기
-		m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ + 3)
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ + 3)
 			, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 12.6, FF, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 12.6, FF, CENTERZ + 3));
 
 		//돌무더기
-		m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.5, FF, CENTERZ + 2.3)
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.5, FF, CENTERZ + 2.3)
 			, D3DXVECTOR3(CENTERX + 11.5, FF, CENTERZ + 3)
 			, D3DXVECTOR3(CENTERX + 12.6, FF, CENTERZ + 3)
 			, D3DXVECTOR3(CENTERX + 12.6, FF, CENTERZ + 2.3));
 
 		//화장실 상자
-		m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 3.2, FF, CENTERZ - 1.2)
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 3.2, FF, CENTERZ - 1.2)
 			, D3DXVECTOR3(CENTERX + 3.2, FF, CENTERZ - 0.7)
 			, D3DXVECTOR3(CENTERX + 4, FF, CENTERZ - 0.7)
 			, D3DXVECTOR3(CENTERX + 4, FF, CENTERZ - 1.2));
@@ -259,10 +259,10 @@ void cMap::Update(int index, bool isTrue)
 void cMap::Render()
 {
 	
-//	m_pSurface->Render();
-	m_pFloor->Render();
-	m_pWall->Render();
-	m_pCeiling->Render();	
+	m_pSurface->Render();
+//	m_pFloor->Render();
+//	m_pWall->Render();
+//	m_pCeiling->Render();	
 	
 	RenderObject();
 }
@@ -314,4 +314,122 @@ void cMap::RenderObject()
 	m_pBookPile1->Render(0.1, -17, 27.5, - 11.5, 0);
 	//m_pBookRow->Render(0.1, -12, 26, -22, 0.5);
 	//m_pOjbSurface->RenderSurface();
+}
+
+
+bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
+{
+	{
+		D3DXVECTOR3 vec[200];
+		D3DXMATRIXA16 matS, matWorld;
+		D3DXMatrixIdentity(&matS);
+		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixScaling(&matS, 6, 6, 6);
+		matWorld = matS;
+		for(int i = 0 ; i<  m_pSurface->GetVecVertex().size() ; i++){
+			D3DXVec3TransformCoord(&vec[i], &m_pSurface->GetVecVertex()[i], &matWorld);
+		}
+		D3DXVECTOR3 vRayPos(x, 8, z);
+		D3DXVECTOR3 vRayDir(0, -1, 0);
+		for (size_t i = 0; i < m_pSurface->GetVecVertex().size(); i += 3) {
+			float u, v, f;
+			if (D3DXIntersectTri(
+				&vec[i + 0],
+				&vec[i + 1],
+				&vec[i + 2],
+				&vRayPos,
+				&vRayDir,
+				&u,
+				&v,
+				&f
+			)) {
+				y = 8 - f;
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+bool cMap::GetObjectSurface(IN float x, OUT float & y, IN float z)
+{
+	{
+		D3DXVECTOR3 vec[200];
+		D3DXMATRIXA16 matS, matWorld;
+		D3DXMatrixIdentity(&matS);
+		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixScaling(&matS, 6, 6, 6);
+		matWorld = matS;
+		for (int i = 0 ; i < m_pObjSurface->GetVecVertex().size() ; i++) {
+			D3DXVec3TransformCoord(&vec[i], &m_pObjSurface->GetVecVertex()[i].p, &matWorld);
+		}
+
+		D3DXVECTOR3 vRayPos(x, 8, z);
+		D3DXVECTOR3 vRayDir(0, -1, 0);
+		for (size_t i = 0; i < m_pObjSurface->GetVecVertex().size(); i += 3) {
+			float u, v, f;
+			if (D3DXIntersectTri(
+				&vec[i + 0],
+				&vec[i + 1],
+				&vec[i + 2],
+				&vRayPos,
+				&vRayDir,
+				&u,
+				&v,
+				&f
+			)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
+{
+	{
+		PassSurface vec[200];
+		D3DXMATRIXA16 matS, matWorld;
+		D3DXMatrixIdentity(&matS);
+		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixScaling(&matS, 6, 6, 6);
+		matWorld = matS;
+		for (int i = 0; i < m_pSurface->GetPassVertex().size(); i++) {
+			D3DXVec3TransformCoord(&vec[i].p, &m_pSurface->GetPassVertex()[i].p, &matWorld);
+			vec[i].nindex = m_pSurface->GetPassVertex()[i].nindex;
+		}
+		
+		D3DXVECTOR3 vRayPos(x, 8, z);
+		D3DXVECTOR3 vRayDir(0, -1, 0);
+		for (size_t i = 0; i < m_pSurface->GetPassVertex().size(); i += 3) {
+			float u, v, f;
+			if (D3DXIntersectTri(&vec[i + 0].p, &vec[i + 1].p, &vec[i + 2].p, &vRayPos, &vRayDir, &u, &v, &f)) {
+				if (g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] == true && vec[i + 0].nindex == SWITCH_DOOR_PRISON)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] == true && vec[i + 0].nindex == SWITCH_DOOR_1STROOM)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] == true && vec[i + 0].nindex == SWITCH_DOOR_1STTOILET)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM1] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM1)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM2)
+					return true;
+				else
+					return false;
+			}
+			else {
+				return true;
+			}
+		}
+	}
+}
+
+bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
+{
+	if (GetSurfaceHeight(x, y, z) && GetObjectSurface(x, y, z) && GetPassSurface(x,y,z)) {
+		return true;
+	}
+	else {
+		false;
+	}
 }
