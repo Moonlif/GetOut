@@ -5,10 +5,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 CRITICAL_SECTION cs;
+CRITICAL_SECTION cs2;
 unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam);
 unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 unsigned int _stdcall SEND_ADR(LPVOID lpParam);
+unsigned int _stdcall SEND_POSITION(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
@@ -18,6 +20,7 @@ cSocketManager::cSocketManager()
 	, nFlagNum(-1)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
+	InitializeCriticalSection(&cs2);	// << : 2
 	prevPosition.x = 0;
 	prevPosition.y = 0;
 	prevPosition.z = 0;
@@ -76,7 +79,7 @@ void cSocketManager::Update_DATA()
 {
 	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
 	{
-		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_ADR, (void*)&hSocket_DATA, 0, NULL);
+		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_POSITION, (void*)&hSocket_DATA, 0, NULL);
 	}
 	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
@@ -233,4 +236,42 @@ unsigned int _stdcall SEND_ADR(LPVOID lpParam)
 	}
 
 	return 0;
+}
+
+unsigned int _stdcall SEND_POSITION(LPVOID lpParam)
+{
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_CLIENT;
+	clock_t prevTime = clock();
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;	// << : 2초에 한번 연결합니다.
+		prevTime = clock();
+		cout << "DATA connect Error()" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	}
+
+	while (true)
+	{
+		if (prevTime + (ONE_SECOND) > clock()) continue;
+		prevTime = clock();
+
+		// << : DataManager에서 플래그를 받아서 날리는 식으로 해야되나.
+		int length = sizeof(ST_PLAYER_POSITION);
+		send(hSocket, (char*)&length, sizeof(int), 0);
+
+		ST_PLAYER_POSITION st;
+		st.fX = 1.0f;
+		st.fY = 2.0f;
+		st.fZ = 3.0f;
+		EnterCriticalSection(&cs2);
+		send(hSocket, (char*)&st, sizeof(ST_PLAYER_POSITION), 0);
+		LeaveCriticalSection(&cs2);
+		cout << "좌표 전송" << endl;
+	}
 }
