@@ -15,7 +15,10 @@ private:
 	SYNTHESIZE(bool, m_IsOnChat, IsOnChat)
 	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
+	SYNTHESIZE(StuffCode, m_UseItem, UseItem)
+	SYNTHESIZE(bool, m_IsMiniGamePrisonBreak, IsMiniGamePrisonBreak)
 
+	SYNTHESIZE(bool, m_IsPossibleMove, IsPossibleMove)
 public:
 	//정훈 - 오브젝트용
 	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;

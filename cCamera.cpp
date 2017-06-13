@@ -50,12 +50,12 @@ void cCamera::Update()
 	GetClientRect(g_hWnd, &rc);
 
 	//마우스 커서 관련 테스트
-	if (g_pData->GetIsStartedGame() && !isMouseView) SetCursor(NULL); // 마우스를 나타나지 않게 않다.
-	if (g_pKeyManager->isStayKeyDown('I'))
-	{
-		SetCursor(NULL); // 마우스를 나타나지 않게 한다.
-		//ClipCursor(&rc); //마우스 가두기
-	}
+	//if (g_pData->GetIsStartedGame() && !isMouseView) SetCursor(NULL); // 마우스를 나타나지 않게 않다.
+	//if (g_pKeyManager->isStayKeyDown('I'))
+	//{
+	//	//SetCursor(NULL); // 마우스를 나타나지 않게 한다.
+	//	//ClipCursor(&rc); //마우스 가두기
+	//}
 
 	D3DXMATRIXA16 matR, matRX, matRY;
 	D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);

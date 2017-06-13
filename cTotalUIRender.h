@@ -5,6 +5,7 @@ class cCharacterSelectScene;
 class cCamera;
 class cInventory;
 class cChat;
+class cMiniGame_PrisonBreak;
 
 class cTotalUIRender
 {
@@ -17,6 +18,7 @@ private:
 	cCharacterSelectScene*				m_pChaSelectScene;
 	cInventory*							m_pInventory;
 	cChat*								m_pChat;
+	cMiniGame_PrisonBreak*				m_pPrisonBreak;
 
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3, m_pCamraStartPos, CamraStartPos);
 

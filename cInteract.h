@@ -25,4 +25,3 @@ public:
 	void Render();
 	void PickStuff(int keyState, D3DXVECTOR3 playerPos);
 };
-

@@ -72,7 +72,7 @@ void cMainGame::Setup()
 		//map
 		m_pMap = new cMap;
 		m_pMap->Setup();
-		
+
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();

@@ -8,6 +8,8 @@ cDataManager::cDataManager()
 	:m_IsInvenOpen(false)
 	, m_IsStartedGame(false)
 	, m_IsOnChat(false)
+	, m_IsMiniGamePrisonBreak(false)
+	, m_IsPossibleMove(false)
 {
 }
 
