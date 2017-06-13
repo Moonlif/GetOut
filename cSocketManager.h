@@ -34,6 +34,7 @@ private:
 	SOCKET hSocket_CHAT, hSocket_DATA;
 	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA, ClntAdr_DATA;
 	HANDLE hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
+	HANDLE hDataThread;
 
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];

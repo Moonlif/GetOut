@@ -8,10 +8,13 @@ CRITICAL_SECTION cs;
 CRITICAL_SECTION cs2;
 unsigned int _stdcall SEND_CHAT(LPVOID lpParam);
 unsigned int _stdcall RECV_CHAT(LPVOID lpParam);
+// << : 바인딩 문제로 현재 클라이언트간 통신이 구현되지 못했습니다.
 unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam);
 unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam);
 unsigned int _stdcall SEND_DATA_TO_CLIENT(LPVOID lpParam);
 unsigned int _stdcall RECV_DATA_FROM_CLIENT(LPVOID lpParam);
+// << : 기존 구현 방식
+unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
@@ -39,6 +42,7 @@ void cSocketManager::Setup_DATA()
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData_DATA) != 0) /// Init Socket
 		cout << "DATA WSAStartup() error!" << endl;
 
+	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
 void cSocketManager::Setup_CHAT()
@@ -75,15 +79,10 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update_DATA()
 {
-	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
-	{
-		hDataSend_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_DATA_TO_SERVER, (void*)&hSocket_DATA, 0, NULL);
-		hDataRecv_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) RECV_DATA_FROM_SERVER, (void*)&hSocket_DATA, 0, NULL);
-	}
-	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
-	//stUpdateTime = clock();
-	//hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
+	if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
+
+	stUpdateTime = clock();
 }
 
 void cSocketManager::Update()
@@ -188,28 +187,23 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 		if (prevTime + (ONE_SECOND) > clock()) continue;
 		prevTime = clock();
 
-		//ST_FLAG stFlag;
-		//stFlag.eFlag = FLAG_POSITION;
-		//stFlag.nPlayerIndex = 1000;
-		//sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
-		//send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
-
-		//ST_PLAYER_POSITION st;
-		//st.fX = 1.0f;
-		//st.fY = 2.0f;
-		//st.fZ = 3.0f;
-		//EnterCriticalSection(&cs2);
-		//send(hSocket, (char*)&st, sizeof(ST_PLAYER_POSITION), 0);
-		//LeaveCriticalSection(&cs2);
-		//cout << "좌표 전송" << endl;
-
 		ST_FLAG stFlag;
-		stFlag.eFlag = FLAG_IP;
-		stFlag.nPlayerIndex = 1000;
+		stFlag.eFlag = FLAG_POSITION;
+		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
 		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
 		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+
+		ST_PLAYER_POSITION st;
+		st.nPlayerIndex = g_pData->m_nPlayerNum1P;
+		st.fX = g_pData->m_vPosition1P.x;
+		st.fY = g_pData->m_vPosition1P.y;
+		st.fZ = g_pData->m_vPosition1P.z;
+		st.fAngle = g_pData->m_vRotation1P;
+		send(hSocket, (char*)&st, sizeof(ST_PLAYER_POSITION), 0);
+		cout << "좌표 전송" << endl;
 	}
 }
+
 unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = *(SOCKET*)lpParam;
@@ -246,11 +240,73 @@ unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
 
 	return 0;
 }
+
 unsigned int _stdcall SEND_DATA_TO_CLIENT(LPVOID lpParam)
 {
 	return 0;
 }
+
 unsigned int _stdcall RECV_DATA_FROM_CLIENT(LPVOID lpParam)
 {
+	return 0;
+}
+
+unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
+{
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_DATA_SERVER;
+
+	clock_t prevTime = clock();
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "스레드 연결 재시도중" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	}
+
+	/* 어떤 데이터를 보낼지 먼저 알려줍니다. 그뒤 해당하는 데이터를 전송합니다. */
+	while (true)
+	{
+		if (prevTime + (ONE_SECOND) > clock()) continue;
+		prevTime = clock();
+
+		ST_FLAG stFlag;
+		stFlag.eFlag = FLAG_POSITION;
+		stFlag.nPlayerIndex = 1000;
+		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
+		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+
+		ST_PLAYER_POSITION stSend;
+		if (g_pData->m_nPlayerNum1P == 1)
+			stSend.nPlayerIndex = OUT_PLAYER1;
+		else if (g_pData->m_nPlayerNum1P == 2)
+			stSend.nPlayerIndex = OUT_PLAYER2;
+		stSend.fX = g_pData->m_vPosition1P.x;
+		stSend.fY = g_pData->m_vPosition1P.y;
+		stSend.fZ = g_pData->m_vPosition1P.z;
+		stSend.fAngle = g_pData->m_vRotation1P;
+		send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+
+		ST_PLAYER_POSITION stRecv;
+		recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
+		g_pData->m_nPlayerNum2P = stRecv.nPlayerIndex;
+		g_pData->m_vPosition2P.x = stRecv.fX;
+		g_pData->m_vPosition2P.y = stRecv.fY;
+		g_pData->m_vPosition2P.z = stRecv.fZ;
+		g_pData->m_vRotation2P = stRecv.fAngle;
+		cout << stRecv.nPlayerIndex << endl;
+		cout << stRecv.fX << endl;
+		cout << stRecv.fY << endl;
+		cout << stRecv.fZ << endl;
+		cout << stRecv.fAngle << endl;
+	}
+
 	return 0;
 }
