@@ -13,6 +13,7 @@ class Player
 {
 private:
 	D3DXVECTOR3		position;
+	D3DXVECTOR3		checkPosition;
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,	headPosition, headPosition)
 	D3DXVECTOR3		direction;
 	float			rotY;
@@ -36,5 +37,7 @@ public:
 	inline D3DXVECTOR3& GetDirection() { return direction; }
 
 	void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
+
+	void MoveCharacter(cMap* pMap);
 };
 

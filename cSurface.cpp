@@ -330,6 +330,7 @@ void cSurface::Setup()
 
 void cSurface::Render()
 {
+
 	//지하 
 	m_pB1StartRoom->Render();
 	m_pB1Prison->Render();
@@ -380,7 +381,7 @@ void cSurface::Render()
 
 void cSurface::PassSetup()
 {
-	/*	0 감옥 
+	/*	0 감옥 SWITCH_DOOR_PRISON
 		1 지하 통로 
 		2 화장실 벽 
 		3 화장실 문 
@@ -391,15 +392,15 @@ void cSurface::PassSetup()
 		8 나무 토막 추가
 	*/
 	PassSurface v0, v1, v2, v3;
-
+	//감옥 문
 	m_pB1PrisonDoor = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 5, B1F, CENTERZ + 2);
 	v1.p = D3DXVECTOR3(CENTERX + 5, B1F, CENTERZ + 2.1);
 	v2.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2.1);
 	v3.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2); 
 	m_pB1PrisonDoor->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
-	PassInput(v0, v1, v2, v3, 0);
-
+	PassInput(v0, v1, v2, v3, SWITCH_DOOR_PRISON);
+	//감옥 -> 지하실 벽
 	m_pB1Door = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 3);
 	v1.p = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 3.5);
@@ -407,8 +408,7 @@ void cSurface::PassSetup()
 	v3.p = D3DXVECTOR3(CENTERX + 8.1, B1F, CENTERZ + 3);
 	m_pB1Door->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, 1);
-
-
+	//화장실 -> 방 벽
 	m_pBathRoomWall = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.5);
 	v1.p = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.4);
@@ -416,39 +416,42 @@ void cSurface::PassSetup()
 	v3.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5);
 	m_pBathRoomWall->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, 2);
-
+	//화장실 -> 통로 문
 	m_pBathRoomDoor = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 3);
 	v1.p = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 2.5);
 	v2.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 2.5);
 	v3.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3);
 	m_pBathRoomDoor->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
-	PassInput(v0, v1, v2, v3, 3);
-
+	PassInput(v0, v1, v2, v3, SWITCH_DOOR_1STTOILET);
+	//1층방 문
 	m_pFFRoomDoor = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3);
 	v1.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3.5);
 	v2.p = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 3.5);
 	v3.p = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 3);
 	m_pFFRoomDoor->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
-	PassInput(v0, v1, v2, v3, 4);
+	PassInput(v0, v1, v2, v3, SWITCH_DOOR_1STROOM);
 
+	//2층방 문
 	m_pSFRoomDoor1 = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ + 1);
 	v1.p = D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ + 1.5);
 	v2.p = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1.5);
 	v3.p = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1);
 	m_pSFRoomDoor1->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
-	PassInput(v0, v1, v2, v3, 5);
+	PassInput(v0, v1, v2, v3, SWITCH_DOOR_2NDROOM1);
 
+	//2층방 문 2
 	m_pSFRoomDoor2 = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1);
 	v1.p = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1.5);
 	v2.p = D3DXVECTOR3(CENTERX + 9.1, SF, CENTERZ + 1.5);
 	v3.p = D3DXVECTOR3(CENTERX + 9.1, SF, CENTERZ + 1);
 	m_pSFRoomDoor2->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
-	PassInput(v0, v1, v2, v3, 6);
+	PassInput(v0, v1, v2, v3, SWITCH_DOOR_2NDROOM2);
 
+	//무너진 천장
 	m_pFFCollision = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2);
 	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4);
@@ -457,6 +460,7 @@ void cSurface::PassSetup()
 	m_pFFCollision->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, 7);
 
+	//나무 판자
 	m_pWoodWay = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 3.1);
 	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 3.4);

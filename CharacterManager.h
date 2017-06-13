@@ -10,7 +10,7 @@ private:
 
 public:
 	void Setup();
-	void Update();
+	void Update(cMap* cmap);
 	void Render();
 
 	CharacterManager();
