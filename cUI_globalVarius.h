@@ -16,8 +16,9 @@ private:
 public:
 	map<StuffCode, ITEMINFO>	m_mapItemInfo;
 
-
 	ITEMINFO GetItemInfo(StuffCode ItemName);
 	void SetItemInfo();
+
+	void SetItem(eITEMTYPE itemType, StuffCode itemCode, char* fullPath);
 };
 

@@ -16,67 +16,32 @@ cUI_globalVarius::~cUI_globalVarius()
 
 void cUI_globalVarius::SetItemInfo()
 {
-	D3DXIMAGE_INFO stImageInfo;
-	int width, height;
+	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY1, "UI/Item/key_study.tga");
+	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY2, "UI/Item/key_tomb.tga");
 
-	ITEMINFO itemInfo;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/key_study.tga", &stImageInfo);	
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_KEY;
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_KEY1, itemInfo));
+	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER1, "UI/Item/academy.png");
+	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER2, "UI/Item/game.png");
+	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER3, "UI/Item/seoul.png");
 
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_KEY;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/key_tomb.tga", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_KEY2, itemInfo));
+	SetItem(eITEMTYPE::ITEMTYPE_THROW, StuffCode::STUFF_BRICK1, "UI/Item/Brick.png");
+	SetItem(eITEMTYPE::ITEMTYPE_THROW, StuffCode::STUFF_BRICK2, "UI/Item/Brick.png");
+	SetItem(eITEMTYPE::ITEMTYPE_THROW, StuffCode::STUFF_BRICK3, "UI/Item/Brick.png");
+	SetItem(eITEMTYPE::ITEMTYPE_THROW, StuffCode::STUFF_BRICK4, "UI/Item/Brick.png");
+	SetItem(eITEMTYPE::ITEMTYPE_THROW, StuffCode::STUFF_BRICK5, "UI/Item/Brick.png");
 
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_KEY;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/key_tomb_rusty.tga", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_KEY3, itemInfo));
-
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_KEY;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/key_torture_chamber.tga", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_KEY4, itemInfo));
-
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_KEY;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/key_tower.tga", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_KEY5, itemInfo));
-
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_COMBINE;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/academy.png", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_PAPER1, itemInfo));
-
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_COMBINE;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/game.png", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_PAPER2, itemInfo));
-
-	itemInfo.ItemType = eITEMTYPE::ITEMTYPE_COMBINE;
-	itemInfo.Texture = g_pTextureManager->GetTexture("UI/Item/seoul.png", &stImageInfo);
-	width = stImageInfo.Width;
-	height = stImageInfo.Height;
-	itemInfo.rc = { 0, 0, width, height };
-	m_mapItemInfo.insert(make_pair(StuffCode::STUFF_PAPER3, itemInfo));
+	SetItem(eITEMTYPE::ITEMTYPE_ATTACK, StuffCode::STUFF_CROWBAR, "UI/Item/crowbar.tga");
 }
 
+void cUI_globalVarius::SetItem(eITEMTYPE itemType, StuffCode itemCode, char * fullPath)
+{
+	D3DXIMAGE_INFO stImageInfo;
+
+	ITEMINFO itemInfo;
+	itemInfo.Texture = g_pTextureManager->GetTexture(fullPath, &stImageInfo);
+	itemInfo.ItemType = itemType;
+	itemInfo.rc = { 0, 0, (int)stImageInfo.Width,  (int)stImageInfo.Height };
+	m_mapItemInfo.insert(make_pair(itemCode, itemInfo));
+}
 
 ITEMINFO cUI_globalVarius::GetItemInfo(StuffCode ItemName)
 {

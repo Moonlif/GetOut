@@ -215,7 +215,7 @@ void cInventory::SetItem(StuffCode ItemName)
 	EmptyInven->SetItemCode(ItemName);
 }
 
-//가방 꽉찾을 시 텍스트 해당시간 렌더
+//경고문구 해당시간 렌더
 void cInventory::LimitWarningTextOutTime()
 {
 	static int countBag = 0;
@@ -229,7 +229,6 @@ void cInventory::LimitWarningTextOutTime()
 		m_strWarningWord = " ";
 	}
 }
-
 
 //아이템 옮기기
 void cInventory::MoveItem()
@@ -300,10 +299,13 @@ void cInventory::MoveItem()
 			cUIInvenItem* UsingIven = (cUIInvenItem*)m_pUIBase->FindChildByTag(eUITAG::INVENTORY_USINGITEM);
 			if (PtInRect(&UsingIven->Getrc(), g_ptMouse))
 			{
-				//사용가능한 아이템일 때
+				//사용가능한 아이템일 때 (벽돌, 키, 빠루)
 				if (g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_THROW ||
-					g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_KEY)
+					g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_KEY ||
+					g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_ATTACK)
 				{
+					g_pData->SetUseItem(FirstCode);
+					cout << g_pData->GetUseItem() << endl;
 				}
 				//사용불가능한 아이템일 때
 				else

@@ -15,14 +15,17 @@ private:
 	SYNTHESIZE(bool, m_IsOnChat, IsOnChat)
 	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
 	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
+	SYNTHESIZE(StuffCode, m_UseItem, UseItem)
+	SYNTHESIZE(bool, m_IsMiniGamePrisonBreak, IsMiniGamePrisonBreak)
 
+	SYNTHESIZE(bool, m_IsPossibleMove, IsPossibleMove)
 public:
 	//Á¤ÈÆ - ¿ÀºêÁ§Æ®¿ë
 	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
-	bool m_bStuffSwitch[10];
+	bool m_bStuffSwitch[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
@@ -45,5 +48,8 @@ public:
 	
 	void Chat(string Text);
 	string GetText();
+
+	void DropItem(StuffCode itemCode, D3DXVECTOR3 position, D3DXVECTOR3 rotation = D3DXVECTOR3(0, 0, 0));
+	void GetItem(StuffCode itemCode);
 };
 

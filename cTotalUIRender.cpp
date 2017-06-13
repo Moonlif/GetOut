@@ -4,6 +4,7 @@
 #include "cCharacterSelectScene.h"
 #include "cInventory.h"
 #include "cChat.h"
+#include "cMiniGame_PrisonBreak.h"
 
 cTotalUIRender::cTotalUIRender()
 	:m_pChaSelectScene(NULL),
@@ -20,6 +21,7 @@ cTotalUIRender::~cTotalUIRender()
 	SAFE_DELETE(m_pChaSelectScene);
 	SAFE_DELETE(m_pInventory);
 	SAFE_DELETE(m_pChat);
+	SAFE_DELETE(m_pPrisonBreak);
 }
 
 void cTotalUIRender::Setup()
@@ -33,6 +35,9 @@ void cTotalUIRender::Setup()
 	m_pChat = new cChat;
 	m_pChat->Setup();
 
+	m_pPrisonBreak = new cMiniGame_PrisonBreak;
+	m_pPrisonBreak->Setup();
+
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 }
 
@@ -43,29 +48,67 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Update();
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Update(camera);
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Update();
+	if (m_pPrisonBreak && !g_pData->GetIsInvenOpen() && g_pData->GetIsMiniGamePrisonBreak()) m_pPrisonBreak->Update();
 
-	//챗이 켜지면 인벤토리 안열림
-	if (!g_pData->GetIsOnChat())
+	if (GetAsyncKeyState('I') & 0x0001)
 	{
-		if (GetAsyncKeyState('I') & 0x0001)
+		//게임이 시작되야 인벤이 켜짐
+		//if (!g_pData->GetIsStartedGame()) return;
+
+		//채팅중이면 리턴
+		if (g_pData->GetIsOnChat()) return;
+
+		if (g_pData->GetIsInvenOpen())
 		{
-			//게임이 시작되야 인벤이 켜짐
-			//if (!g_pData->GetIsStartedGame()) return;
-
-			if (g_pData->GetIsInvenOpen()) g_pData->SetIsInvenOpen(false);
-			else g_pData->SetIsInvenOpen(true);
+			g_pData->SetIsInvenOpen(false);
+			g_pData->SetIsPossibleMove(true);
 		}
-	}
+		else
+		{
+			g_pData->SetIsInvenOpen(true);
+			g_pData->SetIsPossibleMove(false);
+		}
 
-	//테스트용
+	}
+	
+
+	//인벤토리 테스트용
 	if (GetAsyncKeyState('0') & 0x0001)
 	{
-		int nRnd = RND->getInt(5);
+		static int nRnd = 0;
 		if (nRnd == 1)	m_pInventory->SetItem(StuffCode::STUFF_PAPER1);
 		else if (nRnd == 2)	m_pInventory->SetItem(StuffCode::STUFF_PAPER2);
 		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_PAPER3);
-		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_PAPER2);
-		else 	m_pInventory->SetItem(StuffCode::STUFF_PAPER1);
+		else if (nRnd == 4)	m_pInventory->SetItem(StuffCode::STUFF_BRICK1);
+		else if (nRnd == 5)	m_pInventory->SetItem(StuffCode::STUFF_BRICK2);
+		else if (nRnd == 6)	m_pInventory->SetItem(StuffCode::STUFF_BRICK3);
+		else if (nRnd == 7)	m_pInventory->SetItem(StuffCode::STUFF_BRICK4);
+		else if (nRnd == 8)	m_pInventory->SetItem(StuffCode::STUFF_BRICK5);
+		else if (nRnd == 9)	m_pInventory->SetItem(StuffCode::STUFF_CROWBAR);
+		else if (nRnd == 10)	m_pInventory->SetItem(StuffCode::STUFF_KEY1);
+		else if (nRnd == 11)	m_pInventory->SetItem(StuffCode::STUFF_KEY2);
+
+		nRnd++;
+		if (nRnd > 11) nRnd = 0;
+	}
+
+	//미니게임 테스트용
+	if (GetAsyncKeyState('G') & 0x0001)
+	{
+		if (g_pData->GetIsMiniGamePrisonBreak())
+		{
+			//미니게임 끄고 움직이게
+			g_pData->SetIsMiniGamePrisonBreak(false);
+			g_pData->SetIsPossibleMove(true);
+		}
+		else
+		{
+			//미니게임 켜고 못움직이게
+			g_pData->SetIsMiniGamePrisonBreak(true);
+			g_pData->SetIsPossibleMove(false);
+		}
+
+		
 	}
 }
 
@@ -75,7 +118,7 @@ void cTotalUIRender::Render()
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Render();
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
 	if (m_pChat) m_pChat->Render();
-
+	if (m_pPrisonBreak && !g_pData->GetIsInvenOpen() && g_pData->GetIsMiniGamePrisonBreak()) m_pPrisonBreak->Render();
 	//스타트씬 클릭되면 케릭터셀렉씬 셋업하는과정
 	if (!m_pStartScene->GetIsStartSceneOpen())
 	{
