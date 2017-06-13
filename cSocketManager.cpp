@@ -87,7 +87,7 @@ void cSocketManager::Update_DATA()
 
 void cSocketManager::Update()
 {
-	Calc_Position();
+	//Calc_Position();
 }
 
 void cSocketManager::Calc_Position()
@@ -279,7 +279,7 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 
 		ST_FLAG stFlag;
 		stFlag.eFlag = FLAG_POSITION;
-		stFlag.nPlayerIndex = 1000;
+		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
 		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
 		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
 
@@ -288,6 +288,7 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 			stSend.nPlayerIndex = OUT_PLAYER1;
 		else if (g_pData->m_nPlayerNum1P == 2)
 			stSend.nPlayerIndex = OUT_PLAYER2;
+		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
 		stSend.fX = g_pData->m_vPosition1P.x;
 		stSend.fY = g_pData->m_vPosition1P.y;
 		stSend.fZ = g_pData->m_vPosition1P.z;
@@ -301,11 +302,11 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 		g_pData->m_vPosition2P.y = stRecv.fY;
 		g_pData->m_vPosition2P.z = stRecv.fZ;
 		g_pData->m_vRotation2P = stRecv.fAngle;
-		cout << stRecv.nPlayerIndex << endl;
-		cout << stRecv.fX << endl;
-		cout << stRecv.fY << endl;
-		cout << stRecv.fZ << endl;
-		cout << stRecv.fAngle << endl;
+		cout << "2P ÀÎµ¦½º : " << stRecv.nPlayerIndex << endl;
+		cout << "2P XÁÂÇ¥ : " << stRecv.fX << endl;
+		cout << "2P YÁÂÇ¥ : " << stRecv.fY << endl;
+		cout << "2P ZÁÂÇ¥ : " << stRecv.fZ << endl;
+		cout << "2P Angle : " << stRecv.fAngle << endl;
 	}
 
 	return 0;
