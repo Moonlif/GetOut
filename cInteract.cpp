@@ -200,24 +200,20 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 			switch (it->GetStuffCode())
 			{
 			case STUFF_DOOR_PRISON:
-				//¿­¼è¸é
-				//g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
+				if (g_pData->GetUseItem() == STUFF_KEY1)
+					g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
 				return;
 			case STUFF_DOOR_1STROOM:
 				g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
 				return;
 			case STUFF_DOOR_1STTOILET:
-				//¿­¼è¸é
-				g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
+				if (g_pData->GetUseItem() == STUFF_KEY2)
+					g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
 				return;
 			case STUFF_BOARDBLOCK:
-				//ºü·ç¸éif()
-			{
-				//if (g_pData->m_nPlayerNum == 1) //³²ÀÚ¸é
-				m_n1FBlockCount++;
+				if (g_pData->GetUseItem() == STUFF_CROWBAR && g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
 				if (m_n1FBlockCount > 3) g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
-			}
-			return;
+				return;
 			case STUFF_BOX1:
 				g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
 				return;
@@ -235,14 +231,15 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 				}
 				break;
 			case STUFF_WOODBOARD2:
-				if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true) g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
+				if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true) 
+					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
 				return;
 			case STUFF_VALVE1:
-				if (m_vecStuff[14]->GetSwitch() == true) continue;
+				if (m_vecStuff[STUFF_VALVE1]->GetSwitch()) continue;
 				m_bValve1 = true;
 				if (lButton) m_n2FValve1Count--;
 				else m_n2FValve1Count++;
-				if (m_n2FValve1Count > 4)
+				if (m_n2FValve1Count >= 4)
 				{
 					m_n2FValve1Count = 4;
 					g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
@@ -250,11 +247,11 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 				else if (m_n2FValve1Count < -4) m_n2FValve1Count = -4;
 				return;
 			case STUFF_VALVE2:
-				if (m_vecStuff[15]->GetSwitch() == true) continue;
+				if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) continue;
 				m_bValve2 = true;
 				if (lButton) m_n2FValve2Count--;
 				else m_n2FValve2Count++;
-				if (m_n2FValve2Count < -4)
+				if (m_n2FValve2Count <= -4)
 				{
 					m_n2FValve2Count = -4;
 					g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
@@ -269,9 +266,7 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 				return;
 			case STUFF_PAPER1:
 				if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST])
-				{
 					g_pData->GetItem(STUFF_PAPER1);
-				}
 				return;
 			case STUFF_PAPER2:
 				g_pData->GetItem(STUFF_PAPER2);
@@ -312,7 +307,7 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 						return;
 					}
 				}
-				break;
+				return;
 			}
 		}
 	}
