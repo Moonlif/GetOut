@@ -53,6 +53,13 @@ public:
 	void UpdatePosition(float  x, float y, float z);
 };
 
+struct ST_FLAG
+{
+	char szRoomName[50] = { 0, };	// << : key
+	int nPlayerIndex;
+	int eFlag;
+};
+
 struct ST_PLAYER_POSITION
 {
 	char  szRoomName[50] = { 0, };	// << : Key

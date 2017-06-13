@@ -47,8 +47,9 @@ void cSocketManager::Setup_DATA()
 	ServAdr_DATA.sin_port = PORT_DATA_SERVER;
 
 	if (connect(hSocket_DATA, (SOCKADDR*)&ServAdr_DATA, sizeof(ServAdr_DATA)) == SOCKET_ERROR)
+	{
 		cout << "DATA connect() error" << endl;
-
+	}
 }
 
 void cSocketManager::Setup_CHAT()
@@ -87,8 +88,8 @@ void cSocketManager::Update_DATA()
 {
 	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
 	{
-		hDataRecv_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_DATA_TO_SERVER, (void*)&hSocket_DATA, 0, NULL);
-		hDataSend_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) RECV_DATA_FROM_SERVER, (void*)&hSocket_DATA, 0, NULL);
+		hDataSend_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_DATA_TO_SERVER, (void*)&hSocket_DATA, 0, NULL);
+		hDataRecv_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) RECV_DATA_FROM_SERVER, (void*)&hSocket_DATA, 0, NULL);
 	}
 	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
@@ -188,7 +189,7 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 	{
 		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
 		prevTime = clock();
-		cout << "DATA connect Error()" << endl;
+		cout << "스레드 연결 재시도중" << endl;
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
 	}
 
@@ -198,8 +199,11 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 		if (prevTime + (ONE_SECOND) > clock()) continue;
 		prevTime = clock();
 
-		int flag = FLAG_POSITION;
-		send(hSocket, (char*)&flag, sizeof(int), 0);
+		ST_FLAG stFlag;
+		stFlag.eFlag = FLAG_POSITION;
+		stFlag.nPlayerIndex = 1000;
+		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
+		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
 
 		ST_PLAYER_POSITION st;
 		st.fX = 1.0f;
@@ -213,7 +217,7 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 }
 unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
 {
-	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKET hSocket = *(SOCKET*)lpParam;
 	SOCKADDR_IN addr;
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
