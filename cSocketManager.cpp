@@ -39,17 +39,6 @@ void cSocketManager::Setup_DATA()
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData_DATA) != 0) /// Init Socket
 		cout << "DATA WSAStartup() error!" << endl;
 
-	hSocket_DATA = socket(PF_INET, SOCK_STREAM, 0);	/// 데이터 소켓 할당
-
-	memset(&ServAdr_DATA, 0, sizeof(ServAdr_DATA));
-	ServAdr_DATA.sin_family = AF_INET;
-	ServAdr_DATA.sin_addr.s_addr = inet_addr(HOSTIP);
-	ServAdr_DATA.sin_port = PORT_DATA_SERVER;
-
-	if (connect(hSocket_DATA, (SOCKADDR*)&ServAdr_DATA, sizeof(ServAdr_DATA)) == SOCKET_ERROR)
-	{
-		cout << "DATA connect() error" << endl;
-	}
 }
 
 void cSocketManager::Setup_CHAT()
@@ -199,20 +188,26 @@ unsigned int _stdcall SEND_DATA_TO_SERVER(LPVOID lpParam)
 		if (prevTime + (ONE_SECOND) > clock()) continue;
 		prevTime = clock();
 
+		//ST_FLAG stFlag;
+		//stFlag.eFlag = FLAG_POSITION;
+		//stFlag.nPlayerIndex = 1000;
+		//sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
+		//send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+
+		//ST_PLAYER_POSITION st;
+		//st.fX = 1.0f;
+		//st.fY = 2.0f;
+		//st.fZ = 3.0f;
+		//EnterCriticalSection(&cs2);
+		//send(hSocket, (char*)&st, sizeof(ST_PLAYER_POSITION), 0);
+		//LeaveCriticalSection(&cs2);
+		//cout << "좌표 전송" << endl;
+
 		ST_FLAG stFlag;
-		stFlag.eFlag = FLAG_POSITION;
+		stFlag.eFlag = FLAG_IP;
 		stFlag.nPlayerIndex = 1000;
 		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
 		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
-
-		ST_PLAYER_POSITION st;
-		st.fX = 1.0f;
-		st.fY = 2.0f;
-		st.fZ = 3.0f;
-		EnterCriticalSection(&cs2);
-		send(hSocket, (char*)&st, sizeof(ST_PLAYER_POSITION), 0);
-		LeaveCriticalSection(&cs2);
-		cout << "좌표 전송" << endl;
 	}
 }
 unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
@@ -222,31 +217,25 @@ unsigned int _stdcall RECV_DATA_FROM_SERVER(LPVOID lpParam)
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_DATA_SERVER;
+	addr.sin_port = 1235;
 	clock_t prevTime = clock();
 	char szBuffer[BUF_SIZE * 10] = { 0, };
-	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
-	while (result == SOCKET_ERROR)
-	{
-		if (prevTime + (ONE_SECOND * 2) > clock()) continue;	// << : 2초에 한번 연결합니다.
-		prevTime = clock();
-		cout << "DATA connect Error()" << endl;
-		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
-	}
+	int result = listen(hSocket, 5);
 
 	int strLen, i;
-	while ((strLen = recv(hSocket, (char*)&szBuffer, sizeof(int), 0)) != 0)
+	while ((strLen = recv(hSocket, (char*)&szBuffer, sizeof(ST_FLAG), 0)) != 0)
 	{
 		if (strLen == -1) break;
-		int nFlag = *(char*)szBuffer;
+		ST_FLAG nFlag = *(ST_FLAG*)szBuffer;
 
-		switch (nFlag)	// << : g_pDataManager에 그대로 넣어준다 ?
+		switch (nFlag.eFlag)	// << : g_pDataManager에 그대로 넣어준다 ?
 		{
 		case FLAG_NONE:
 			break;
 		case FLAG_IP:
 			break;
 		case FLAG_POSITION:
+			cout << "FLAG_POSITION" << endl;
 			break;
 		case FLAG_OBJECT_DATA:
 			break;
