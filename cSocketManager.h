@@ -20,6 +20,7 @@
 #define OUT_PLAYER2 1 << 5
 #define PORT_DATA 1234
 #define PORT_CHAT 9090
+#define PORT_CLIENT 10111
 #define ROOM_NAME_SIZE 50
 #define SEND_PER_SECOND 2
 
@@ -40,6 +41,8 @@ private:
 	D3DXVECTOR3 prevPosition, nextPosition;
 	clock_t stStart, stCurrent, stUpdateTime;
 	float m_fT;
+
+	SYNTHESIZE(int, nFlagNum, FlagNum);
 public:
 	void Setup_DATA();
 	void Setup_CHAT();
@@ -65,13 +68,28 @@ struct ST_PLAYER_POSITION
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 
-struct ST_SOCKET_POSITION
+struct ST_ALL_DATA
 {
-	SOCKET pSocket;
-	char szRoomName[50] = { 0, };
-	int  nPlayerIndex;
+	// << : Player Data
+	char  szRoomName[50] = { 0, };	// << : Key
+	int	  nFROM_SERVER;				// << : SERVER FLAG
+	int   nFROM_CLIENT;				// << : CLIENT FLAG
+	int	  nPlayerIndex;				// << : Current Player Index
+	animationState eAnimState;		// << : Animation index
+	float fX;
+	float fY;
+	float fZ;
+	float fAngle;
+	// << : Object Data
+	float objectPosX[SWITCH_LASTNUM];	// << : PosX
+	float objectPosY[SWITCH_LASTNUM];	// << : PosY
+	float objectPosZ[SWITCH_LASTNUM];	// << : PosZ
+	float objectRotX[SWITCH_LASTNUM];	// << : RotX
+	float objectRotY[SWITCH_LASTNUM];	// << : RotY
+	float objectRotZ[SWITCH_LASTNUM];	// << : RotZ
+	StuffCode objectType[SWITCH_LASTNUM];	// << : objectType
+	bool objectRunning[SWITCH_LASTNUM];		// << : Is Object Run?
 };
-
 struct ST_CHAT
 {
 	char ROOM_NAME[ROOM_NAME_SIZE] = { 0, };

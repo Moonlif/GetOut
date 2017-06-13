@@ -8,12 +8,14 @@ CRITICAL_SECTION cs;
 unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam);
 unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
+unsigned int _stdcall SEND_ADR(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 	, stStart(clock())
 	, stCurrent(clock())
 	, m_fT(0.0f)
+	, nFlagNum(-1)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	prevPosition.x = 0;
@@ -72,10 +74,14 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update_DATA()
 {
-	if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
+	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
+	{
+		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_ADR, (void*)&hSocket_DATA, 0, NULL);
+	}
+	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
 
-	stUpdateTime = clock();
-	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
+	//stUpdateTime = clock();
+	//hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
 void cSocketManager::Update()
@@ -182,7 +188,8 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	else if(g_pData->m_nPlayerNum1P == 2)
 		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
 
-	SendData.nFROM_CLIENT = 0;
+	SendData.nFROM_CLIENT = g_pSocketmanager->GetFlagNum();
+	g_pSocketmanager->SetFlagNum(++SendData.nFROM_CLIENT);
 	SendData.nFROM_SERVER = 0;
 	sprintf_s(SendData.szRoomName, "%s", "DEFAULT", 7);
 	
@@ -201,5 +208,29 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	g_pSocketmanager->stStart = clock();
 	g_pSocketmanager->UpdatePosition(RecvData.fX, RecvData.fY, RecvData.fZ);
 	// << : CRITICAL SECTION ?
+	return 0;
+}
+
+unsigned int _stdcall SEND_ADR(LPVOID lpParam)
+{
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_CLIENT;
+	clock_t prevTime = clock();
+	if (connect(hSocket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR)
+	{
+		cout << "DATA connect Error()" << endl;
+	}
+	while (true)
+	{
+		if (prevTime + 5000 > clock()) continue;
+		prevTime = clock();
+		send(hSocket, (char*)&addr, sizeof(SOCKADDR_IN), 0);
+		cout << inet_ntoa(addr.sin_addr) << endl;
+	}
+
 	return 0;
 }
