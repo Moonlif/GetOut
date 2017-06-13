@@ -125,7 +125,6 @@ void cInteract::Update()
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == false && m_vecStuff[STUFF_DOOR_2NDROOM2]->GetSwitch() == false)
 		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-6.0f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.03f);
 
-
 	//save player position
 	m_n2FButton1Count = 0;
 	m_n2FButton2Count = 0;
