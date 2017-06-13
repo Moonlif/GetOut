@@ -84,6 +84,7 @@ void cStuff::Reposition(D3DXVECTOR3 deltaPosition)
 
 void cStuff::Update()
 {
+	//아이템일시 g_pData에 값과 연동
 	if (m_eStuffCode >= STUFF_CROWBAR && m_eStuffCode <= STUFF_BRICK5)
 	{
 		m_IsOnMap = g_pData->m_bStuffSwitch[m_eStuffCode];
@@ -91,6 +92,7 @@ void cStuff::Update()
 		m_vRotation = m_vRenderRotation = g_pData->m_vStuffRotation[m_eStuffCode];
 	}
 
+	//acting
 	if (m_bSwitch)
 	{
 		m_fSwitchValue += m_fSwitchValueIntensity;
@@ -132,6 +134,7 @@ void cStuff::Render()
 	D3DXMatrixRotationZ(&matRz, m_vRenderRotation.z);
 	matR =  matRy * matRz * matRx;
 
+	//회전값 quaternion으로 변경시 (수정필요)
 	//D3DXQUATERNION q;
 	//q.x = m_vRenderRotation.x;
 	//q.y = m_vRenderRotation.y;
@@ -153,12 +156,11 @@ void cStuff::Render()
 
 	if (g_bDebug)
 	{
-		if (m_pMeshSphere == NULL) return;
 		//g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		D3DXMATRIXA16 matDebug;
 		D3DXMatrixTranslation(&matDebug, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matDebug);
-		m_pMeshSphere->DrawSubset(0);
+		if (m_pMeshSphere != NULL) m_pMeshSphere->DrawSubset(0);
 		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	}
 }

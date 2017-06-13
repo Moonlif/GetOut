@@ -28,6 +28,7 @@ void cDataManager::Setup()
 		m_mapStuffMesh[STUFF_PAPER3] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_PAPER3], "Objects/clickable", "paper2.obj", 1);
 		m_mapStuffMesh[STUFF_KEY1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_KEY1], "Objects/clickable", "key1.obj", 1);
 		m_mapStuffMesh[STUFF_KEY2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_KEY2], "Objects/clickable", "key2.obj", 1);
+		m_mapStuffMesh[STUFF_KEY3] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_KEY3], "Objects/clickable", "key3.obj", 1);
 		m_mapStuffMesh[STUFF_BRICK1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BRICK1], "Objects/clickable", "brick.obj", 1);
 		m_mapStuffMesh[STUFF_BRICK2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BRICK2], "Objects/clickable", "brick.obj", 1);
 		m_mapStuffMesh[STUFF_BRICK3] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BRICK3], "Objects/clickable", "brick.obj", 1);
@@ -51,8 +52,14 @@ void cDataManager::Setup()
 		m_mapStuffMesh[STUFF_WOODBOARD2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_WOODBOARD2], "Objects/clickable", "woodboard2.obj", 1);
 		m_mapStuffMesh[STUFF_BUTTON1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BUTTON1], "Objects/clickable", "button1.obj", 1);
 		m_mapStuffMesh[STUFF_BUTTON2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BUTTON2], "Objects/clickable", "button2.obj", 1);
+		m_mapStuffMesh[STUFF_BUTTON3] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BUTTON3], "Objects/clickable", "button1.obj", 1);
+		m_mapStuffMesh[STUFF_BUTTON4] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_BUTTON4], "Objects/clickable", "button2.obj", 1);
 
-		//m_mapStuffMesh[STUFF_DOOR1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR1], "Objects/clickable", "door1.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_PRISON] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_PRISON], "Objects/clickable/door", "PrisonDoor3.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_1STROOM] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_1STROOM], "Objects/clickable/door", "RoomDoor.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_1STTOILET] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_1STTOILET], "Objects/clickable/door", "PrisonDoor2.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_2NDROOM1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_2NDROOM1], "Objects/clickable/door", "WoodDoor.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_2NDROOM2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_2NDROOM2], "Objects/clickable/door", "PrisonDoor.obj", 1);
 	}
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
@@ -77,9 +84,12 @@ void cDataManager::Setup()
 		m_bStuffSwitch[SWITCH_ONMAP_KEY1] = true;
 		m_vStuffPosition[SWITCH_ONMAP_KEY1] = D3DXVECTOR3(-14.0f, 0.3f, 1.5f);
 		m_vStuffRotation[SWITCH_ONMAP_KEY1] = D3DXVECTOR3(0, D3DX_PI / 2.5f, 0);
-		m_bStuffSwitch[SWITCH_ONMAP_KEY2] = false;
-		m_vStuffPosition[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(0, 0, 0);
-		m_vStuffRotation[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(0, 0, 0);
+		m_bStuffSwitch[SWITCH_ONMAP_KEY2] = true;
+		m_vStuffPosition[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(-30, 12.3f, -13);
+		m_vStuffRotation[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(0, 0.3f, 0);
+		m_bStuffSwitch[SWITCH_ONMAP_KEY3] = false;
+		m_vStuffPosition[SWITCH_ONMAP_KEY3] = D3DXVECTOR3(0, 0, 0);
+		m_vStuffRotation[SWITCH_ONMAP_KEY3] = D3DXVECTOR3(0, 0, 0);
 
 		for (int i = SWITCH_ONMAP_BRICK1; i <= SWITCH_ONMAP_BRICK5; ++i)
 		{

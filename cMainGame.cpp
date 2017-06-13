@@ -83,19 +83,19 @@ void cMainGame::Setup()
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
-	//g_pData->SetIsStartedGame(true);
-	//g_pD3DDevice->LightEnable(0, true);
-	//m_pCamera->SetCameraDistance(50.0f);
+	g_pData->SetIsStartedGame(true);
+	g_pD3DDevice->LightEnable(0, true);
+	m_pCamera->SetCameraDistance(50.0f);
 
-	g_pSocketmanager->Setup_CHAT();
-	g_pSocketmanager->Setup_DATA();
+	//g_pSocketmanager->Setup_CHAT();
+	//g_pSocketmanager->Setup_DATA();
 }
 
 void cMainGame::Update()
 {
 	g_pTimeManager->Update();
-	g_pSocketmanager->Update();
-	g_pSocketmanager->Update_DATA();
+	//g_pSocketmanager->Update();
+	//g_pSocketmanager->Update_DATA();
 
 	if (m_pCamera) m_pCamera->Update();
 	{
