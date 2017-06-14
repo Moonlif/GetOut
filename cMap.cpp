@@ -258,8 +258,7 @@ void cMap::SetupObject()
 
 void cMap::Render()
 {
-
-	//   m_pSurface->Render();
+	//m_pSurface->Render();
 	m_pFloor->Render();
 	m_pWall->Render();
 	m_pCeiling->Render();
@@ -306,7 +305,7 @@ void cMap::RenderObject()
 	//m_pObjChair->Render(0.1, 9, 14, -22, -1);
 	//m_pObjBarrel->Render(15, 2.2, 24, 14, 0);
 	//m_pObjBarrel->Render(15, -2.7, 24, 14, 0);
-	m_pDrawers->Render(0.09, -10, 14.1, 0, 0);
+	m_pDrawers->Render(0.09, -10, 14.5, 0, 0);
 	m_pObjDesk->Render(8.5, 18, 24.1, 11, 1);
 	m_pIronmaiden->Render(0.1, 0, 24.1, -15, -1);
 	m_pTorture->Render(0.1, 3, 12, 1, 0);
@@ -432,32 +431,30 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 		}
 
 		D3DXVECTOR3 vRayPos(x, 6 + y, z);
-		D3DXVECTOR3 vRayPos1(x, 6 + y, z);
-		D3DXVECTOR3 vRayPos2(x, 6 + y, z);
-		D3DXVECTOR3 vRayPos3(x, 6 + y, z);
 		D3DXVECTOR3 vRayDir(0, -1, 0);
 		for (size_t i = 0; i < m_pSurface->GetPassVertex().size(); i += 3) {
 			float u, v, f;
-			if (D3DXIntersectTri(&vec[i + 0].p, &vec[i + 1].p, &vec[i + 2].p, &vRayPos, &vRayDir, &u, &v, &f)
-				&& D3DXIntersectTri(&vec[i + 0].p, &vec[i + 1].p, &vec[i + 2].p, &vRayPos1, &vRayDir, &u, &v, &f)
-				&& D3DXIntersectTri(&vec[i + 0].p, &vec[i + 1].p, &vec[i + 2].p, &vRayPos2, &vRayDir, &u, &v, &f)
-				&& D3DXIntersectTri(&vec[i + 0].p, &vec[i + 1].p, &vec[i + 2].p, &vRayPos3, &vRayDir, &u, &v, &f)
-				) {
+			if (D3DXIntersectTri(&vec[i + 0].p, &vec[i + 1].p, &vec[i + 2].p, &vRayPos, &vRayDir, &u, &v, &f)) {
 				if (g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] == true && vec[i + 0].nindex == SWITCH_DOOR_PRISON)
 					return true;
-				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] == true && vec[i + 0].nindex == SWITCH_DOOR_1STROOM)
+				else if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] == true && vec[i + 0].nindex == SWITCH_BASEMENT_BOX1)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_BLOCK)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] == true && vec[i + 0].nindex == SWITCH_DOOR_1STTOILET)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] == true && vec[i + 0].nindex == SWITCH_DOOR_1STROOM)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM1] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM1)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM2)
 					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP)
+					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1)
+					return true;
 				else
 					return false;
-			}
-			else {
-				return true;
 			}
 		}
 	}
@@ -465,20 +462,17 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 
 bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 {
-
-	if (GetSurfaceHeight(x, y, z) && GetObjectSurface(x, y, z) && GetPassSurface(x, y, z)) {
+	if (GetSurfaceHeight(x, y, z) && GetObjectSurface(x, y, z)) {
+		return true;
+	}
+	else if (!GetObjectSurface(x, y, z)) {
+		return false;
+	}
+	else if (!GetSurfaceHeight(x, y, z) && GetPassSurface(x, y, z)) {
 		return true;
 	}
 	else {
 		false;
 	}
 
-	/*
-	if (GetSurfaceHeight(x, y, z)) {
-	return true;
-	}
-	else {
-	false;
-	}
-	*/
 }
