@@ -87,15 +87,15 @@ void cSocketManager::Update_DATA()
 
 void cSocketManager::Update()
 {
-	//Calc_Position();
+	Calc_Position();
 }
 
 void cSocketManager::Calc_Position()
 {
 	stCurrent = clock();
 	float Devide = stCurrent - stStart;
-	if (Devide == 0) Devide = ONE_SECOND / SEND_PER_SECOND;
-	m_fT = (float)(ONE_SECOND / SEND_PER_SECOND) / (float)(Devide);
+	if (Devide == 0) Devide = ONE_SECOND;
+	m_fT = (float)(Devide) / (float)(ONE_SECOND);
 	if (m_fT > 1) m_fT = 1;
 
 	D3DXVECTOR3 interval = nextPosition - prevPosition;
@@ -120,6 +120,7 @@ void cSocketManager::UpdatePosition(float  x, float y, float z)
 {
 	prevPosition = nextPosition;
 	nextPosition = D3DXVECTOR3(x, y, z);
+	stStart = clock();
 }
 
 unsigned int _stdcall SEND_CHAT(LPVOID lpParam)
@@ -285,9 +286,13 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 
 		ST_PLAYER_POSITION stSend;
 		if (g_pData->m_nPlayerNum1P == 1)
+		{
 			stSend.nPlayerIndex = OUT_PLAYER1;
+		}
 		else if (g_pData->m_nPlayerNum1P == 2)
+		{
 			stSend.nPlayerIndex = OUT_PLAYER2;
+		}
 		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
 		stSend.fX = g_pData->m_vPosition1P.x;
 		stSend.fY = g_pData->m_vPosition1P.y;
@@ -297,17 +302,25 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 
 		ST_PLAYER_POSITION stRecv;
 		recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
-		g_pData->m_nPlayerNum2P = stRecv.nPlayerIndex;
-		g_pData->m_vPosition2P.x = stRecv.fX;
-		g_pData->m_vPosition2P.y = stRecv.fY;
-		g_pData->m_vPosition2P.z = stRecv.fZ;
+		g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 		g_pData->m_vRotation2P = stRecv.fAngle;
+		if (stRecv.nPlayerIndex & IN_PLAYER1)
+		{
+			g_pData->m_nPlayerNum2P = 1;
+		}
+		else if (stRecv.nPlayerIndex & IN_PLAYER2)
+		{
+			g_pData->m_nPlayerNum2P = 2;
+		}
 		cout << "2P ÀÎµ¦½º : " << stRecv.nPlayerIndex << endl;
 		cout << "2P XÁÂÇ¥ : " << stRecv.fX << endl;
 		cout << "2P YÁÂÇ¥ : " << stRecv.fY << endl;
 		cout << "2P ZÁÂÇ¥ : " << stRecv.fZ << endl;
 		cout << "2P Angle : " << stRecv.fAngle << endl;
 	}
+	//g_pData->m_vPosition2P.x = stRecv.fX;
+	//g_pData->m_vPosition2P.y = stRecv.fY;
+	//g_pData->m_vPosition2P.z = stRecv.fZ;
 
 	return 0;
 }
