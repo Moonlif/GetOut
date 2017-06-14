@@ -14,6 +14,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 
 // << : 분리된 함수들
 void ReceiveNetworkID(SOCKET* pSocket);
+void ReceiveRoomName(SOCKET* pSocket);
 void ReceivePosition(LPVOID lpParam);
 void ReceiveAll(LPVOID lpParam);
 
@@ -292,6 +293,9 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		case FLAG_NETWORK_ID:
 			ReceiveNetworkID(&hSocket);
 			break;
+		case FLAG_ROOM_NAME:
+			ReceiveRoomName(&hSocket);
+			break;
 		case FLAG_IP:
 			break;
 		case FLAG_POSITION:
@@ -362,8 +366,18 @@ void ReceiveNetworkID(SOCKET* pSocket)
 	recv(*pSocket, (char*)&nID, sizeof(int), 0);
 	g_pSocketmanager->SetNetworkID(nID);
 	cout << "네트워크 아이디 " << nID << endl;
-	//g_pSocketmanager->SetFlagNum(FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
+	g_pSocketmanager->SetFlagNum(FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
 }
+
+/* 방이 연결 가능한지 확인 */
+void ReceiveRoomName(SOCKET* pSocket)
+{
+	int IsOK = 0;
+	recv(*pSocket, (char*)&IsOK, sizeof(int), 0);
+
+	// < : 만약 입장 가능하다면 Init All로 , 불가능 하다면 ReceiveRoomName 그대로 ?
+}
+
 
 /* 좌표 수신 */
 void ReceivePosition(LPVOID lpParam)

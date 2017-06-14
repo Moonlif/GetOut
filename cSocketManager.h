@@ -60,6 +60,7 @@ private:
 	SYNTHESIZE(bool, InitServer, InitServer);
 	SYNTHESIZE(int, nNetworkID, NetworkID);
 
+	char szRoomName[ROOM_NAME_SIZE] = { 0, };
 
 public:
 	void Setup_Host();
@@ -71,6 +72,17 @@ public:
 	void Destroy();
 	void UpdatePosition(float  x, float y, float z);
 	void UpdateRotation(float Rotate);
+};
+
+enum FLAG
+{
+	FLAG_NONE = 1 << 0,
+	FLAG_NETWORK_ID = 1 << 1,
+	FLAG_ROOM_NAME = 1 << 2,
+	FLAG_IP = 1 << 3,
+	FLAG_POSITION = 1 << 4,
+	FLAG_OBJECT_DATA = 1 << 5,
+	FLAG_ALL = 1 << 6,
 };
 
 struct ST_FLAG
@@ -121,13 +133,3 @@ struct ST_CHAT
 	char TEXT[NAME_SIZE + BUF_SIZE] = { 0, };
 };
 
-enum FLAG
-{
-	FLAG_NONE = 1 << 0,
-	FLAG_NETWORK_ID = 1 << 1,
-	FLAG_ROOM_NAME = 1 << 2,
-	FLAG_IP = 1 << 3,
-	FLAG_POSITION = 1 << 4,
-	FLAG_OBJECT_DATA = 1 << 5,
-	FLAG_ALL = 1 << 6,
-};
