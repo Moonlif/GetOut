@@ -16,12 +16,17 @@ unsigned int _stdcall RECV_DATA_FROM_CLIENT(LPVOID lpParam);
 // << : 기존 구현 방식
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
 
+// << : 분리된 함수들
+void ReceivePosition(LPVOID lpParam);
+
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 	, stStart(clock())
 	, stCurrent(clock())
 	, m_fT(0.0f)
-	, nFlagNum(-1)
+	, nFlagNum(FLAG_POSITION)
+	, prevRotation(0.0f)
+	, nextRotation(0.0f)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -98,9 +103,11 @@ void cSocketManager::Calc_Position()
 	m_fT = (float)(Devide) / (float)(ONE_SECOND);
 	if (m_fT > 1) m_fT = 1;
 
-	D3DXVECTOR3 interval = nextPosition - prevPosition;
-
-	g_pData->m_vPosition2P = prevPosition + (interval * m_fT);
+	D3DXVECTOR3 posInterval = nextPosition - prevPosition;
+	float rotInterval = nextRotation - prevRotation;
+	
+	g_pData->m_vPosition2P = prevPosition + (posInterval * m_fT);
+	g_pData->m_vRotation2P = prevRotation + (rotInterval * m_fT);
 }
 
 void cSocketManager::Destroy()
@@ -121,6 +128,12 @@ void cSocketManager::UpdatePosition(float  x, float y, float z)
 	prevPosition = nextPosition;
 	nextPosition = D3DXVECTOR3(x, y, z);
 	stStart = clock();
+}
+
+void cSocketManager::UpdateRotation(float Rotate)
+{
+	prevRotation = nextRotation;
+	nextRotation = Rotate;
 }
 
 unsigned int _stdcall SEND_CHAT(LPVOID lpParam)
@@ -273,26 +286,22 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 	}
 
 	/* 어떤 데이터를 보낼지 먼저 알려줍니다. 그뒤 해당하는 데이터를 전송합니다. */
+	ST_FLAG stFlag;
 	while (true)
 	{
-		if (prevTime + (ONE_SECOND) > clock()) continue;
+		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
 		prevTime = clock();
+		stFlag.eFlag = g_pSocketmanager->GetFlagNum();	// << : 싱글톤에서 플래그를 받아옵니다.
 
-		ST_FLAG stFlag;
-		stFlag.eFlag = FLAG_POSITION;
 		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
 		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
 		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
 
 		ST_PLAYER_POSITION stSend;
 		if (g_pData->m_nPlayerNum1P == 1)
-		{
 			stSend.nPlayerIndex = OUT_PLAYER1;
-		}
 		else if (g_pData->m_nPlayerNum1P == 2)
-		{
 			stSend.nPlayerIndex = OUT_PLAYER2;
-		}
 		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
 		stSend.fX = g_pData->m_vPosition1P.x;
 		stSend.fY = g_pData->m_vPosition1P.y;
@@ -300,27 +309,41 @@ unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
 		stSend.fAngle = g_pData->m_vRotation1P;
 		send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 
-		ST_PLAYER_POSITION stRecv;
-		recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
-		g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
-		g_pData->m_vRotation2P = stRecv.fAngle;
-		if (stRecv.nPlayerIndex & IN_PLAYER1)
+		switch (stFlag.eFlag)
 		{
-			g_pData->m_nPlayerNum2P = 1;
+		case FLAG_POSITION:
+			ReceivePosition(&hSocket);
+			break;
 		}
-		else if (stRecv.nPlayerIndex & IN_PLAYER2)
-		{
-			g_pData->m_nPlayerNum2P = 2;
-		}
-		cout << "2P 인덱스 : " << stRecv.nPlayerIndex << endl;
-		cout << "2P X좌표 : " << stRecv.fX << endl;
-		cout << "2P Y좌표 : " << stRecv.fY << endl;
-		cout << "2P Z좌표 : " << stRecv.fZ << endl;
-		cout << "2P Angle : " << stRecv.fAngle << endl;
 	}
-	//g_pData->m_vPosition2P.x = stRecv.fX;
-	//g_pData->m_vPosition2P.y = stRecv.fY;
-	//g_pData->m_vPosition2P.z = stRecv.fZ;
-
 	return 0;
+}
+
+void ReceivePosition(LPVOID lpParam)
+{
+	SOCKET hSocket = *(SOCKET*)lpParam;
+	ST_PLAYER_POSITION stRecv;
+	recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
+	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
+	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
+	cout << "접속중인 플레이어 ";
+	if (stRecv.nPlayerIndex & IN_PLAYER1)
+	{
+		g_pData->m_nPlayerNum2P = 1;
+		cout << "1P" << " ";
+	}
+	else if (stRecv.nPlayerIndex & IN_PLAYER2)
+	{
+		g_pData->m_nPlayerNum2P = 2;
+		cout << "2P" << " ";
+	}
+	else
+	{
+		cout << "없음" << " ";
+	}
+
+	cout << "X좌표 : " << stRecv.fX << " ";
+	cout << "Y좌표 : " << stRecv.fY << " ";
+	cout << "Z좌표 : " << stRecv.fZ << " ";
+	cout << "Angle : " << stRecv.fAngle << endl;
 }

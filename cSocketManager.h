@@ -16,6 +16,7 @@
 #define IN_PLAYER2 1 << 1
 #define NAME_SIZE 20
 #define ONE_SECOND 1000
+#define OVERHEAD 300
 #define OUT_PLAYER1 1 << 4
 #define OUT_PLAYER2 1 << 5
 #define PORT_DATA_SERVER 1234
@@ -40,6 +41,7 @@ private:
 	char msg[BUF_SIZE];
 
 	D3DXVECTOR3 prevPosition, nextPosition;
+	float prevRotation, nextRotation;
 	clock_t stStart, stCurrent, stUpdateTime;
 	float m_fT;
 
@@ -52,6 +54,7 @@ public:
 	void Calc_Position();
 	void Destroy();
 	void UpdatePosition(float  x, float y, float z);
+	void UpdateRotation(float Rotate);
 };
 
 struct ST_FLAG

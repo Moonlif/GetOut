@@ -95,9 +95,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));	
 	else									 text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
 	
-	cout << g_pData->m_nPlayerNum1P << endl;
-	cout << g_pData->m_nPlayerNum2P << endl;
-
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
 	{		
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
