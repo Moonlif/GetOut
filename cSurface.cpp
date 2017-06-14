@@ -574,7 +574,16 @@ void cSurface::PassSetup()
 	v3.p = D3DXVECTOR3(CENTERX + 9.4, SF, CENTERZ + 1);
 	m_pSFRoomDoor2->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_DOOR_2NDROOM2);
-
+	
+	//나무 판자
+	m_pWoodWay = new cRectMake;
+	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 3.1);
+	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 3.4);
+	v2.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 3.4);
+	v3.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 3.1);
+	m_pWoodWay->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
+	PassInput(v0, v1, v2, v3, SWITCH_FIRSTFLOOR_WOODBOARD1);
+	
 	//무너진 천장
 	m_pFFCollision = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2);
@@ -584,14 +593,7 @@ void cSurface::PassSetup()
 	m_pFFCollision->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_FIRSTFLOOR_TRAP);
 
-	//나무 판자
-	m_pWoodWay = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 3.1);
-	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 3.4);
-	v2.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 3.4);
-	v3.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 3.1);
-	m_pWoodWay->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
-	PassInput(v0, v1, v2, v3, SWITCH_FIRSTFLOOR_WOODBOARD1);
+	
 }
 
 void cSurface::PassInput(PassSurface v0, PassSurface v1, PassSurface v2, PassSurface v3, int index)

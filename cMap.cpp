@@ -258,12 +258,12 @@ void cMap::SetupObject()
 
 void cMap::Render()
 {
-	//m_pSurface->Render();
-	m_pFloor->Render();
-	m_pWall->Render();
-	m_pCeiling->Render();
+	m_pSurface->Render();
+	//m_pFloor->Render();
+	//m_pWall->Render();
+	//m_pCeiling->Render();
 	//m_pObjSurface->RenderSurface();
-	RenderObject();
+	//RenderObject();
 }
 
 void cMap::RenderObject()
@@ -488,7 +488,6 @@ bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 	else if (!GetObjectSurface(x, y, z)) {
 		return false;
 	}
-	
 	else if (!GetSurfaceHeight(x, y, z) && GetPassSurface(x, y, z)) {
 		return true;
 	}
