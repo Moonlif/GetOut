@@ -54,7 +54,7 @@ void cCamera::Update()
 	{
 		isMouseView = true;
 	}
-	//else isMouseView = false;
+	else isMouseView = false;
 
 	//마우스 커서 관련 테스트
 	if (g_pData->GetIsStartedGame() && !isMouseView)

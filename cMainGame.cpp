@@ -61,17 +61,9 @@ void cMainGame::Setup()
 		m_pMap = new cMap;
 		m_pMap->Setup();
 
-		//character
-		m_pCharacter = new CharacterManager;
-		m_pCharacter->Setup();
-
 		//interact
 		m_pInteract = new cInteract;
 		m_pInteract->Setup();
-
-		//map
-		m_pMap = new cMap;
-		m_pMap->Setup();
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;

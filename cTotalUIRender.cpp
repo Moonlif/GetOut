@@ -4,7 +4,6 @@
 #include "cCharacterSelectScene.h"
 #include "cInventory.h"
 #include "cChat.h"
-#include "cMiniGame_PrisonBreak.h"
 
 cTotalUIRender::cTotalUIRender()
 	:m_pChaSelectScene(NULL),
@@ -35,9 +34,6 @@ void cTotalUIRender::Setup()
 	m_pChat = new cChat;
 	m_pChat->Setup();
 
-	m_pPrisonBreak = new cMiniGame_PrisonBreak;
-	m_pPrisonBreak->Setup();
-
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 }
 
@@ -48,7 +44,6 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Update();
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Update(camera);
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Update();
-	if (m_pPrisonBreak && !g_pData->GetIsInvenOpen() && g_pData->GetIsMiniGamePrisonBreak()) m_pPrisonBreak->Update();
 
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
@@ -118,7 +113,7 @@ void cTotalUIRender::Render()
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Render();
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
 	if (m_pChat) m_pChat->Render();
-	if (m_pPrisonBreak && !g_pData->GetIsInvenOpen() && g_pData->GetIsMiniGamePrisonBreak()) m_pPrisonBreak->Render();
+
 	//스타트씬 클릭되면 케릭터셀렉씬 셋업하는과정
 	if (!m_pStartScene->GetIsStartSceneOpen())
 	{

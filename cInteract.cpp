@@ -68,7 +68,7 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_DOOR_PRISON]->Setup(STUFF_DOOR_PRISON, D3DXVECTOR3(-26.5f, 5, 13), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(4, 5, 0), 5.0f, 0.21f, true);
 	m_vecStuff[STUFF_DOOR_1STROOM]->Setup(STUFF_DOOR_1STROOM, D3DXVECTOR3(-24, 18, 19), D3DXVECTOR3(0, -D3DX_PI/2.0f, 0), D3DXVECTOR3(0, 6, -3), 2.5f, 0.1f, true);
 	m_vecStuff[STUFF_DOOR_1STTOILET]->Setup(STUFF_DOOR_1STTOILET, D3DXVECTOR3(-24, 16, -18), D3DXVECTOR3(0, D3DX_PI/2.0f, 0), D3DXVECTOR3(0, 4.2f, 3), 2.5f, 0.2f, true);
-	m_vecStuff[STUFF_DOOR_2NDROOM1]->Setup(STUFF_DOOR_2NDROOM1, D3DXVECTOR3(-13.3f, 28, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.4f, true);
+	m_vecStuff[STUFF_DOOR_2NDROOM1]->Setup(STUFF_DOOR_2NDROOM1, D3DXVECTOR3(-13.3f, 28.1f, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.4f, true);
 	m_vecStuff[STUFF_DOOR_2NDROOM2]->Setup(STUFF_DOOR_2NDROOM2, D3DXVECTOR3(-6.0f, 28, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.25f, true);
 }
 
@@ -125,18 +125,9 @@ void cInteract::Update()
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == false && m_vecStuff[STUFF_DOOR_2NDROOM2]->GetSwitch() == false)
 		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-6.0f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.03f);
 
-	//save player position
+	//act button1 & button2 (on 2nd floor)
 	m_n2FButton1Count = 0;
 	m_n2FButton2Count = 0;
-	D3DXVECTOR3 vPlayerPos;
-	if (g_pData->m_nPlayerNum1P == 1) vPlayerPos = g_pData->m_vPosition1P;
-	else if (g_pData->m_nPlayerNum1P == 2) vPlayerPos = g_pData->m_vPosition2P;
-
-	//act button1 & button2 (on 2nd floor)
-	float dis = D3DXVec3Length(&(vPlayerPos - m_vecStuff[STUFF_BUTTON1]->GetPosition()));
-	if (dis <= 2.0f) m_n2FButton1Count += 2;
-	float dis2 = D3DXVec3Length(&(vPlayerPos - m_vecStuff[STUFF_BUTTON3]->GetPosition()));
-	if (dis <= 2.0f) m_n2FButton2Count += 2;
 	for (int i = STUFF_BRICK1; i < STUFF_BRICK5; ++i)
 	{
 		if (m_vecStuff[i]->GetIsOnMap() == true)
@@ -152,6 +143,13 @@ void cInteract::Update()
 	else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON1] = false;
 	if (m_n2FButton2Count > 1) g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON2] = true;
 	else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON2] = false;
+
+	//save player position
+	D3DXVECTOR3 vPlayerPos;
+	//if (g_pData->m_nPlayerNum1P == 1) 
+		vPlayerPos = g_pData->m_vPosition1P;
+		cout << vPlayerPos.x << " " << vPlayerPos.y << " " << vPlayerPos.z << endl;
+	//else if (g_pData->m_nPlayerNum1P == 2) vPlayerPos = g_pData->m_vPosition2P;
 
 	//picking object
 	if (g_pData->GetIsInvenOpen() == false)
@@ -189,7 +187,7 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 	bool lButton = false;
 	if (keyState == 1) lButton = true;
 
-	cRay Ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
+	cRay Ray = cRay::RayAtWorldSpace(1280/2, 720/2);
 
 	for each(auto it in m_vecStuff)
 	{
@@ -197,6 +195,8 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 
 		if (Ray.IsPicked(it->GetPosition(), it->GetRadius()) && it->GetIsOnMap())
 		{
+			float dis = D3DXVec3Length(&(it->GetPosition() - playerPos));
+			if (dis > 5.0f) continue;
 			switch (it->GetStuffCode())
 			{
 			case STUFF_DOOR_PRISON:
