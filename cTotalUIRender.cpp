@@ -46,7 +46,7 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (m_pChat) m_pChat->Update();
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Update();
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Update(camera);
-	if (m_pInventory) m_pInventory->Update();
+	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Update();
 
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
@@ -123,7 +123,7 @@ void cTotalUIRender::Render()
 {
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Render();
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Render();
-	if (m_pInventory) m_pInventory->Render();
+	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
 	if (m_pChat) m_pChat->Render();
 
 	//스타트씬 클릭되면 케릭터셀렉씬 셋업하는과정
