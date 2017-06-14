@@ -336,6 +336,33 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 
 unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 {
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_DATA_SERVER_IN;
+
+	clock_t prevTime = clock();
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "스레드 연결 재시도중" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	}
+
+	ST_FLAG stFlag;
+	while (true)
+	{
+		recv(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+		cout << stFlag.szRoomName << endl;
+		cout << stFlag.eFlag << endl;
+		cout << stFlag.nPlayerIndex << endl;
+	}
+
 	return 0;
 }
 
