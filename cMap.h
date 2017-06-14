@@ -45,7 +45,6 @@ public:
 	~cMap();
 	void Setup();
 	void SetupObject();
-	void Update(int index, bool isTrue);
 	void Render();
 	void RenderObject();
 	cSurface* getSurface() { return m_pSurface; };
