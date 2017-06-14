@@ -15,6 +15,7 @@ unsigned int _stdcall SEND_DATA_TO_CLIENT(LPVOID lpParam);
 unsigned int _stdcall RECV_DATA_FROM_CLIENT(LPVOID lpParam);
 // << : 기존 구현 방식
 unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
+unsigned int _stdcall PROCESS_CLIENT(LPVOID lpParam);
 
 // << : 분리된 함수들
 void ReceivePosition(LPVOID lpParam);
@@ -27,6 +28,7 @@ cSocketManager::cSocketManager()
 	, nFlagNum(FLAG_POSITION)
 	, prevRotation(0.0f)
 	, nextRotation(0.0f)
+	, InitServer(false)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -42,21 +44,40 @@ cSocketManager::~cSocketManager()
 {
 }
 
+void cSocketManager::InitClient()
+{
+}
+
 void cSocketManager::Setup_DATA()
 {
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData_DATA) != 0) /// Init Socket
+	int nRet;
+	clock_t prevTime = clock();
+	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+	while (nRet != 0)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
 		cout << "DATA WSAStartup() error!" << endl;
+		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+	}
 
 	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
 void cSocketManager::Setup_CHAT()
 {
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT) != 0)	
-		cout << "CHAT WSAStartup() error!" << endl;
+	int nRet;
+	clock_t prevTime = clock();
+	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT);
+	while (nRet != 0)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT);
+		cout << "CHAT WSAStartup() Error!" << endl;
+	}
 
 	hSocket_CHAT = socket(PF_INET, SOCK_STREAM, 0);		/// 채팅 소켓 할당
-	clock_t prevTime = clock();
 
 	memset(&ServAdr_CHAT, 0, sizeof(ServAdr_CHAT));
 	ServAdr_CHAT.sin_family = AF_INET;
@@ -84,10 +105,12 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update_DATA()
 {
+	// << : 서버로부터 호스트를 해라 라는 신호가 들어오면 스레드를 동작시킨다 ?
+	if (InitServer)
+	{
+		SetInitServer(false);
 
-	if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
-
-	stUpdateTime = clock();
+	}
 }
 
 void cSocketManager::Update()
@@ -347,3 +370,35 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Z좌표 : " << stRecv.fZ << " ";
 	cout << "Angle : " << stRecv.fAngle << endl;
 }
+unsigned int _stdcall PROCESS_CLIENT(LPVOID lpParam)
+{
+	//ST_SOCKET_ADDR RecvSocket = *(ST_SOCKET_ADDR*)arg;
+	//SOCKET ClntSock = RecvSocket.stSocket;
+	//char szBuffer[BUF_SIZE * 10] = { 0, };
+	//int strLen1, strLen2, i;
+
+	//while ((strLen1 = recv(ClntSock, szBuffer, sizeof(ST_FLAG), 0)) != 0)
+	//{
+	//	if (strLen1 == -1) break;
+
+	//	ST_FLAG stFlag = *(ST_FLAG*)szBuffer;
+	//	switch (stFlag.eFlag)
+	//	{
+	//	case FLAG_NONE:
+	//		break;
+	//	case FLAG_IP:
+	//		break;
+	//	case FLAG_POSITION:
+	//		break;
+	//	case FLAG_OBJECT_DATA:
+	//		break;
+	//	case FLAG_ALL:
+	//		break;
+	//	}
+	//	continue;
+	//}
+
+	//closesocket(ClntSock);
+	return 0;
+}
+

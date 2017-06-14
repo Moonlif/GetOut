@@ -11,7 +11,7 @@
 #define g_pSocketmanager cSocketManager::GetInstance()
 
 #define BUF_SIZE 100
-#define HOSTIP "122.45.137.187"
+#define HOSTIP "127.0.0.1"
 #define IN_PLAYER1 1 << 0
 #define IN_PLAYER2 1 << 1
 #define NAME_SIZE 20
@@ -46,7 +46,11 @@ private:
 	float m_fT;
 
 	SYNTHESIZE(int, nFlagNum, FlagNum);
+	SYNTHESIZE(bool, InitServer, InitServer);
+
+	// << : 클라이언트가 호스트가 되기 위해 필요한 데이터 입니다.
 public:
+	void InitClient();
 	void Setup_DATA();
 	void Setup_CHAT();
 	void Update_DATA();
