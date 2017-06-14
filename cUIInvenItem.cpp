@@ -6,14 +6,12 @@ cUIInvenItem::cUIInvenItem()
 	:m_pItemTexture(NULL)
 	, m_nAlpha(255)
 	, m_nItemType(eITEMTYPE::ITEMTYPE_NONE)
-	, m_nItem(0)
 {
 }
 
 cUIInvenItem::cUIInvenItem(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 	: m_pItemTexture(NULL)
 	, m_nItemType(eITEMTYPE::ITEMTYPE_NONE)
-	, m_nItem(0)
 {
 	m_nAlpha = alpha;
 	D3DXIMAGE_INFO stImageInfo;

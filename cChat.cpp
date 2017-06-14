@@ -47,7 +47,7 @@ void cChat::SetChildWindow()
 
 	//이름입력 핸들 생성
 	m_hWndNaming = CreateWindow("edit", "",
-		WS_CHILD | WS_BORDER | WS_VISIBLE,
+		WS_CHILD | WS_BORDER,
 		0, WINSIZEY - CHATWORDHEIGHT * 10, 250, 20, g_hWnd, HMENU(0), hInst, NULL);
 
 	//폰트 생성
@@ -62,13 +62,6 @@ void cChat::ChatOnOff()
 	//챗 찾기
 	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
 
-	if (!g_pData->m_listChat_RECV.empty())
-	{
-		chat->PushChat(m_strChat);
-		WaitForSingleObject(g_hMutex_CHAT, INFINITE);	// << : Wait Mutex
-		g_pData->m_listChat_RECV.pop_front();
-		ReleaseMutex(g_hMutex_CHAT);
-	}
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;
 
@@ -96,7 +89,7 @@ void cChat::ChatOnOff()
 			//아무것도 입력 안할시 리턴
 			if (m_strChat == "") return;
 
-			m_strChat += " ";
+			//m_strChat += " ";
 			
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
@@ -108,6 +101,7 @@ void cChat::ChatOnOff()
 		else
 		{
 			SetFocus(m_hWndNaming);
+			ZeroMemory(&str, sizeof(str));
 			g_pData->SetIsOnChat(true);
 		}
 	}
@@ -115,6 +109,7 @@ void cChat::ChatOnOff()
 
 void cChat::RenderChat()
 {
+	if (!g_pData->GetIsOnChat()) return;
 	//이름 렌더
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
