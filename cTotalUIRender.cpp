@@ -99,24 +99,6 @@ void cTotalUIRender::Update(cCamera* camera)
 		if (nRnd > 12) nRnd = 0;
 	}
 
-	//미니게임 테스트용
-	if (GetAsyncKeyState('G') & 0x0001)
-	{
-		if (g_pData->GetIsMiniGamePrisonBreak())
-		{
-			//미니게임 끄고 움직이게
-			g_pData->SetIsMiniGamePrisonBreak(false);
-			g_pData->SetIsPossibleMove(true);
-		}
-		else
-		{
-			//미니게임 켜고 못움직이게
-			g_pData->SetIsMiniGamePrisonBreak(true);
-			g_pData->SetIsPossibleMove(false);
-		}
-
-		
-	}
 }
 
 void cTotalUIRender::Render()

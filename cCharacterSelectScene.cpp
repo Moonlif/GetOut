@@ -92,6 +92,9 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	///-------------------------------------------------------------
 	//						게임스타트 텍스트 변화
 	///-------------------------------------------------------------
+	cUIImageView* p1Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
+	cUIImageView* p2Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
+
 
 	cUITextView* text = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));	
@@ -101,8 +104,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	{		
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
-		cUIImageView* p1Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
-		cUIImageView* p2Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 
 		///-------------------------------------------------------------
@@ -194,8 +195,40 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		}
 
 		///-------------------------------------------------------------
-		//						상대방 1P, 2P 띄우기
+		//						게임 시작하려고 할 시
 		///-------------------------------------------------------------
+		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
+		{
+			////플레이어가 선택되지 않았으면 리턴
+			//if (g_pData->m_nPlayerNum1P == 0)
+			//{
+			//	g_pData->TextOutWarningWord("캐릭터가 선택되지 않았습니다.");
+			//	return;
+			//}
+			////같은 플레이어 선택중이라면 게임시작 안됨
+			//if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
+			//{	
+			//	if (m_WhatIsYourNumber == 1)
+			//	{
+			//		g_pData->TextOutWarningWord("플레이어2와 다른 케릭을 선택해 주세요.");
+			//	}
+			//	else if (m_WhatIsYourNumber == 2)
+			//	{
+			//		g_pData->TextOutWarningWord("플레이어1과 다른 케릭을 선택해 주세요.");
+			//	}
+			//	return;
+			//}
+			m_pCamera->ReTarget(&m_vRetargetPos);
+			m_isDeleteBackground = true;
+		}
+
+
+	}
+
+
+	///-------------------------------------------------------------
+	//						상대방 1P, 2P 띄우기
+	///-------------------------------------------------------------
 		if (g_pData->m_nPlayerNum2P != 0)
 		{
 			//상대방이 1P일 때
@@ -219,37 +252,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 				else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
 			}
 		}
-
-
-		///-------------------------------------------------------------
-		//						게임 시작하려고 할 시
-		///-------------------------------------------------------------
-		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
-		{
-			//플레이어가 선택되지 않았으면 리턴
-			if (g_pData->m_nPlayerNum1P == 0)
-			{
-				g_pData->TextOutWarningWord("캐릭터가 선택되지 않았습니다.");
-				return;
-			}
-			//같은 플레이어 선택중이라면 게임시작 안됨
-			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
-			{	
-				if (m_WhatIsYourNumber == 1)
-				{
-					g_pData->TextOutWarningWord("플레이어2와 다른 케릭을 선택해 주세요.");
-				}
-				else if (m_WhatIsYourNumber == 2)
-				{
-					g_pData->TextOutWarningWord("플레이어1과 다른 케릭을 선택해 주세요.");
-				}
-				return;
-			}
-			m_pCamera->ReTarget(&m_vRetargetPos);
-			m_isDeleteBackground = true;
-		}
-	}
-
 }
 
 void cCharacterSelectScene::UpdateBeforGameStart()
