@@ -367,9 +367,11 @@ bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
 		return false;
 	}
 }
-
+static bool isTrapIng;
+static bool isTrapOpen;
 bool cMap::GetObjectSurface(IN float x, OUT float & y, IN float z)
 {
+	if (isTrapIng) return false;
 	int floor;
 	if (y >= 22.8)floor = 2;
 	if (y >= 11.8 && y < 22.8) floor = 1;
@@ -429,7 +431,7 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 			D3DXVec3TransformCoord(&vec[i].p, &m_pSurface->GetPassVertex()[i].p, &matWorld);
 			vec[i].nindex = m_pSurface->GetPassVertex()[i].nindex;
 		}
-
+		
 		D3DXVECTOR3 vRayPos(x, 6 + y, z);
 		D3DXVECTOR3 vRayDir(0, -1, 0);
 		for (size_t i = 0; i < m_pSurface->GetPassVertex().size(); i += 3) {
@@ -449,10 +451,20 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM2)
 					return true;
-				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP)
-					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1)
 					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == false && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {	// Æ®·¦
+					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;		
+				}
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// Æ®·¦
+					if(isTrapOpen != true){
+						if (y > 0) {
+							isTrapIng = true;
+							return true;
+						}
+					}
+					else return false;
+				}	
 				else
 					return false;
 			}
@@ -462,12 +474,21 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 
 bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 {
+	if (isTrapIng && y > 0) {
+		y -= 0.5;
+		return true;
+	}
+	else if (y < 0 && isTrapIng == true) {
+		isTrapIng = false;
+		isTrapOpen = true;
+	}
 	if (GetSurfaceHeight(x, y, z) && GetObjectSurface(x, y, z)) {
 		return true;
 	}
 	else if (!GetObjectSurface(x, y, z)) {
 		return false;
 	}
+	
 	else if (!GetSurfaceHeight(x, y, z) && GetPassSurface(x, y, z)) {
 		return true;
 	}

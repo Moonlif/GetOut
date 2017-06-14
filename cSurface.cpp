@@ -125,8 +125,8 @@ void cSurface::Setup()
 	//스타트룸 공간
 	m_pB1StartSpace = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 1.5);
-	v1.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 4);
-	v2.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 4);
+	v1.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 3.5);
+	v2.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 3.5);
 	v3.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 1.5);
 	v0.floor = 0;
 	v1.floor = 0;
@@ -290,8 +290,8 @@ void cSurface::Setup()
 
 	//방
 	m_pFFRoom = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ - 0.2);
-	v1.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 3.7);
+	v0.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ - 0.2);
+	v1.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 3.7);
 	v2.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ + 3.7);
 	v3.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ - 0.2);
 	v0.floor = 1;
@@ -455,8 +455,7 @@ void cSurface::Render()
 	m_pFFPassage2->Render();
 	m_pFFLivingRoom->Render();
 	m_pFFLivingRoom2->Render();
-	m_pFFRoom->Render();
-	m_pFFRoom1->Render();
+	
 	m_pFFBathRoom->Render();
 	m_pFFStairSurface->Render();
 
@@ -474,8 +473,13 @@ void cSurface::Render()
 	m_pFFRoomDoor->Render();
 	m_pSFRoomDoor1->Render();
 	m_pSFRoomDoor2->Render();
+	
+	
+	m_pFFRoom->Render();
+	m_pFFRoom1->Render();
+
 	//무너진 바닥
-	m_pFFCollision->Render();
+	//if(!g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP]) m_pFFCollision->Render();
 	m_pWoodWay->Render();
 
 	/*
@@ -575,8 +579,8 @@ void cSurface::PassSetup()
 	m_pFFCollision = new cRectMake;
 	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2);
 	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4);
-	v2.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 4);
-	v3.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 2);
+	v2.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 4);
+	v3.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 2);
 	m_pFFCollision->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_FIRSTFLOOR_TRAP);
 
