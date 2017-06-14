@@ -49,7 +49,7 @@ public:
 	void Chat(string Text);
 	string GetText();
 
-	void DropItem(StuffCode itemCode, D3DXVECTOR3 position, D3DXVECTOR3 rotation = D3DXVECTOR3(0, 0, 0));
+	void DropItem(StuffCode itemCode);
 	void GetItem(StuffCode itemCode);
 };
 

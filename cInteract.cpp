@@ -144,21 +144,11 @@ void cInteract::Update()
 	if (m_n2FButton2Count > 1) g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON2] = true;
 	else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON2] = false;
 
-	//save player position
+	//checking object
 	D3DXVECTOR3 vPlayerPos;
-	//if (g_pData->m_nPlayerNum1P == 1) 
-		vPlayerPos = g_pData->m_vPosition1P;
-		cout << vPlayerPos.x << " " << vPlayerPos.y << " " << vPlayerPos.z << endl;
-	//else if (g_pData->m_nPlayerNum1P == 2) vPlayerPos = g_pData->m_vPosition2P;
-
-	//picking object
-	if (g_pData->GetIsInvenOpen() == false)
-	{
-		int keyState = 0;
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x0001) keyState = 1;
-		else if (GetAsyncKeyState(VK_RBUTTON) & 0x0001) keyState = 2;
-		PickStuff(keyState, vPlayerPos);
-	}
+	vPlayerPos = g_pData->m_vPosition1P;
+	vPlayerPos.y += 4.0f;	//피킹용 위치로 변경
+	CheckStuff(vPlayerPos);
 
 	for each (auto it in m_vecStuff)
 	{
@@ -180,14 +170,18 @@ void cInteract::Render()
 	}
 }
 
-void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
+void cInteract::CheckStuff(D3DXVECTOR3 playerPos)
 {
-	if (keyState == 0) return;
+	if (g_pData->GetIsInvenOpen()) return;
 
+	//좌클릭 우클릭 여부 확인
+	int keyState = 0;
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001) keyState = 1;
+	else if (GetAsyncKeyState(VK_RBUTTON) & 0x0001) keyState = 2;
 	bool lButton = false;
 	if (keyState == 1) lButton = true;
 
-	cRay Ray = cRay::RayAtWorldSpace(1280/2, 720/2);
+	cRay Ray = cRay::RayAtWorldSpace(WINSIZEX / 2, WINSIZEY / 2);
 
 	for each(auto it in m_vecStuff)
 	{
@@ -196,119 +190,156 @@ void cInteract::PickStuff(int keyState, D3DXVECTOR3 playerPos)
 		if (Ray.IsPicked(it->GetPosition(), it->GetRadius()) && it->GetIsOnMap())
 		{
 			float dis = D3DXVec3Length(&(it->GetPosition() - playerPos));
-			if (dis > 5.0f) continue;
-			switch (it->GetStuffCode())
+
+			if (dis < 8.0f)	//일정거리 미만이면
 			{
-			case STUFF_DOOR_PRISON:
-				if (g_pData->GetUseItem() == STUFF_KEY1)
-					g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
-				return;
-			case STUFF_DOOR_1STROOM:
-				g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
-				return;
-			case STUFF_DOOR_1STTOILET:
-				if (g_pData->GetUseItem() == STUFF_KEY2)
-					g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
-				return;
-			case STUFF_BOARDBLOCK:
-				if (g_pData->GetUseItem() == STUFF_CROWBAR && g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
-				if (m_n1FBlockCount > 3) g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
-				return;
-			case STUFF_BOX1:
-				g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
-				return;
-			case STUFF_CHEST3:
-				g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;
-				return;
-			case STUFF_TRAP:
-				g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;
-				return;
-			case STUFF_WOODBOARD1:
-				if (it->GetPosition().x > -32 && g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] == true)
-				{
-					g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1] = it->GetPosition() + D3DXVECTOR3(-9, 0, 0);
-					if (g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1].x <= -32) g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] = true;
-				}
-				break;
-			case STUFF_WOODBOARD2:
-				if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true) 
-					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
-				return;
-			case STUFF_VALVE1:
-				if (m_vecStuff[STUFF_VALVE1]->GetSwitch()) continue;
-				m_bValve1 = true;
-				if (lButton) m_n2FValve1Count--;
-				else m_n2FValve1Count++;
-				if (m_n2FValve1Count >= 4)
-				{
-					m_n2FValve1Count = 4;
-					g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
-				}
-				else if (m_n2FValve1Count < -4) m_n2FValve1Count = -4;
-				return;
-			case STUFF_VALVE2:
-				if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) continue;
-				m_bValve2 = true;
-				if (lButton) m_n2FValve2Count--;
-				else m_n2FValve2Count++;
-				if (m_n2FValve2Count <= -4)
-				{
-					m_n2FValve2Count = -4;
-					g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
-				}
-				else if (m_n2FValve2Count > 4) m_n2FValve2Count = 4;
-				return;
-			case STUFF_BUTTON1:
-				g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON1] = true;
-				return;
-			case STUFF_CROWBAR:
-				g_pData->GetItem(STUFF_CROWBAR);
-				return;
-			case STUFF_PAPER1:
-				if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST])
-					g_pData->GetItem(STUFF_PAPER1);
-				return;
-			case STUFF_PAPER2:
-				g_pData->GetItem(STUFF_PAPER2);
-				return;
-			case STUFF_PAPER3:
-				g_pData->GetItem(STUFF_PAPER3);
-				return;
-			case STUFF_KEY1:
-				g_pData->GetItem(STUFF_KEY1);
-				return;
-			case STUFF_KEY2:
-				g_pData->GetItem(STUFF_KEY2);
-				return;
-			case STUFF_KEY3:
-				g_pData->GetItem(STUFF_KEY3);
-				return;
-			case STUFF_BRICK1:
-				g_pData->GetItem(STUFF_BRICK1);
-				return;
-			case STUFF_BRICK2:
-				g_pData->GetItem(STUFF_BRICK2);
-				return;
-			case STUFF_BRICK3:
-				g_pData->GetItem(STUFF_BRICK3);
-				return;
-			case STUFF_BRICK4:
-				g_pData->GetItem(STUFF_BRICK4);
-				return;
-			case STUFF_BRICK5:
-				g_pData->GetItem(STUFF_BRICK5);
-				return;
-			case STUFF_BRICKPILE:
-				for (int i = 0; i < 5; ++i)
-				{
-					if (g_pData->m_bStuffSwitch[STUFF_BRICK1 + i] == false)
-					{
-						g_pData->GetItem(StuffCode(STUFF_BRICK1 + i));
-						return;
-					}
-				}
+				cout << dis << endl;
+				//화면에 손모양 표시 추가
+				//g_pData->함수호출
+
+				if (keyState > 0) PickStuff(it->GetStuffCode(), lButton);
+			}
+		}
+	}
+}
+
+void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
+{
+	switch (stuffCode)
+	{
+	case STUFF_DOOR_PRISON:
+		if (g_pData->GetUseItem() == STUFF_KEY1)
+		{
+			g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
+			m_vecStuff[STUFF_DOOR_PRISON]->SetRadius(0.01f);
+		}
+		else; //열쇠1가 필요하다는 경고창
+		return;
+	case STUFF_DOOR_1STROOM:
+		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
+		m_vecStuff[STUFF_DOOR_1STROOM]->SetRadius(0.01f);
+		return;
+	case STUFF_DOOR_1STTOILET:
+		if (g_pData->GetUseItem() == STUFF_KEY2)
+		{
+			g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
+			m_vecStuff[STUFF_DOOR_1STTOILET]->SetRadius(0.01f);
+		}
+		else; //열쇠2가 필요하다는 경고창
+		return;
+	case STUFF_BOARDBLOCK:
+		if (g_pData->GetUseItem() == STUFF_CROWBAR)
+		{
+			if (g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
+			else; //여자는 안된다는 경고창
+		}
+		else; //크로우바가 필요하다는 경고창
+		if (m_n1FBlockCount > 3)
+		{
+			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
+			m_vecStuff[STUFF_BOARDBLOCK]->SetRadius(0.01f);
+		}
+		return;
+	case STUFF_BOX1:
+		if (g_pData->m_nPlayerNum1P == 1)
+		{
+			g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
+			m_vecStuff[STUFF_BOX1]->SetRadius(0.01f);
+		}
+		else; //여자는 밀수 없다는 경고창
+		return;
+	case STUFF_CHEST3:
+		g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;
+		m_vecStuff[STUFF_CHEST3]->SetRadius(0.01f);
+		return;
+	case STUFF_WOODBOARD1:
+		if (m_vecStuff[STUFF_WOODBOARD1]->GetPosition().x > -32 && g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] == true)
+		{
+			g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1] = m_vecStuff[STUFF_WOODBOARD1]->GetPosition() + D3DXVECTOR3(-9, 0, 0);
+			if (g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1].x <= -32)
+			{
+				g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] = true;
+				m_vecStuff[STUFF_WOODBOARD1]->SetRadius(0.01f);
+			}
+		}
+		break;
+	case STUFF_WOODBOARD2:
+		if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true)
+		{
+			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
+			m_vecStuff[STUFF_WOODBOARD2]->SetRadius(0.01f);
+		}
+		return;
+	case STUFF_VALVE1:
+		if (m_vecStuff[STUFF_VALVE1]->GetSwitch()) return;
+		m_bValve1 = true;
+		if (lButton) m_n2FValve1Count--;
+		else m_n2FValve1Count++;
+		if (m_n2FValve1Count >= 4)
+		{
+			m_n2FValve1Count = 4;
+			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
+		}
+		else if (m_n2FValve1Count < -4) m_n2FValve1Count = -4;
+		return;
+	case STUFF_VALVE2:
+		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return;
+		m_bValve2 = true;
+		if (lButton) m_n2FValve2Count--;
+		else m_n2FValve2Count++;
+		if (m_n2FValve2Count <= -4)
+		{
+			m_n2FValve2Count = -4;
+			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
+		}
+		else if (m_n2FValve2Count > 4) m_n2FValve2Count = 4;
+		return;
+	case STUFF_CROWBAR:
+		g_pData->GetItem(STUFF_CROWBAR);
+		return;
+	case STUFF_PAPER1:
+		if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST])
+			g_pData->GetItem(STUFF_PAPER1);
+		return;
+	case STUFF_PAPER2:
+		g_pData->GetItem(STUFF_PAPER2);
+		return;
+	case STUFF_PAPER3:
+		g_pData->GetItem(STUFF_PAPER3);
+		return;
+	case STUFF_KEY1:
+		g_pData->GetItem(STUFF_KEY1);
+		return;
+	case STUFF_KEY2:
+		g_pData->GetItem(STUFF_KEY2);
+		return;
+	case STUFF_KEY3:
+		g_pData->GetItem(STUFF_KEY3);
+		return;
+	case STUFF_BRICK1:
+		g_pData->GetItem(STUFF_BRICK1);
+		return;
+	case STUFF_BRICK2:
+		g_pData->GetItem(STUFF_BRICK2);
+		return;
+	case STUFF_BRICK3:
+		g_pData->GetItem(STUFF_BRICK3);
+		return;
+	case STUFF_BRICK4:
+		g_pData->GetItem(STUFF_BRICK4);
+		return;
+	case STUFF_BRICK5:
+		g_pData->GetItem(STUFF_BRICK5);
+		return;
+	case STUFF_BRICKPILE:
+		for (int i = 0; i < 5; ++i)
+		{
+			if (g_pData->m_bStuffSwitch[STUFF_BRICK1 + i] == false)
+			{
+				g_pData->GetItem(StuffCode(STUFF_BRICK1 + i));
 				return;
 			}
 		}
+		m_vecStuff[STUFF_BRICKPILE]->SetRadius(0.01f);
 	}
 }

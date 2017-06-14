@@ -143,13 +143,13 @@ string cDataManager::GetText()
 }
 
 //¾ÆÀÌÅÛ È¹µæ ¹× µå¶ø
-void cDataManager::DropItem(StuffCode itemCode, D3DXVECTOR3 position, D3DXVECTOR3 rotation)
+void cDataManager::DropItem(StuffCode itemCode)
 {
 	if (itemCode < STUFF_CROWBAR || itemCode > STUFF_BRICK5) return;
 
 	m_bStuffSwitch[itemCode] = true;
-	m_vStuffPosition[itemCode] = position;
-	m_vStuffRotation[itemCode] = rotation;
+	m_vStuffPosition[itemCode] = m_vPosition1P;
+	m_vStuffRotation[itemCode] = D3DXVECTOR3(0, m_vRotation1P, 0);
 }
 
 void cDataManager::GetItem(StuffCode itemCode)

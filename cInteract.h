@@ -23,5 +23,6 @@ public:
 	void Setup();
 	void Update();
 	void Render();
-	void PickStuff(int keyState, D3DXVECTOR3 playerPos);
+	void CheckStuff(D3DXVECTOR3 playerPos);
+	void PickStuff(StuffCode stuffCode, bool lButton);
 };
