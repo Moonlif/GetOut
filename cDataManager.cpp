@@ -10,6 +10,7 @@ cDataManager::cDataManager()
 	, m_IsOnChat(false)
 	, m_IsMiniGamePrisonBreak(false)
 	, m_IsPossibleMove(false)
+	, m_SetItem(StuffCode::STUFF_NONE)
 {
 }
 
@@ -105,6 +106,7 @@ void cDataManager::Setup()
 
 	//m_bStuffSwitch[SWITCH_ONMAP_BRICK1] = true;
 	//m_vStuffPosition[SWITCH_ONMAP_BRICK1] = D3DXVECTOR3(1, 12, 3);
+
 }
 
 void cDataManager::Destroy()
@@ -143,13 +145,12 @@ string cDataManager::GetText()
 }
 
 //¾ÆÀÌÅÛ È¹µæ ¹× µå¶ø
-void cDataManager::DropItem(StuffCode itemCode, D3DXVECTOR3 position, D3DXVECTOR3 rotation)
+void cDataManager::DropItem(StuffCode itemCode)
 {
 	if (itemCode < STUFF_CROWBAR || itemCode > STUFF_BRICK5) return;
 
 	m_bStuffSwitch[itemCode] = true;
-	m_vStuffPosition[itemCode] = position;
-	m_vStuffRotation[itemCode] = rotation;
+
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
@@ -157,4 +158,11 @@ void cDataManager::GetItem(StuffCode itemCode)
 	if (itemCode < STUFF_CROWBAR || itemCode > STUFF_BRICK5) return;
 
 	m_bStuffSwitch[itemCode] = false;
+}
+
+
+void cDataManager::TextOutWarningWord(string str)
+{
+	m_isWarning = true;
+	m_strWarningWord = str;
 }

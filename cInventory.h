@@ -15,12 +15,6 @@ private:
 
 	LPD3DXSPRITE			m_pSprite;
 	
-	//가방 꽉 찾을 때
-	bool					m_isWarning;
-	string					m_strWarningWord;
-	int						m_nBagIsFullTextOutCount;
-	LPD3DXFONT				m_pFontWarning;
-
 	//인벤 내에서 아이템 이동시
 	bool					m_IsPick;
 	StuffCode				FirstCode, SecondCode;
@@ -37,8 +31,6 @@ public:
 
 	void SetInventoryBase();
 	void SetItem(StuffCode ItemName);
-
-	void LimitWarningTextOutTime();
 
 	void MoveItem();
 	void PickedRender();

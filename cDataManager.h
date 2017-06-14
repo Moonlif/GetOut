@@ -19,6 +19,12 @@ private:
 	SYNTHESIZE(bool, m_IsMiniGamePrisonBreak, IsMiniGamePrisonBreak)
 
 	SYNTHESIZE(bool, m_IsPossibleMove, IsPossibleMove)
+	SYNTHESIZE(StuffCode, m_SetItem, SetItem)
+
+	//경고문구 띄우기
+	SYNTHESIZE(bool,					m_isWarning, isWarning);
+	SYNTHESIZE(string,					m_strWarningWord, WarningWord);
+	
 public:
 	//정훈 - 오브젝트용
 	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;
@@ -49,7 +55,9 @@ public:
 	void Chat(string Text);
 	string GetText();
 
-	void DropItem(StuffCode itemCode, D3DXVECTOR3 position, D3DXVECTOR3 rotation = D3DXVECTOR3(0, 0, 0));
+	void DropItem(StuffCode itemCode);
 	void GetItem(StuffCode itemCode);
+
+	void TextOutWarningWord(string str);
 };
 
