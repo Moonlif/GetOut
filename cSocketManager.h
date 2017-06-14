@@ -40,9 +40,17 @@ private:
 	HANDLE hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
 	HANDLE hDataThread;
 
+	// << : 클라이언트간 통신하기 위해 필요한 변수들입니다.
+	int clntAdrSz;
+	WSADATA wsaData_HOST;
+	SOCKET hSocket_Serv, hSocket_Clnt;
+	SOCKADDR_IN hostAdr, clntAdr;
+	HANDLE hHostThread;
+
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
 
+	// << : 좌표 계산을 위해 필요한 변수들
 	D3DXVECTOR3 prevPosition, nextPosition;
 	float prevRotation, nextRotation;
 	clock_t stStart, stCurrent, stUpdateTime;
@@ -50,13 +58,9 @@ private:
 
 	SYNTHESIZE(int, nFlagNum, FlagNum);
 	SYNTHESIZE(bool, InitServer, InitServer);
+	SYNTHESIZE(int, nNetworkID, NetworkID);
 
-	// << : 클라이언트간 통신하기 위해 필요한 변수들입니다.
-	int clntAdrSz;
-	WSADATA wsaData_HOST;
-	SOCKET hSocket_Serv, hSocket_Clnt;
-	SOCKADDR_IN hostAdr, clntAdr;
-	HANDLE hHostThread;
+
 public:
 	void Setup_Host();
 	void Connect_Client();
@@ -72,6 +76,7 @@ public:
 struct ST_FLAG
 {
 	char szRoomName[50] = { 0, };	// << : key
+	int nNetworkID;
 	int nPlayerIndex;
 	int eFlag;
 };
@@ -119,8 +124,10 @@ struct ST_CHAT
 enum FLAG
 {
 	FLAG_NONE = 1 << 0,
-	FLAG_IP = 1 << 1,
-	FLAG_POSITION = 1 << 2,
-	FLAG_OBJECT_DATA = 1 << 3,
-	FLAG_ALL = 1 << 4,
+	FLAG_NETWORK_ID = 1 << 1,
+	FLAG_ROOM_NAME = 1 << 2,
+	FLAG_IP = 1 << 3,
+	FLAG_POSITION = 1 << 4,
+	FLAG_OBJECT_DATA = 1 << 5,
+	FLAG_ALL = 1 << 6,
 };

@@ -13,17 +13,23 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam);
 unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 
 // << : 분리된 함수들
+void ReceiveNetworkID(SOCKET* pSocket);
 void ReceivePosition(LPVOID lpParam);
+void ReceiveAll(LPVOID lpParam);
+
+void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
+void SendPosition(SOCKET* pSocket);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 	, stStart(clock())
 	, stCurrent(clock())
 	, m_fT(0.0f)
-	, nFlagNum(FLAG_POSITION)
+	, nFlagNum(FLAG_NETWORK_ID)
 	, prevRotation(0.0f)
 	, nextRotation(0.0f)
 	, InitServer(false)
+	, nNetworkID(-1)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -250,7 +256,116 @@ unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
 	return 0;
 }
 
-/* 스레드에서 좌표를 수신했을때 처리하는 함수입니다 */
+unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
+{
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_DATA_SERVER_OUT;
+
+	clock_t prevTime = clock();
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "SEND 스레드 연결 재시도중" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	}
+
+	ST_FLAG stFlag;
+	// >> : 맨처음 데이터를 받아올때 네트워크 아이디도 받아와야함
+	while (true)
+	{
+		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
+		prevTime = clock();
+
+		SendFlag(&hSocket,&stFlag);
+
+		switch (stFlag.eFlag)
+		{
+		case FLAG_NONE:
+			break;
+		case FLAG_NETWORK_ID:
+			ReceiveNetworkID(&hSocket);
+			break;
+		case FLAG_IP:
+			break;
+		case FLAG_POSITION:
+			ReceivePosition(&hSocket);
+			break;
+		case FLAG_OBJECT_DATA:
+			break;
+		case FLAG_ALL:
+			break;
+
+		}
+	}
+	return 0;
+}
+
+unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
+{
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	int strLen;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_port = PORT_DATA_SERVER_IN;
+
+	clock_t prevTime = clock();
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "RECV 스레드 연결 재시도중" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	}
+
+	ST_FLAG stFlag;
+	while (strLen = recv(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0) != 0)
+	{
+		stFlag.nNetworkID = g_pSocketmanager->GetNetworkID();
+		if (strLen == -1) break;
+		cout << stFlag.szRoomName << endl;
+		cout << stFlag.eFlag << endl;
+		cout << stFlag.nPlayerIndex << endl;
+
+		switch (stFlag.eFlag)
+		{
+		case FLAG_NONE:
+			break;
+		case FLAG_IP:
+			break;
+		case FLAG_POSITION:
+			SendPosition(&hSocket);
+			break;
+		case FLAG_OBJECT_DATA:
+			break;
+		case FLAG_ALL:
+			break;
+		}
+	}
+
+	return 0;
+}
+/* 네트워크 아이디 수신 */
+void ReceiveNetworkID(SOCKET* pSocket)
+{
+	int nID;
+	recv(*pSocket, (char*)&nID, sizeof(int), 0);
+	g_pSocketmanager->SetNetworkID(nID);
+	cout << "네트워크 아이디 " << nID << endl;
+	//g_pSocketmanager->SetFlagNum(FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
+}
+
+/* 좌표 수신 */
 void ReceivePosition(LPVOID lpParam)
 {
 	SOCKET hSocket = *(SOCKET*)lpParam;
@@ -280,91 +395,34 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Angle : " << stRecv.fAngle << endl;
 }
 
-unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
+/* 모든 데이터 수신 */
+void ReceiveAll(LPVOID lpParam)
 {
-	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN addr;
-	memset(&addr, 0, sizeof(SOCKADDR_IN));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_DATA_SERVER_OUT;
+	SOCKET hSocket = *(SOCKET*)lpParam;
 
-	clock_t prevTime = clock();
-	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
-	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
-	while (result == SOCKET_ERROR)
-	{
-		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
-		prevTime = clock();
-		cout << "스레드 연결 재시도중" << endl;
-		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
-	}
-
-	ST_FLAG stFlag;
-	//clock_t prevTime = clock();
-	while (true)
-	{
-		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
-		prevTime = clock();
-		stFlag.eFlag = g_pSocketmanager->GetFlagNum();	// << : 싱글톤에서 플래그를 받아옵니다.
-
-		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
-		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
-		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
-
-		ST_PLAYER_POSITION stSend;
-		if (g_pData->m_nPlayerNum1P == 1)
-			stSend.nPlayerIndex = OUT_PLAYER1;
-		else if (g_pData->m_nPlayerNum1P == 2)
-			stSend.nPlayerIndex = OUT_PLAYER2;
-		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
-		stSend.fX = g_pData->m_vPosition1P.x;
-		stSend.fY = g_pData->m_vPosition1P.y;
-		stSend.fZ = g_pData->m_vPosition1P.z;
-		stSend.fAngle = g_pData->m_vRotation1P;
-		send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
-
-		switch (stFlag.eFlag)
-		{
-		case FLAG_POSITION:
-			ReceivePosition(&hSocket);
-			break;
-		}
-	}
-	return 0;
 }
 
-unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
+void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 {
-	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN addr;
-	memset(&addr, 0, sizeof(SOCKADDR_IN));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_DATA_SERVER_IN;
-
-	clock_t prevTime = clock();
-	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
-	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
-	while (result == SOCKET_ERROR)
-	{
-		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
-		prevTime = clock();
-		cout << "스레드 연결 재시도중" << endl;
-		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
-	}
-
-	ST_FLAG stFlag;
-	while (true)
-	{
-		recv(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
-		cout << stFlag.szRoomName << endl;
-		cout << stFlag.eFlag << endl;
-		cout << stFlag.nPlayerIndex << endl;
-	}
-
-	return 0;
+	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
+	pFlag->nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
+	pFlag->nPlayerIndex = g_pData->m_nPlayerNum1P;
+	sprintf_s(pFlag->szRoomName, "DEFAULT", 7);
+	send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
 }
 
-
-
+void SendPosition(SOCKET* pSocket)
+{
+	SOCKET hSocket = *pSocket;
+	ST_PLAYER_POSITION stSend;
+	if (g_pData->m_nPlayerNum1P == 1)
+		stSend.nPlayerIndex = OUT_PLAYER1;
+	else if (g_pData->m_nPlayerNum1P == 2)
+		stSend.nPlayerIndex = OUT_PLAYER2;
+	sprintf_s(stSend.szRoomName, "DEFAULT", 7);
+	stSend.fX = g_pData->m_vPosition1P.x;
+	stSend.fY = g_pData->m_vPosition1P.y;
+	stSend.fZ = g_pData->m_vPosition1P.z;
+	stSend.fAngle = g_pData->m_vRotation1P;
+	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+}
