@@ -148,6 +148,7 @@ void cDataManager::DropItem(StuffCode itemCode)
 	m_bStuffSwitch[itemCode] = true;
 	m_vStuffPosition[itemCode] = m_vPosition1P;
 	m_vStuffRotation[itemCode] = D3DXVECTOR3(0, m_vRotation1P, 0);
+	cout << "버릴때 : " << itemCode << endl;
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
@@ -155,7 +156,8 @@ void cDataManager::GetItem(StuffCode itemCode)
 	if (itemCode < STUFF_CROWBAR || itemCode > STUFF_BRICK5) return;
 
 	m_bStuffSwitch[itemCode] = false;
-	m_SetItem = itemCode;
+	m_PickUpItemCode = itemCode;
+	cout << "줏을때 : " << itemCode << endl;
 }
 
 

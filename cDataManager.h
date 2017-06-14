@@ -31,7 +31,7 @@ public:
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
 	//정훈 - 맵 정보
-	bool m_bStuffSwitch[SWITCH_LASTNUM];
+	bool m_bStuffSwitch[SWITCH_LASTNUM];			//아이템일 경우 맵에 있는게 true
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 

@@ -10,6 +10,7 @@ cInteract::cInteract()
 	, m_n2FValve2Count(0)
 	, m_n2FButton1Count(0)
 	, m_n2FButton2Count(0)
+	, m_nBrickCount(0)
 {
 }
 
@@ -345,15 +346,14 @@ void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return;
 	case STUFF_BRICKPILE:
-		for (int i = 0; i < 5; ++i)
+		if (m_nBrickCount >= 5)
 		{
-			if (g_pData->m_bStuffSwitch[STUFF_BRICK1 + i] == false)
-			{
-				g_pData->GetItem(StuffCode(STUFF_BRICK1 + i));
-				g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-				return;
-			}
+			m_vecStuff[STUFF_BRICKPILE]->SetRadius(0.01f);
+			return;
 		}
-		m_vecStuff[STUFF_BRICKPILE]->SetRadius(0.01f);
+		g_pData->GetItem(StuffCode(STUFF_BRICK1 + m_nBrickCount));
+		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
+		m_nBrickCount++;
+		return;
 	}
 }

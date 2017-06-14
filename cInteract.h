@@ -18,6 +18,7 @@ private:
 	int m_n2FValve2Count;					//2층 Valve2의 로테이션 값 (범위: -4 ~ 4)
 	int m_n2FButton1Count;					//2층 Button1이 눌려있는지
 	int m_n2FButton2Count;					//2층 Button2이 눌려있는지
+	int m_nBrickCount;						//1층 벽돌무더기에서 벽돌을 몇개 가져갔는지
 
 public:
 	void Setup();
