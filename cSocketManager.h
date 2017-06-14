@@ -11,16 +11,18 @@
 #define g_pSocketmanager cSocketManager::GetInstance()
 
 #define BUF_SIZE 100
+#define CLIENT_NUM 5
 #define HOSTIP "127.0.0.1"
 #define IN_PLAYER1 1 << 0
 #define IN_PLAYER2 1 << 1
 #define NAME_SIZE 20
 #define ONE_SECOND 1000
+#define OVERHEAD 300
 #define OUT_PLAYER1 1 << 4
 #define OUT_PLAYER2 1 << 5
-#define PORT_DATA 1234
-#define PORT_CHAT 9090
-#define PORT_CLIENT 10111
+#define PORT_DATA_SERVER 1234
+#define PORT_DATA_CLIENT 10111
+#define PORT_CHAT_SERVER 9090
 #define ROOM_NAME_SIZE 50
 #define SEND_PER_SECOND 2
 
@@ -30,41 +32,58 @@ class cSocketManager
 private:
 	SINGLETONE(cSocketManager);
 
+	// << : 서버와 통신하기 위해 필요한 변수들입니다.
 	WSADATA wsaData_CHAT, wsaData_DATA;
 	SOCKET hSocket_CHAT, hSocket_DATA;
-	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA;
-	HANDLE hSndThread, hRcvThread, hDataThread;
+	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA, ClntAdr_DATA;
+	HANDLE hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
+	HANDLE hDataThread;
 
 	char name[NAME_SIZE] = "[DEFAULT]";
 	char msg[BUF_SIZE];
 
 	D3DXVECTOR3 prevPosition, nextPosition;
+	float prevRotation, nextRotation;
 	clock_t stStart, stCurrent, stUpdateTime;
 	float m_fT;
 
 	SYNTHESIZE(int, nFlagNum, FlagNum);
+	SYNTHESIZE(bool, InitServer, InitServer);
+
+	// << : 클라이언트간 통신하기 위해 필요한 변수들입니다.
+	int clntAdrSz;
+	SOCKET hSocket_Serv, hSocket_Clnt;
+	SOCKADDR_IN hostAdr, clntAdr;
+	HANDLE hHostThread;
 public:
+	void Setup_Host();
+	void Connect_Client();
 	void Setup_DATA();
 	void Setup_CHAT();
-	void Update_DATA();
 	void Update();
 	void Calc_Position();
 	void Destroy();
 	void UpdatePosition(float  x, float y, float z);
+	void UpdateRotation(float Rotate);
+};
+
+struct ST_FLAG
+{
+	char szRoomName[50] = { 0, };	// << : key
+	int nPlayerIndex;
+	int eFlag;
 };
 
 struct ST_PLAYER_POSITION
 {
 	char  szRoomName[50] = { 0, };	// << : Key
-	int	  nFROM_SERVER;				// << : Server Flag
-	int   nFROM_CLIENT;				// << :	Client Flag
 	int	  nPlayerIndex;				// << : Player Index
 	animationState eAnimState;		// << : Animation index
 	float fX;
 	float fY;
 	float fZ;
 	float fAngle;
-	ST_PLAYER_POSITION() :nFROM_SERVER(0), nFROM_CLIENT(0), nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
+	ST_PLAYER_POSITION() : nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 
@@ -72,8 +91,6 @@ struct ST_ALL_DATA
 {
 	// << : Player Data
 	char  szRoomName[50] = { 0, };	// << : Key
-	int	  nFROM_SERVER;				// << : SERVER FLAG
-	int   nFROM_CLIENT;				// << : CLIENT FLAG
 	int	  nPlayerIndex;				// << : Current Player Index
 	animationState eAnimState;		// << : Animation index
 	float fX;
@@ -90,8 +107,18 @@ struct ST_ALL_DATA
 	StuffCode objectType[SWITCH_LASTNUM];	// << : objectType
 	bool objectRunning[SWITCH_LASTNUM];		// << : Is Object Run?
 };
+
 struct ST_CHAT
 {
 	char ROOM_NAME[ROOM_NAME_SIZE] = { 0, };
 	char TEXT[NAME_SIZE + BUF_SIZE] = { 0, };
+};
+
+enum FLAG
+{
+	FLAG_NONE = 1 << 0,
+	FLAG_IP = 1 << 1,
+	FLAG_POSITION = 1 << 2,
+	FLAG_OBJECT_DATA = 1 << 3,
+	FLAG_ALL = 1 << 4,
 };

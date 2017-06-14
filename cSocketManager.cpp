@@ -5,19 +5,27 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 CRITICAL_SECTION cs;
-unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam);
-unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam);
-unsigned int _stdcall PROCESS_DATA(LPVOID lpParam);
-unsigned int _stdcall SEND_ADR(LPVOID lpParam);
+CRITICAL_SECTION cs2;
+unsigned int _stdcall SEND_CHAT(LPVOID lpParam);
+unsigned int _stdcall RECV_CHAT(LPVOID lpParam);
+unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam);
+unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam);
+
+// << : 분리된 함수들
+void ReceivePosition(LPVOID lpParam);
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 	, stStart(clock())
 	, stCurrent(clock())
 	, m_fT(0.0f)
-	, nFlagNum(-1)
+	, nFlagNum(FLAG_POSITION)
+	, prevRotation(0.0f)
+	, nextRotation(0.0f)
+	, InitServer(false)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
+	InitializeCriticalSection(&cs2);	// << : 2
 	prevPosition.x = 0;
 	prevPosition.y = 0;
 	prevPosition.z = 0;
@@ -30,99 +38,155 @@ cSocketManager::~cSocketManager()
 {
 }
 
-void cSocketManager::Setup_DATA()
+/* 호스트가 없다면 자신이 호스트가 됩니다.*/
+void cSocketManager::Setup_Host()
 {
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData_DATA) != 0) /// Init Socket
-		cout << "DATA WSAStartup() error!" << endl;
+	// << :
+	hSocket_Serv = socket(PF_INET, SOCK_STREAM, 0);
 
-	hSocket_DATA = socket(PF_INET, SOCK_STREAM, 0);	/// 데이터 소켓 할당
+	memset(&hostAdr, 0, sizeof(hostAdr));
+	hostAdr.sin_family = AF_INET;
+	hostAdr.sin_addr.s_addr = htonl(INADDR_ANY);
+	hostAdr.sin_port = PORT_DATA_CLIENT;
+	bool bValid = 1;
+	setsockopt(hSocket_Serv, SOL_SOCKET, SO_REUSEADDR, (const char *)&bValid, sizeof(bValid));
+	if (bind(hSocket_Serv, (SOCKADDR*)&hostAdr, sizeof(hostAdr)) == SOCKET_ERROR)
+		cout << "Server_HOST bind() Error" << endl;
+	if (listen(hSocket_Serv, CLIENT_NUM) == SOCKET_ERROR)
+		cout << "Server_HOST listen() Error" << endl;
 
-	memset(&ServAdr_DATA, 0, sizeof(ServAdr_DATA));
-	ServAdr_DATA.sin_family = AF_INET;
-	ServAdr_DATA.sin_addr.s_addr = inet_addr(HOSTIP);
-	ServAdr_DATA.sin_port = PORT_DATA;
-
-	if (connect(hSocket_DATA, (SOCKADDR*)&ServAdr_DATA, sizeof(ServAdr_DATA)) == SOCKET_ERROR)
-		cout << "DATA connect() error" << endl;
-
+	// << : 이부분은 크리티컬 섹션으로 처리합니다.
+	while (true)
+	{
+		clntAdrSz = sizeof(clntAdr);
+		hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
+		if (hSocket_Clnt > 0)
+		{
+			// << : 다른 클라이언트가 연결하면 스레드로 좌표를 계속 받게 처리한다.
+		}
+	}
 }
 
+/* 이미 호스트가 있다면 해당 호스트와 연결하는 함수입니다. */
+void cSocketManager::Connect_Client()
+{
+}
+
+/* 서버와 통신을 위한 스레드 동작 */
+void cSocketManager::Setup_DATA()
+{
+	int nRet;
+	clock_t prevTime = clock();
+	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+	while (nRet != 0)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "DATA WSAStartup() error!" << endl;
+		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+	}
+
+	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) INTERECT_SERVER, (void*)&hSocket_DATA, 0, NULL);
+}
+
+/* 채팅 동작을 위한 소켓 초기화및 스레드 동작 */
 void cSocketManager::Setup_CHAT()
 {
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT) != 0)	/// Init Socket
-		cout << "CHAT WSAStartup() error!" << endl;
+	/* WSAStartup이 제대로 되지 않았다면 2초마다 한번씩 실행합니다. */
+	int nRet;
+	clock_t prevTime = clock();
+	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT);
+	while (nRet != 0)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_CHAT);
+		cout << "CHAT WSAStartup() Error!" << endl;
+	}
 
-	//sprintf(name, "[DEFAULT]");						/// 플레이어 이름 초기화
-	hSocket_CHAT = socket(PF_INET, SOCK_STREAM, 0);	/// 채팅 소켓 할당
+	hSocket_CHAT = socket(PF_INET, SOCK_STREAM, 0);		/// 채팅 소켓 할당
 
 	memset(&ServAdr_CHAT, 0, sizeof(ServAdr_CHAT));
 	ServAdr_CHAT.sin_family = AF_INET;
 	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HOSTIP);
-	ServAdr_CHAT.sin_port = PORT_CHAT;
+	ServAdr_CHAT.sin_port = PORT_CHAT_SERVER;
 
+	int result = connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT));
 
-	if (connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT)) == SOCKET_ERROR)
-		cout << "CHAT connect() error" << endl;
-
-
-	if (hSocket_CHAT != SOCKET_ERROR)		/// 소켓의 연결이 정상이라면
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result != SOCKET_ERROR)
 	{
-		hSndThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))PROCESS_CHAT_Send, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 발신 스레드 함수
-		hRcvThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))PROCESS_CHAT_Recv, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 수신 스레드 함수
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "CHAT 서버에 재연결 합니다" << endl;
+		result = connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT));
 	}
-}
 
-void cSocketManager::Update_DATA()
-{
-	if (GetAsyncKeyState(VK_NUMPAD1) & 0x0001)
+	/* 소켓의 연결이 정상이라면 스레드를 동작시킵니다. */
+	if (hSocket_CHAT != SOCKET_ERROR)
 	{
-		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) SEND_ADR, (void*)&hSocket_DATA, 0, NULL);
+		hChatSend = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))SEND_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 발신 스레드 함수
+		hChatRecv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(__stdcall*)(void*))RECV_CHAT, (void*)&hSocket_CHAT, 0, NULL);	// 메시지 수신 스레드 함수
 	}
-	//if (stUpdateTime + (ONE_SECOND / SEND_PER_SECOND) > clock()) return;
-
-	//stUpdateTime = clock();
-	//hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) PROCESS_DATA, (void*)&hSocket_DATA, 0, NULL);
 }
 
 void cSocketManager::Update()
 {
-	Calc_Position();
+	Calc_Position(); // < : 좌표를 보정해서 계산합니다.
+	if (InitServer)
+	{
+		SetInitServer(false);
+		// << : 서버로부터 호스트를 해라 라는 신호가 들어오면 스레드를 동작시킨다 ?
+	}
 }
 
+/* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
 void cSocketManager::Calc_Position()
 {
 	stCurrent = clock();
 	float Devide = stCurrent - stStart;
-	if (Devide == 0) Devide = ONE_SECOND / SEND_PER_SECOND;
-	m_fT = (float)(ONE_SECOND / SEND_PER_SECOND) / (float)(Devide);
+	if (Devide == 0) Devide = ONE_SECOND;
+	m_fT = (float)(Devide) / (float)(ONE_SECOND);
 	if (m_fT > 1) m_fT = 1;
 
-	D3DXVECTOR3 interval = nextPosition - prevPosition;
-
-	g_pData->m_vPosition2P = prevPosition + (interval * m_fT);
+	D3DXVECTOR3 posInterval = nextPosition - prevPosition;
+	float rotInterval = nextRotation - prevRotation;
+	
+	g_pData->m_vPosition2P = prevPosition + (posInterval * m_fT);
+	g_pData->m_vRotation2P = prevRotation + (rotInterval * m_fT);
 }
 
+/* 모든 스레드를 종료하고 소켓을 닫습니다 */
 void cSocketManager::Destroy()
 {
-	WaitForSingleObject(hSndThread, INFINITE);	/// 스레드 종료 대기
-	WaitForSingleObject(hRcvThread, INFINITE);	/// 스레드 종료 대기
+	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
+	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
 
-	CloseHandle(hSndThread);
-	CloseHandle(hRcvThread);
+	CloseHandle(hChatSend);
+	CloseHandle(hChatRecv);
 
 	closesocket(hSocket_CHAT);
 	closesocket(hSocket_DATA);
 	WSACleanup();
 }
 
+/* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
 void cSocketManager::UpdatePosition(float  x, float y, float z)
 {
-	prevPosition = nextPosition;
+	prevPosition = g_pData->m_vPosition2P;
 	nextPosition = D3DXVECTOR3(x, y, z);
+	stStart = clock();
 }
 
+/* 현재 회전값을 출발 회전값으로, 수신한 회전값을 목표 회전값으로 설정 */
+void cSocketManager::UpdateRotation(float Rotate)
+{
+	prevRotation = g_pData->m_vRotation2P;
+	nextRotation = Rotate;
+}
 
-unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam)
+/* 채팅을 전송하는 스레드 */
+unsigned int _stdcall SEND_CHAT(LPVOID lpParam)
 {
 	SOCKET hSock = *((SOCKET*)lpParam);
 	char nameMsg[NAME_SIZE + BUF_SIZE];
@@ -133,14 +197,14 @@ unsigned int _stdcall PROCESS_CHAT_Send(LPVOID lpParam)
 		string Data = g_pData->GetText();
 		sprintf_s(SendData.TEXT, "%s", Data.c_str(),NAME_SIZE + BUF_SIZE);
 		if (Data.size() < 2) continue;
-		//sText.resize(BUF_SIZE);
 		LeaveCriticalSection(&cs);	// << : End CRITICAL SECTION
 		send(hSock, (char*)&SendData, sizeof(ST_CHAT), 0);
 	}
 	return 0;
 }
 
-unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
+/* 채팅을 수신하는 스레드 */
+unsigned int _stdcall RECV_CHAT(LPVOID lpParam)
 {
 	SOCKET hSock = *((SOCKET*)lpParam);
 	ST_CHAT RecvData;
@@ -161,76 +225,123 @@ unsigned int _stdcall PROCESS_CHAT_Recv(LPVOID lpParam)
 	return 0;
 }
 
-unsigned int _stdcall PROCESS_DATA(LPVOID lpParam)
+/* 서버와 상호작용하는 스레드 */
+unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN addr;
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_DATA;
+	addr.sin_port = PORT_DATA_SERVER;
 
-	if (connect(hSocket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR)
-	{
-		cout << "DATA connect Error()" << endl;
-	}
-	
-	ST_PLAYER_POSITION SendData;
-
-	SendData.fAngle = g_pData->m_vRotation1P;
-	SendData.fX = g_pData->m_vPosition1P.x;
-	SendData.fY = g_pData->m_vPosition1P.y;
-	SendData.fZ = g_pData->m_vPosition1P.z;
-	SendData.eAnimState = g_pData->m_eAnimState1P;
-
-	if(g_pData->m_nPlayerNum1P == 1)
-		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER1;
-	else if(g_pData->m_nPlayerNum1P == 2)
-		SendData.nPlayerIndex = SendData.nPlayerIndex | OUT_PLAYER2;
-
-	SendData.nFROM_CLIENT = g_pSocketmanager->GetFlagNum();
-	g_pSocketmanager->SetFlagNum(++SendData.nFROM_CLIENT);
-	SendData.nFROM_SERVER = 0;
-	sprintf_s(SendData.szRoomName, "%s", "DEFAULT", 7);
-	
-	send(hSocket, (char*)&SendData, sizeof(ST_PLAYER_POSITION), 0);
-
-	ST_PLAYER_POSITION RecvData;
-	recv(hSocket, (char*)&RecvData, sizeof(ST_PLAYER_POSITION), 0);
-
-	if (RecvData.nPlayerIndex & IN_PLAYER1)
-		g_pData->m_nPlayerNum2P = 1;
-
-	if(RecvData.nPlayerIndex & IN_PLAYER2)
-		g_pData->m_nPlayerNum2P = 2;
-
-	// << : CRITICAL SECTION ?
-	g_pSocketmanager->stStart = clock();
-	g_pSocketmanager->UpdatePosition(RecvData.fX, RecvData.fY, RecvData.fZ);
-	// << : CRITICAL SECTION ?
-	return 0;
-}
-
-unsigned int _stdcall SEND_ADR(LPVOID lpParam)
-{
-	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN addr;
-	memset(&addr, 0, sizeof(SOCKADDR_IN));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_CLIENT;
 	clock_t prevTime = clock();
-	if (connect(hSocket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR)
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result == SOCKET_ERROR)
 	{
-		cout << "DATA connect Error()" << endl;
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "스레드 연결 재시도중" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
 	}
+
+	/* 어떤 데이터를 보낼지 먼저 알려줍니다. 그뒤 해당하는 데이터를 전송합니다. */
+	ST_FLAG stFlag;
 	while (true)
 	{
-		if (prevTime + 5000 > clock()) continue;
+		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
 		prevTime = clock();
-		send(hSocket, (char*)&addr, sizeof(SOCKADDR_IN), 0);
-		cout << inet_ntoa(addr.sin_addr) << endl;
-	}
+		stFlag.eFlag = g_pSocketmanager->GetFlagNum();	// << : 싱글톤에서 플래그를 받아옵니다.
 
+		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
+		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
+		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+
+		ST_PLAYER_POSITION stSend;
+		if (g_pData->m_nPlayerNum1P == 1)
+			stSend.nPlayerIndex = OUT_PLAYER1;
+		else if (g_pData->m_nPlayerNum1P == 2)
+			stSend.nPlayerIndex = OUT_PLAYER2;
+		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
+		stSend.fX = g_pData->m_vPosition1P.x;
+		stSend.fY = g_pData->m_vPosition1P.y;
+		stSend.fZ = g_pData->m_vPosition1P.z;
+		stSend.fAngle = g_pData->m_vRotation1P;
+		send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+
+		switch (stFlag.eFlag)
+		{
+		case FLAG_POSITION:
+			ReceivePosition(&hSocket);
+			break;
+		}
+	}
 	return 0;
 }
+
+/* 클라이언트 (2P)와 상호작용하는 스레드 */
+unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
+{
+	//ST_SOCKET_ADDR RecvSocket = *(ST_SOCKET_ADDR*)arg;
+	//SOCKET ClntSock = RecvSocket.stSocket;
+	//char szBuffer[BUF_SIZE * 10] = { 0, };
+	//int strLen1, strLen2, i;
+
+	//while ((strLen1 = recv(ClntSock, szBuffer, sizeof(ST_FLAG), 0)) != 0)
+	//{
+	//	if (strLen1 == -1) break;
+
+	//	ST_FLAG stFlag = *(ST_FLAG*)szBuffer;
+	//	switch (stFlag.eFlag)
+	//	{
+	//	case FLAG_NONE:
+	//		break;
+	//	case FLAG_IP:
+	//		break;
+	//	case FLAG_POSITION:
+	//		break;
+	//	case FLAG_OBJECT_DATA:
+	//		break;
+	//	case FLAG_ALL:
+	//		break;
+	//	}
+	//	continue;
+	//}
+
+	//closesocket(ClntSock);
+	return 0;
+}
+
+/* 스레드에서 좌표를 수신했을때 처리하는 함수입니다 */
+void ReceivePosition(LPVOID lpParam)
+{
+	SOCKET hSocket = *(SOCKET*)lpParam;
+	ST_PLAYER_POSITION stRecv;
+	recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
+	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
+	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
+	cout << "접속중인 플레이어 ";
+	if (stRecv.nPlayerIndex & IN_PLAYER1)
+	{
+		g_pData->m_nPlayerNum2P = 1;
+		cout << "1P" << " ";
+	}
+	else if (stRecv.nPlayerIndex & IN_PLAYER2)
+	{
+		g_pData->m_nPlayerNum2P = 2;
+		cout << "2P" << " ";
+	}
+	else
+	{
+		cout << "없음" << " ";
+	}
+
+	cout << "X좌표 : " << stRecv.fX << " ";
+	cout << "Y좌표 : " << stRecv.fY << " ";
+	cout << "Z좌표 : " << stRecv.fZ << " ";
+	cout << "Angle : " << stRecv.fAngle << endl;
+}
+
+
+
