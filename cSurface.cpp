@@ -8,6 +8,8 @@ cSurface::cSurface()
 	, m_pB1Prison(NULL)
 	, m_pB1StartSpace(NULL)
 	, m_pB1NextRoom(NULL)
+	, m_pB1StairPass(NULL)
+
 	, m_pFFPassage(NULL)
 	, m_pFFPassage2(NULL)
 	, m_pFFLivingRoom(NULL)
@@ -42,6 +44,7 @@ cSurface::~cSurface()
 	SAFE_DELETE(m_pB1StartSpace);
 	SAFE_DELETE(m_pB1NextRoom);
 	SAFE_DELETE(m_pB1StairSurface);
+	SAFE_DELETE(m_pB1StairPass);
 
 	//1Ãþ
 	SAFE_DELETE(m_pFFPassage);
@@ -80,12 +83,16 @@ void cSurface::Setup()
 	//>> ÁöÇÏ 
 	//½ºÅ¸Æ® ·ë
 	m_pB1StartRoom = new cRectMake;
-	D3DXVECTOR3 v0, v1, v2, v3;
-	v0 = D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ); 
-	v1 = D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 2); 
-	v2 = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 2);
-	v3 = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ);
-	m_pB1StartRoom->Setup(v0, v1, v2, v3, NULL);
+	Surface v0, v1, v2, v3;
+	v0.p = D3DXVECTOR3(CENTERX + 3.5, B1F, CENTERZ + 0.5);
+	v1.p = D3DXVECTOR3(CENTERX + 3.5, B1F, CENTERZ + 1.5); 
+	v2.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 1.5);
+	v3.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 0.5);
+	v0.floor = 0;
+	v1.floor = 0;
+	v2.floor = 0;
+	v3.floor = 0;
+	m_pB1StartRoom->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -96,11 +103,15 @@ void cSurface::Setup()
 
 	//°¨¿Á
 	m_pB1Prison = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 2.1); 
-	v1 = D3DXVECTOR3(CENTERX + 3, B1F, CENTERZ + 4); 
-	v2 = D3DXVECTOR3(CENTERX + 6.4, B1F, CENTERZ + 4);
-	v3 = D3DXVECTOR3(CENTERX + 6.4, B1F, CENTERZ + 2.1);
-	m_pB1Prison->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 3.5, B1F, CENTERZ + 2.4);
+	v1.p = D3DXVECTOR3(CENTERX + 3.5, B1F, CENTERZ + 3.5);
+	v2.p = D3DXVECTOR3(CENTERX + 6, B1F, CENTERZ + 3.5);
+	v3.p = D3DXVECTOR3(CENTERX + 6, B1F, CENTERZ + 2.4);
+	v0.floor = 0;
+	v1.floor = 0;
+	v2.floor = 0;
+	v3.floor = 0;
+	m_pB1Prison->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -111,11 +122,15 @@ void cSurface::Setup()
 
 	//½ºÅ¸Æ®·ë °ø°£
 	m_pB1StartSpace = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2); 
-	v1 = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 4); 
-	v2 = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 4); 
-	v3 = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 2); 
-	m_pB1StartSpace->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 1.5);
+	v1.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 4);
+	v2.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 4);
+	v3.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 1.5);
+	v0.floor = 0;
+	v1.floor = 0;
+	v2.floor = 0;
+	v3.floor = 0;
+	m_pB1StartSpace->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -126,11 +141,34 @@ void cSurface::Setup()
 
 	//ÁöÇÏ ¹æ
 	m_pB1NextRoom = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 8.1, B1F, CENTERZ); 
-	v1 = D3DXVECTOR3(CENTERX + 8.1, B1F, CENTERZ + 4);
-	v2 = D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 4); 
-	v3 = D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ); 
-	m_pB1NextRoom->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 8.4, B1F, CENTERZ + 0.5);
+	v1.p = D3DXVECTOR3(CENTERX + 8.4, B1F, CENTERZ + 3.5);
+	v2.p = D3DXVECTOR3(CENTERX + 11.5, B1F, CENTERZ + 3.5);
+	v3.p = D3DXVECTOR3(CENTERX + 11.5, B1F, CENTERZ + 0.5);
+	v0.floor = 0;
+	v1.floor = 0;
+	v2.floor = 0;
+	v3.floor = 0;
+	m_pB1NextRoom->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
+	vecVertex.push_back(v0);
+	vecVertex.push_back(v1);
+	vecVertex.push_back(v2);
+
+	vecVertex.push_back(v0);
+	vecVertex.push_back(v2);
+	vecVertex.push_back(v3);
+	
+	//°è´Ü °¡´Â±æ
+	m_pB1StairPass = new cRectMake;
+	v0.p = D3DXVECTOR3(CENTERX + 9.3, B1F, CENTERZ + 0.5);
+	v1.p = D3DXVECTOR3(CENTERX + 9.1, B1F, CENTERZ - 0.3);
+	v2.p = D3DXVECTOR3(CENTERX + 9.7, B1F, CENTERZ - 0.3);
+	v3.p = D3DXVECTOR3(CENTERX + 9.7, B1F, CENTERZ + 0.5);
+	v0.floor = 0;
+	v1.floor = 0;
+	v2.floor = 0;
+	v3.floor = 0;
+	m_pB1StairPass->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -141,11 +179,26 @@ void cSurface::Setup()
 
 	//ÁöÇÏ 1Ãþ °è´Ü
 	m_pB1StairSurface = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 9.1, FF, CENTERZ - 3);
-	v1 = D3DXVECTOR3(CENTERX + 9.1, B1F, CENTERZ + 0);
-	v2 = D3DXVECTOR3(CENTERX + 9.9, B1F, CENTERZ + 0); 
-	v3 = D3DXVECTOR3(CENTERX + 9.9, FF, CENTERZ - 3);
-	m_pB1StairSurface->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 9.3, FF, CENTERZ - 3);
+	v1.p = D3DXVECTOR3(CENTERX + 9.1, B1F, CENTERZ + 0);
+	v2.p = D3DXVECTOR3(CENTERX + 9.7, B1F, CENTERZ + 0);
+	v3.p = D3DXVECTOR3(CENTERX + 9.7, FF, CENTERZ - 3);
+	v0.floor = 0;
+	v1.floor = 0;
+	v2.floor = 0;
+	v3.floor = 0;
+	m_pB1StairSurface->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
+	vecVertex.push_back(v0);
+	vecVertex.push_back(v1);
+	vecVertex.push_back(v2);
+
+	vecVertex.push_back(v0);
+	vecVertex.push_back(v2);
+	vecVertex.push_back(v3);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -154,15 +207,21 @@ void cSurface::Setup()
 	vecVertex.push_back(v2);
 	vecVertex.push_back(v3);
 
+
+
 	//>>1Ãþ
 
 	//1Ãþ Åë·Î1
 	m_pFFPassage = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4); 
-	v1 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3); 
-	v2 = D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3);
-	v3 = D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4);
-	m_pFFPassage->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 6.5, FF, CENTERZ - 3.6);
+	v1.p = D3DXVECTOR3(CENTERX + 6.5, FF, CENTERZ - 3);
+	v2.p = D3DXVECTOR3(CENTERX + 12.5, FF, CENTERZ - 3);
+	v3.p = D3DXVECTOR3(CENTERX + 12.5, FF, CENTERZ - 3.6);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFPassage->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -173,11 +232,15 @@ void cSurface::Setup()
 
 	//1Ãþ Åë·Î2
 	m_pFFPassage2 = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3); 
-	v1 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5); 
-	v2 = D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 0.5);
-	v3 = D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 3); 
-	m_pFFPassage2->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 6.3, FF, CENTERZ - 3);
+	v1.p = D3DXVECTOR3(CENTERX + 6.3, FF, CENTERZ - 0.8);
+	v2.p = D3DXVECTOR3(CENTERX + 7.4, FF, CENTERZ - 0.8);
+	v3.p = D3DXVECTOR3(CENTERX + 7.4, FF, CENTERZ - 3);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFPassage2->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -187,11 +250,15 @@ void cSurface::Setup()
 	vecVertex.push_back(v3);
 	//°Å½Ç
 	m_pFFLivingRoom = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ - 3);
-	v1 = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ + 4);
-	v2 = D3DXVECTOR3(CENTERX + 13, FF, CENTERZ + 4); 
-	v3 = D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3); 
-	m_pFFLivingRoom->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ - 3.5);
+	v1.p = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ + 3.7);
+	v2.p = D3DXVECTOR3(CENTERX + 12.7, FF, CENTERZ + 3.7);
+	v3.p = D3DXVECTOR3(CENTERX + 12.7, FF, CENTERZ - 3.5);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFLivingRoom->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -202,11 +269,15 @@ void cSurface::Setup()
 
 	//°Å½Ç 2
 	m_pFFLivingRoom2 = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ - 0.4); 
-	v1 = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 4); 
-	v2 = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ + 4);
-	v3 = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ - 0.4); 
-	m_pFFLivingRoom2->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ - 0.1);
+	v1.p = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 3.7);
+	v2.p = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ + 3.7);
+	v3.p = D3DXVECTOR3(CENTERX + 10.1, FF, CENTERZ - 0.1);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFLivingRoom2->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -217,11 +288,15 @@ void cSurface::Setup()
 
 	//¹æ
 	m_pFFRoom = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ - 0.5);
-	v1 = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 4); 
-	v2 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 4); 
-	v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5);
-	m_pFFRoom->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ - 0.2);
+	v1.p = D3DXVECTOR3(CENTERX + 4.5, FF, CENTERZ + 3.7);
+	v2.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ + 3.7);
+	v3.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ - 0.2);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFRoom->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -231,11 +306,15 @@ void cSurface::Setup()
 	vecVertex.push_back(v3);
 
 	m_pFFRoom1 = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2.25);
-	v1 = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4);
-	v2 = D3DXVECTOR3(CENTERX + 3.67, FF, CENTERZ + 4);
-	v3 = D3DXVECTOR3(CENTERX + 3.67, FF, CENTERZ + 2.25);
-	m_pFFRoom1->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2.25);
+	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4);
+	v2.p = D3DXVECTOR3(CENTERX + 3.67, FF, CENTERZ + 4);
+	v3.p = D3DXVECTOR3(CENTERX + 3.67, FF, CENTERZ + 2.25);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFRoom1->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -247,11 +326,15 @@ void cSurface::Setup()
 	//È­Àå½Ç
 
 	m_pFFBathRoom = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 4);
-	v1 = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ - 0.5); 
-	v2 = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 0.5);
-	v3 = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 4); 
-	m_pFFBathRoom->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 3.3, FF, CENTERZ - 3.7);
+	v1.p = D3DXVECTOR3(CENTERX + 3.3, FF, CENTERZ - 0.7);
+	v2.p = D3DXVECTOR3(CENTERX + 5.6, FF, CENTERZ - 0.7);
+	v3.p = D3DXVECTOR3(CENTERX + 5.6, FF, CENTERZ - 3.7);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFBathRoom->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -262,11 +345,15 @@ void cSurface::Setup()
 
 	//1Ãþ -> 2Ãþ °è´Ü
 	m_pFFStairSurface = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 7.9, FF, CENTERZ - 3);
-	v1 = D3DXVECTOR3(CENTERX + 7.9, SF, CENTERZ - 0.3);
-	v2 = D3DXVECTOR3(CENTERX + 8.9, SF, CENTERZ - 0.3);
-	v3 = D3DXVECTOR3(CENTERX + 8.9, FF, CENTERZ - 3);
-	m_pFFStairSurface->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 8.1, FF, CENTERZ - 3);
+	v1.p = D3DXVECTOR3(CENTERX + 8.1, SF, CENTERZ - 0.3);
+	v2.p = D3DXVECTOR3(CENTERX + 8.7, SF, CENTERZ - 0.3);
+	v3.p = D3DXVECTOR3(CENTERX + 8.7, FF, CENTERZ - 3);
+	v0.floor = 1;
+	v1.floor = 1;
+	v2.floor = 1;
+	v3.floor = 1;
+	m_pFFStairSurface->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -274,16 +361,30 @@ void cSurface::Setup()
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v2);
 	vecVertex.push_back(v3);
+	v0.floor = 2;
+	v1.floor = 2;
+	v2.floor = 2;
+	v3.floor = 2;
+	vecVertex.push_back(v0);
+	vecVertex.push_back(v1);
+	vecVertex.push_back(v2);
 
-
+	vecVertex.push_back(v0);
+	vecVertex.push_back(v2);
+	vecVertex.push_back(v3);
 	//2Ãþ
+	
 	//2Ãþ Åë·Î
 	m_pSFPassage = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ - 0.3);
-	v1 = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 3);
-	v2 = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 3);
-	v3 = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ - 0.3);
-	m_pSFPassage->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 8.1, SF, CENTERZ - 0.5);
+	v1.p = D3DXVECTOR3(CENTERX + 8.1, SF, CENTERZ + 2.5);
+	v2.p = D3DXVECTOR3(CENTERX + 8.7, SF, CENTERZ + 2.6);
+	v3.p = D3DXVECTOR3(CENTERX + 8.7, SF, CENTERZ - 0.5);
+	v0.floor = 2;
+	v1.floor = 2;
+	v2.floor = 2;
+	v3.floor = 2;
+	m_pSFPassage->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -295,11 +396,15 @@ void cSurface::Setup()
 
 	//2Ãþ ·ë1
 	m_pSFRoom = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 9.1, SF, CENTERZ - 2.2); 
-	v1 = D3DXVECTOR3(CENTERX + 9.1, SF, CENTERZ + 3); 
-	v2 = D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 3); 
-	v3 = D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ - 2.2);
-	m_pSFRoom->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 9.4, SF, CENTERZ - 1.9);
+	v1.p = D3DXVECTOR3(CENTERX + 9.4, SF, CENTERZ + 3);
+	v2.p = D3DXVECTOR3(CENTERX + 10.3, SF, CENTERZ + 3);
+	v3.p = D3DXVECTOR3(CENTERX + 10.3, SF, CENTERZ - 1.9);
+	v0.floor = 2;
+	v1.floor = 2;
+	v2.floor = 2;
+	v3.floor = 2;
+	m_pSFRoom->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -311,11 +416,15 @@ void cSurface::Setup()
 
 	//2Ãþ ·ë2
 	m_pSFRoom2 = new cRectMake;
-	v0 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.2);
-	v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3); 
-	v2 = D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ + 3);
-	v3 = D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ - 2.2);
-	m_pSFRoom2->Setup(v0, v1, v2, v3, NULL);
+	v0.p = D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ - 1.9);
+	v1.p = D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ + 2.7);
+	v2.p = D3DXVECTOR3(CENTERX + 7.4, SF, CENTERZ + 2.7);
+	v3.p = D3DXVECTOR3(CENTERX + 7.4, SF, CENTERZ - 1.9);
+	v0.floor = 2;
+	v1.floor = 2;
+	v2.floor = 2;
+	v3.floor = 2;
+	m_pSFRoom2->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	vecVertex.push_back(v0);
 	vecVertex.push_back(v1);
 	vecVertex.push_back(v2);
@@ -330,12 +439,14 @@ void cSurface::Setup()
 
 void cSurface::Render()
 {
+
 	//ÁöÇÏ 
 	m_pB1StartRoom->Render();
 	m_pB1Prison->Render();
 	m_pB1StartSpace->Render();
 	m_pB1NextRoom->Render();
 	m_pB1StairSurface->Render();
+	m_pB1StairPass->Render();
 
 	//1Ãþ 
 	m_pFFPassage->Render();
@@ -393,40 +504,47 @@ void cSurface::PassSetup()
 	PassSurface v0, v1, v2, v3;
 	//°¨¿Á ¹®
 	m_pB1PrisonDoor = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 5, B1F, CENTERZ + 2);
-	v1.p = D3DXVECTOR3(CENTERX + 5, B1F, CENTERZ + 2.1);
-	v2.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2.1);
-	v3.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2); 
+	v0.p = D3DXVECTOR3(CENTERX + 5, B1F, CENTERZ + 0.5);
+	v1.p = D3DXVECTOR3(CENTERX + 5, B1F, CENTERZ + 2.4);
+	v2.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 2.4);
+	v3.p = D3DXVECTOR3(CENTERX + 6.5, B1F, CENTERZ + 0.5); 
 	m_pB1PrisonDoor->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_DOOR_PRISON);
+
+
 	//°¨¿Á -> ÁöÇÏ½Ç º®
 	m_pB1Door = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 3);
-	v1.p = D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 3.5);
-	v2.p = D3DXVECTOR3(CENTERX + 8.1, B1F, CENTERZ + 3.5);
-	v3.p = D3DXVECTOR3(CENTERX + 8.1, B1F, CENTERZ + 3);
+	v0.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 3);
+	v1.p = D3DXVECTOR3(CENTERX + 7.5, B1F, CENTERZ + 3.5);
+	v2.p = D3DXVECTOR3(CENTERX + 8.4, B1F, CENTERZ + 3.5);
+	v3.p = D3DXVECTOR3(CENTERX + 8.4, B1F, CENTERZ + 3);
 	m_pB1Door->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, 1);
+
+
 	//È­Àå½Ç -> ¹æ º®
 	m_pBathRoomWall = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.5);
-	v1.p = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.4);
-	v2.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.4);
-	v3.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5);
+	v0.p = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.7);
+	v1.p = D3DXVECTOR3(CENTERX + 5.2, FF, CENTERZ - 0.2);
+	v2.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ - 0.2);
+	v3.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ - 0.7);
 	m_pBathRoomWall->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, 2);
+
+
 	//È­Àå½Ç -> Åë·Î ¹®
 	m_pBathRoomDoor = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 3);
-	v1.p = D3DXVECTOR3(CENTERX + 5.9, FF, CENTERZ - 2.5);
-	v2.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 2.5);
-	v3.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3);
+	v0.p = D3DXVECTOR3(CENTERX + 5.6, FF, CENTERZ - 3);
+	v1.p = D3DXVECTOR3(CENTERX + 5.6, FF, CENTERZ - 2.5);
+	v2.p = D3DXVECTOR3(CENTERX + 6.5, FF, CENTERZ - 2.5);
+	v3.p = D3DXVECTOR3(CENTERX + 6.5, FF, CENTERZ - 3);
 	m_pBathRoomDoor->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_DOOR_1STTOILET);
+
 	//1Ãþ¹æ ¹®
 	m_pFFRoomDoor = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3);
-	v1.p = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3.5);
+	v0.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ + 3);
+	v1.p = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ + 3.5);
 	v2.p = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 3.5);
 	v3.p = D3DXVECTOR3(CENTERX + 6.1, FF, CENTERZ + 3);
 	m_pFFRoomDoor->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
@@ -434,19 +552,19 @@ void cSurface::PassSetup()
 
 	//2Ãþ¹æ ¹®
 	m_pSFRoomDoor1 = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ + 1);
-	v1.p = D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ + 1.5);
-	v2.p = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1.5);
-	v3.p = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1);
+	v0.p = D3DXVECTOR3(CENTERX + 7.4, SF, CENTERZ + 1);
+	v1.p = D3DXVECTOR3(CENTERX + 7.4, SF, CENTERZ + 1.5);
+	v2.p = D3DXVECTOR3(CENTERX + 8.1, SF, CENTERZ + 1.5);
+	v3.p = D3DXVECTOR3(CENTERX + 8.1, SF, CENTERZ + 1);
 	m_pSFRoomDoor1->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_DOOR_2NDROOM1);
 
 	//2Ãþ¹æ ¹® 2
 	m_pSFRoomDoor2 = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1);
-	v1.p = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1.5);
-	v2.p = D3DXVECTOR3(CENTERX + 9.1, SF, CENTERZ + 1.5);
-	v3.p = D3DXVECTOR3(CENTERX + 9.1, SF, CENTERZ + 1);
+	v0.p = D3DXVECTOR3(CENTERX + 8.7, SF, CENTERZ + 1);
+	v1.p = D3DXVECTOR3(CENTERX + 8.7, SF, CENTERZ + 1.5);
+	v2.p = D3DXVECTOR3(CENTERX + 9.4, SF, CENTERZ + 1.5);
+	v3.p = D3DXVECTOR3(CENTERX + 9.4, SF, CENTERZ + 1);
 	m_pSFRoomDoor2->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_DOOR_2NDROOM2);
 

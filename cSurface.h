@@ -7,6 +7,12 @@ struct PassSurface
 	int nindex;
 
 };
+struct Surface
+{
+	D3DXVECTOR3 p;
+	int floor;
+};
+
 /*
 struct Check
 {
@@ -17,7 +23,7 @@ struct Check
 class cSurface
 {
 private:
-	SYNTHESIZE(std::vector<D3DXVECTOR3>, vecVertex, VecVertex);
+	SYNTHESIZE(std::vector<Surface>, vecVertex, VecVertex);
 	SYNTHESIZE(std::vector<PassSurface>, passVertex, PassVertex);
 	
 	
@@ -28,6 +34,7 @@ private:
 	cRectMake* m_pB1StartSpace;
 	cRectMake* m_pB1NextRoom;
 	cRectMake* m_pB1StairSurface;
+	cRectMake* m_pB1StairPass;
 	
 	//1Ãþ
 	cRectMake* m_pFFPassage;
