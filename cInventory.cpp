@@ -5,11 +5,9 @@
 #include "cUIInvenItem.h"
 
 cInventory::cInventory()
-	:m_nBagIsFullTextOutCount(0)
-	, m_IsPick(false)
+	: m_IsPick(false)
 	, m_FirstInvenItemNum(0)
 	, m_SecondInvenItemNum(0)
-	, m_isWarning(false)
 {
 }
 
@@ -18,7 +16,6 @@ cInventory::~cInventory()
 {
 	m_pUIBase->Destroy();
 	SAFE_RELEASE(m_pSprite);
-	SAFE_RELEASE(m_pFontWarning);
 	SAFE_RELEASE(m_pSprite);
 	SAFE_RELEASE(m_pTexture);
 
@@ -27,7 +24,6 @@ cInventory::~cInventory()
 void cInventory::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
-	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 20, 500);
 	SetInventoryBase();
 }
 
@@ -38,16 +34,12 @@ void cInventory::Update()
 	//아이템 이동시
 	MoveItem();
 
-	if (m_isWarning) LimitWarningTextOutTime();
-
 }
 
 void cInventory::Render()
 {
 	if (m_pUIBase) m_pUIBase->Render(m_pSprite);
-	RECT rc{ 500, 20, 750, 220 };
-	if (m_isWarning) g_pFontManager->TextOut2D(m_pFontWarning, m_strWarningWord, rc,
-		D3DXCOLOR(1.0f, 1.0f, 0, 1.0f));
+	
 
 	//무언가를 픽하고 있으면 렌더하기
 	if (m_IsPick) PickedRender();
@@ -204,8 +196,7 @@ void cInventory::SetItem(StuffCode ItemName)
 	//가방이 풀일 때
 	if (EmptyInven == NULL)
 	{
-		m_isWarning = true;
-		m_strWarningWord = "가방이 꽉 찼습니다.";
+		g_pData->TextOutWarningWord("가방이 꽉 찼습니다.");
 		return;
 	}
 	EmptyInven->SetItemTexture(g_pUIvarius->m_mapItemInfo[ItemName].Texture);
@@ -213,21 +204,6 @@ void cInventory::SetItem(StuffCode ItemName)
 	EmptyInven->SetItemType(g_pUIvarius->m_mapItemInfo[ItemName].ItemType);
 	EmptyInven->SetrcItem(g_pUIvarius->m_mapItemInfo[ItemName].rc);
 	EmptyInven->SetItemCode(ItemName);
-}
-
-//경고문구 해당시간 렌더
-void cInventory::LimitWarningTextOutTime()
-{
-	static int countBag = 0;
-
-	countBag++;
-
-	if (countBag > 100)
-	{
-		countBag = 0;
-		m_isWarning = false;
-		m_strWarningWord = " ";
-	}
 }
 
 //아이템 옮기기
@@ -291,6 +267,8 @@ void cInventory::MoveItem()
 				m_pTexture = NULL;
 				m_rcItem = { 0,0,0,0 };
 
+				g_pData->DropItem(FirstCode);
+
 				return;
 			}
 			///-------------------------------------------------------
@@ -310,8 +288,7 @@ void cInventory::MoveItem()
 				//사용불가능한 아이템일 때
 				else
 				{
-					m_isWarning = true;
-					m_strWarningWord = "사용 불가능한 아이템입니다.";
+					g_pData->TextOutWarningWord("사용 불가능한 아이템입니다.");
 					return;
 				}
 
@@ -442,8 +419,7 @@ void cInventory::OnClick(cUIButton * pSender)
 				(combine1->GetItemTexture() != NULL && combine2->GetItemTexture() != NULL &&
 					combine3->GetItemTexture() != NULL))
 			{
-				m_isWarning = true;
-				m_strWarningWord = "조합이 가능.";
+				g_pData->TextOutWarningWord("조합 완료");
 
 				//조합 아이템 초기화
 				combine1->SetItemTexture(NULL);
@@ -472,15 +448,13 @@ void cInventory::OnClick(cUIButton * pSender)
 			}
 			else
 			{
-				m_isWarning = true;
-				m_strWarningWord = "조합이 불가능 합니다.";
+				g_pData->TextOutWarningWord("조합이 불가능 합니다.");
 				return;
 			}
 		}
 		else
 		{
-			m_isWarning = true;
-			m_strWarningWord = "조합이 불가능 합니다.";
+			g_pData->TextOutWarningWord("조합이 불가능 합니다.");
 			return;
 		}
 

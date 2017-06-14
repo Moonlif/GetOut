@@ -20,7 +20,7 @@ cTotalUIRender::~cTotalUIRender()
 	SAFE_DELETE(m_pChaSelectScene);
 	SAFE_DELETE(m_pInventory);
 	SAFE_DELETE(m_pChat);
-	SAFE_DELETE(m_pPrisonBreak);
+	SAFE_RELEASE(m_pFontWarning);
 }
 
 void cTotalUIRender::Setup()
@@ -35,6 +35,9 @@ void cTotalUIRender::Setup()
 	m_pChat->Setup();
 
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
+
+	//경고 폰트 셋업
+	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 20, 500);
 }
 
 void cTotalUIRender::Update(cCamera* camera)
@@ -48,7 +51,7 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
 		//게임이 시작되야 인벤이 켜짐
-		//if (!g_pData->GetIsStartedGame()) return;
+		if (!g_pData->GetIsStartedGame()) return;
 
 		//채팅중이면 리턴
 		if (g_pData->GetIsOnChat()) return;
@@ -65,7 +68,8 @@ void cTotalUIRender::Update(cCamera* camera)
 		}
 
 	}
-	
+	//경고 문구 띄우기
+	if (g_pData->GetisWarning()) LimitWarningTextOutTime();
 
 	//인벤토리 테스트용
 	if (GetAsyncKeyState('0') & 0x0001)
@@ -82,9 +86,10 @@ void cTotalUIRender::Update(cCamera* camera)
 		else if (nRnd == 9)	m_pInventory->SetItem(StuffCode::STUFF_CROWBAR);
 		else if (nRnd == 10)	m_pInventory->SetItem(StuffCode::STUFF_KEY1);
 		else if (nRnd == 11)	m_pInventory->SetItem(StuffCode::STUFF_KEY2);
-
+		else if (nRnd == 12)	m_pInventory->SetItem(StuffCode::STUFF_KEY3);
+		
 		nRnd++;
-		if (nRnd > 11) nRnd = 0;
+		if (nRnd > 12) nRnd = 0;
 	}
 
 	//미니게임 테스트용
@@ -121,6 +126,11 @@ void cTotalUIRender::Render()
 		if (IsSelectSceneOpen) SetupChaSelectScene();
 		IsSelectSceneOpen = false;
 	}
+
+	RECT rc{ 0, 30, WINSIZEX, 100 };
+	if (g_pData->GetisWarning()) g_pFontManager->TextOut2D(m_pFontWarning, 
+		g_pData->GetWarningWord(), rc, D3DXCOLOR(1.0f, 1.0f, 0, 1.0f), 
+		DT_CENTER | DT_TOP | DT_NOCLIP);
 }
 
 void cTotalUIRender::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -142,4 +152,18 @@ void cTotalUIRender::SetupChaSelectScene()
 {
 	m_pChaSelectScene = new cCharacterSelectScene;
 	m_pChaSelectScene->Setup();
+}
+
+void cTotalUIRender::LimitWarningTextOutTime()
+{
+	static int countBag = 0;
+
+	countBag++;
+
+	if (countBag > 100)
+	{
+		countBag = 0;
+		g_pData->SetisWarning(false);
+		g_pData->SetWarningWord(" ");
+	}
 }

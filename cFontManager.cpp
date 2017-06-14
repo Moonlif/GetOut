@@ -75,12 +75,12 @@ void cFontManager::TextOut3D(IN ID3DXMesh * font, IN D3DXVECTOR3 scailing, IN D3
 	font->DrawSubset(0);
 }
 
-void cFontManager::TextOut2D(IN LPD3DXFONT font, IN string str, IN RECT rc, D3DXCOLOR color)
+void cFontManager::TextOut2D(IN LPD3DXFONT font, IN string str, IN RECT rc, D3DXCOLOR color,
+	DWORD format)
 {
 	string sText(str);
 
-
-	font->DrawTextA(NULL, sText.c_str(), sText.length(), &rc, DT_LEFT | DT_TOP | DT_NOCLIP,
+	font->DrawTextA(NULL, sText.c_str(), sText.length(), &rc, format,
 		color);
 }
 

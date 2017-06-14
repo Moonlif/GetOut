@@ -18,6 +18,7 @@ void cUI_globalVarius::SetItemInfo()
 {
 	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY1, "UI/Item/key_study.tga");
 	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY2, "UI/Item/key_tomb.tga");
+	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY3, "UI/Item/key_laboratory.tga");
 
 	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER1, "UI/Item/academy.png");
 	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER2, "UI/Item/game.png");

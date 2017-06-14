@@ -16,6 +16,7 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_isDeleteBackground(false)
 	, m_vRetargetPos(0,0,0)
 	, m_WhatIsYourNumber(0)
+
 {
 }
 
@@ -37,6 +38,7 @@ void cCharacterSelectScene::Setup()
 
 	//메쉬, 라이트 셋업
 	SetMesh();
+
 }
 
 void cCharacterSelectScene::Update(cCamera* camera)
@@ -54,6 +56,7 @@ void cCharacterSelectScene::Update(cCamera* camera)
 
 	//케릭선택 완료시 배경 지우기
 	if(m_isDeleteBackground) DeleteBackground();
+
 }
 
 void cCharacterSelectScene::Render()
@@ -62,7 +65,6 @@ void cCharacterSelectScene::Render()
 	m_pRoot->Render(m_pSprite);
 	m_pPlayer1->Render(m_pSprite);
 	m_pPlayer2->Render(m_pSprite);
-	
 
 }
 
@@ -189,18 +191,62 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 				p2Text->SetIsHidden(false);
 				p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
 			}
+
+			
 		}
+
+		///-------------------------------------------------------------
+		//						상대방 1P, 2P 띄우기
+		///-------------------------------------------------------------
+		if (g_pData->m_nPlayerNum2P != 0)
+		{
+			//상대방이 1P일 때
+			if (m_WhatIsYourNumber == 2)
+			{
+				p1Text->SetIsHidden(false);
+				p1Text->SetAlpha(100);
+				//남자를 선택하고 있을 때
+				if (g_pData->m_nPlayerNum2P == 1)	p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));			
+				//여자를 선택하고 있을 때
+				else p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));				
+			}
+			//상대방이 2P일 때
+			else if (m_WhatIsYourNumber == 1)
+			{
+				p2Text->SetIsHidden(false);
+				p2Text->SetAlpha(100);
+				//남자를 선택하고 있을 때
+				if (g_pData->m_nPlayerNum2P == 1)	p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
+				//여자를 선택하고 있을 때
+				else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
+			}
+		}
+
+
 		///-------------------------------------------------------------
 		//						게임 시작하려고 할 시
 		///-------------------------------------------------------------
 		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
 		{
 			//플레이어가 선택되지 않았으면 리턴
-			if (m_WhatIsYourNumber == 0) return;
-
+			if (g_pData->m_nPlayerNum1P == 0)
+			{
+				g_pData->TextOutWarningWord("캐릭터가 선택되지 않았습니다.");
+				return;
+			}
 			//같은 플레이어 선택중이라면 게임시작 안됨
-			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P) return;
-
+			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
+			{	
+				if (m_WhatIsYourNumber == 1)
+				{
+					g_pData->TextOutWarningWord("플레이어2와 다른 케릭을 선택해 주세요.");
+				}
+				else if (m_WhatIsYourNumber == 2)
+				{
+					g_pData->TextOutWarningWord("플레이어1과 다른 케릭을 선택해 주세요.");
+				}
+				return;
+			}
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
 		}
@@ -359,6 +405,8 @@ void cCharacterSelectScene::SetBackground()
 	cUIImageView* pBackgroundImage = new cUIImageView("UI/CharacterSelectScene/size_Amnesia.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	pBackgroundImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	m_pRoot = pBackgroundImage;
+
+	
 
 	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(870, 140, 0), 0);
 	ExplainImage->SetScaling(D3DXVECTOR3(0.45f, 0.65f, 1.0f));

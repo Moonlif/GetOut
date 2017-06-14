@@ -47,11 +47,11 @@ void cChat::SetChildWindow()
 
 	//이름입력 핸들 생성
 	m_hWndNaming = CreateWindow("edit", "",
-		WS_CHILD | WS_BORDER,
-		0, WINSIZEY - CHATWORDHEIGHT, 250, 20, g_hWnd, HMENU(0), hInst, NULL);
+		WS_CHILD | WS_BORDER | WS_VISIBLE,
+		0, WINSIZEY - CHATWORDHEIGHT * 10, 250, 20, g_hWnd, HMENU(0), hInst, NULL);
 
 	//폰트 생성
-	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 500);
+	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
 }
 
 void cChat::ChatOnOff()
@@ -93,6 +93,11 @@ void cChat::ChatOnOff()
 			//채팅상태 끔
 			g_pData->SetIsOnChat(false);
 
+			//아무것도 입력 안할시 리턴
+			if (m_strChat == "") return;
+
+			m_strChat += " ";
+			
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
 
@@ -114,9 +119,21 @@ void cChat::RenderChat()
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
 	D3DXCOLOR color;
-	if (g_pData->m_nPlayerNum1P == 1) color = D3DXCOLOR(0.5f, 0.1f, 0.1f, 1.0f);
-	else color = D3DXCOLOR(0.1f, 0.1f, 0.5f, 1.0f);
+	if (g_pData->m_nPlayerNum1P == 1)
+	{
+		color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+		m_strChat = "Player1: " + m_strChat;
 
+	}
+	else if (g_pData->m_nPlayerNum1P == 2)
+	{
+		m_strChat = "Player2: " + m_strChat;
+		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+	}
+	else
+	{
+		color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+	}
 	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 }
 
