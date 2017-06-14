@@ -10,6 +10,8 @@ unsigned int _stdcall SEND_CHAT(LPVOID lpParam);
 unsigned int _stdcall RECV_CHAT(LPVOID lpParam);
 unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam);
 unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam);
+unsigned int _stdcall SEND_DATA_SERVER(LPVOID lpParam);
+unsigned int _stdcall RECV_DATA_SERVER(LPVOID lpParam);
 
 // << : 분리된 함수들
 void ReceivePosition(LPVOID lpParam);
@@ -42,6 +44,9 @@ cSocketManager::~cSocketManager()
 void cSocketManager::Setup_Host()
 {
 	// << :
+	int nRet;
+	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_HOST);
+
 	hSocket_Serv = socket(PF_INET, SOCK_STREAM, 0);
 
 	memset(&hostAdr, 0, sizeof(hostAdr));
@@ -52,19 +57,31 @@ void cSocketManager::Setup_Host()
 	setsockopt(hSocket_Serv, SOL_SOCKET, SO_REUSEADDR, (const char *)&bValid, sizeof(bValid));
 	if (bind(hSocket_Serv, (SOCKADDR*)&hostAdr, sizeof(hostAdr)) == SOCKET_ERROR)
 		cout << "Server_HOST bind() Error" << endl;
-	if (listen(hSocket_Serv, CLIENT_NUM) == SOCKET_ERROR)
-		cout << "Server_HOST listen() Error" << endl;
+	// >> : 바인딩 현재 정상으로 됨
+
+
+	// << : 바인딩이 끝나고 스레드에 진입하면 호스팅 중임을 알려준다.
+
+	//if (listen(hSocket_Serv, CLIENT_NUM) == SOCKET_ERROR)
+	//	cout << "Server_HOST listen() Error" << endl;
+
+	//clntAdrSz = sizeof(clntAdr);
+	//hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
+	//if (hSocket_Clnt > 0)
+	//	cout << " 호스트 데이터 수신 " << endl;
 
 	// << : 이부분은 크리티컬 섹션으로 처리합니다.
-	while (true)
-	{
-		clntAdrSz = sizeof(clntAdr);
-		hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
-		if (hSocket_Clnt > 0)
-		{
-			// << : 다른 클라이언트가 연결하면 스레드로 좌표를 계속 받게 처리한다.
-		}
-	}
+
+	
+	//while (true)
+	//{
+	//	clntAdrSz = sizeof(clntAdr);
+	//	hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
+	//	if (hSocket_Clnt > 0)
+	//	{
+	//		// << : 다른 클라이언트가 연결하면 스레드로 좌표를 계속 받게 처리한다.
+	//	}
+	//}
 }
 
 /* 이미 호스트가 있다면 해당 호스트와 연결하는 함수입니다. */
@@ -110,6 +127,9 @@ void cSocketManager::Setup_CHAT()
 	ServAdr_CHAT.sin_family = AF_INET;
 	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HOSTIP);
 	ServAdr_CHAT.sin_port = PORT_CHAT_SERVER;
+
+	bool bValid = true;
+	setsockopt(hSocket_CHAT, SOL_SOCKET, SO_REUSEADDR, (const char *)&bValid, sizeof(bValid));
 
 	int result = connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT));
 
@@ -225,7 +245,7 @@ unsigned int _stdcall RECV_CHAT(LPVOID lpParam)
 	return 0;
 }
 
-/* 서버와 상호작용하는 스레드 */
+/* 서버와 소켓을 연결 후 SEND, RECV스레드를 각각 실행 */
 unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -246,8 +266,8 @@ unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam)
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
 	}
 
-	/* 어떤 데이터를 보낼지 먼저 알려줍니다. 그뒤 해당하는 데이터를 전송합니다. */
 	ST_FLAG stFlag;
+	//clock_t prevTime = clock();
 	while (true)
 	{
 		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
@@ -277,6 +297,12 @@ unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam)
 			break;
 		}
 	}
+	//HANDLE hThread_RECV, hThread_SEND;
+	//hThread_RECV = (HANDLE)_beginthreadex(NULL, 0, SEND_DATA_SERVER, (void*)&hSocket, 0, NULL);	// << : Recv Thread
+	//hThread_SEND = (HANDLE)_beginthreadex(NULL, 0, RECV_DATA_SERVER, (void*)&hSocket, 0, NULL);	// << : Send Thread
+	//
+	//WaitForSingleObject(hThread_RECV, INFINITE);
+	//WaitForSingleObject(hThread_SEND, INFINITE);
 	return 0;
 }
 
@@ -341,6 +367,49 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Y좌표 : " << stRecv.fY << " ";
 	cout << "Z좌표 : " << stRecv.fZ << " ";
 	cout << "Angle : " << stRecv.fAngle << endl;
+}
+
+unsigned int _stdcall SEND_DATA_SERVER(LPVOID lpParam)
+{
+	// >> : 서버에 요청한뒤 데이터를 수신함
+	ST_FLAG stFlag;
+	SOCKET hSocket = *(SOCKET*)lpParam;
+	clock_t prevTime = clock();
+	while (true)
+	{
+		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
+		prevTime = clock();
+		stFlag.eFlag = g_pSocketmanager->GetFlagNum();	// << : 싱글톤에서 플래그를 받아옵니다.
+
+		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
+		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
+		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+
+		ST_PLAYER_POSITION stSend;
+		if (g_pData->m_nPlayerNum1P == 1)
+			stSend.nPlayerIndex = OUT_PLAYER1;
+		else if (g_pData->m_nPlayerNum1P == 2)
+			stSend.nPlayerIndex = OUT_PLAYER2;
+		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
+		stSend.fX = g_pData->m_vPosition1P.x;
+		stSend.fY = g_pData->m_vPosition1P.y;
+		stSend.fZ = g_pData->m_vPosition1P.z;
+		stSend.fAngle = g_pData->m_vRotation1P;
+		send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+
+		switch (stFlag.eFlag)
+		{
+		case FLAG_POSITION:
+			ReceivePosition(&hSocket);
+			break;
+		}
+	}
+
+}
+
+unsigned int _stdcall RECV_DATA_SERVER(LPVOID lpParam)
+{
+	return 0;
 }
 
 

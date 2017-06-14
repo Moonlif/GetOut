@@ -81,6 +81,7 @@ void cMainGame::Setup()
 
 	g_pSocketmanager->Setup_CHAT();
 	g_pSocketmanager->Setup_DATA();
+	g_pSocketmanager->Setup_Host();
 }
 
 void cMainGame::Update()

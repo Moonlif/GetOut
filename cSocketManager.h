@@ -52,6 +52,7 @@ private:
 
 	// << : 클라이언트간 통신하기 위해 필요한 변수들입니다.
 	int clntAdrSz;
+	WSADATA wsaData_HOST;
 	SOCKET hSocket_Serv, hSocket_Clnt;
 	SOCKADDR_IN hostAdr, clntAdr;
 	HANDLE hHostThread;
