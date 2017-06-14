@@ -18,7 +18,6 @@ private:
 	//인벤 내에서 아이템 이동시
 	bool					m_IsPick;
 	StuffCode				FirstCode, SecondCode;
-	int						m_FirstInvenItemNum, m_SecondInvenItemNum;
 
 	//마우스 포인터에 옮길 아이템 렌더
 	LPDIRECT3DTEXTURE9		m_pTexture;

@@ -19,7 +19,7 @@ private:
 	SYNTHESIZE(bool, m_IsMiniGamePrisonBreak, IsMiniGamePrisonBreak)
 
 	SYNTHESIZE(bool, m_IsPossibleMove, IsPossibleMove)
-	SYNTHESIZE(StuffCode, m_SetItem, SetItem)
+	SYNTHESIZE(StuffCode, m_PickUpItemCode, PickUpItemCode)
 
 	//경고문구 띄우기
 	SYNTHESIZE(bool,					m_isWarning, isWarning);

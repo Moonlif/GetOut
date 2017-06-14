@@ -21,7 +21,6 @@ private:
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3, m_pCamraStartPos, CamraStartPos);
 
 	LPD3DXFONT							m_pFontWarning;
-
 public:
 	void Setup();
 	void Update(cCamera* camera);

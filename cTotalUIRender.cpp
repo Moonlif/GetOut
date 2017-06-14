@@ -71,6 +71,13 @@ void cTotalUIRender::Update(cCamera* camera)
 	//경고 문구 띄우기
 	if (g_pData->GetisWarning()) LimitWarningTextOutTime();
 
+	//아이템 습득
+	if (g_pData->GetPickUpItemCode() != StuffCode::STUFF_NONE)
+	{
+		SetItem(g_pData->GetPickUpItemCode());
+		g_pData->SetPickUpItemCode(StuffCode::STUFF_NONE);
+	}
+
 	//인벤토리 테스트용
 	if (GetAsyncKeyState('0') & 0x0001)
 	{

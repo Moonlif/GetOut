@@ -6,8 +6,6 @@
 
 cInventory::cInventory()
 	: m_IsPick(false)
-	, m_FirstInvenItemNum(0)
-	, m_SecondInvenItemNum(0)
 {
 }
 
@@ -101,7 +99,8 @@ void cInventory::SetInventoryBase()
 	int			nAlpha = 150;
 
 	//아이템창 1번설정	
-	cUIInvenItem *inven = new cUIInvenItem("UI/Inventory/key_laboratory.tga", D3DXVECTOR3(-55, 15, 0), nAlpha);
+	cUIInvenItem *inven = new cUIInvenItem("UI/BlackBackground.png", D3DXVECTOR3(-55, 15, 0), nAlpha);
+	inven->SetScaling(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	inven->SetItemTexture(g_pTextureManager->GetTexture("UI/Inventory/inventory_oil_bg.tga"));
 	m_pInven = inven;
 	upLine->AddChild(m_pInven);
@@ -200,7 +199,6 @@ void cInventory::SetItem(StuffCode ItemName)
 		return;
 	}
 	EmptyInven->SetItemTexture(g_pUIvarius->m_mapItemInfo[ItemName].Texture);
-	EmptyInven->SetItemNum(EmptyInven->GetItemNum() + 1);
 	EmptyInven->SetItemType(g_pUIvarius->m_mapItemInfo[ItemName].ItemType);
 	EmptyInven->SetrcItem(g_pUIvarius->m_mapItemInfo[ItemName].rc);
 	EmptyInven->SetItemCode(ItemName);
@@ -236,12 +234,10 @@ void cInventory::MoveItem()
 
 			//아이템 코드 저장
 			FirstCode = FirstClick->GetItemCode();
-			m_FirstInvenItemNum = FirstClick->GetItemNum();
 
 			//클릭한곳 아이템 초기화
 			FirstClick->SetItemTexture(NULL);
 			FirstClick->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
-			FirstClick->SetItemNum(0);
 			FirstClick->SetrcItem(RECT{ 0,0,0,0 });
 			FirstClick->SetItemCode(StuffCode::STUFF_NONE);
 
@@ -309,7 +305,6 @@ void cInventory::MoveItem()
 				//지정된 곳에 이전 클릭한 곳 아이템 정보 저장
 				SecondClick->SetItemTexture(g_pUIvarius->m_mapItemInfo[FirstCode].Texture);
 				SecondClick->SetItemType(g_pUIvarius->m_mapItemInfo[FirstCode].ItemType);
-				SecondClick->SetItemNum(m_FirstInvenItemNum);
 				SecondClick->SetrcItem(g_pUIvarius->m_mapItemInfo[FirstCode].rc);
 				SecondClick->SetItemCode(FirstCode);
 			}
@@ -318,18 +313,15 @@ void cInventory::MoveItem()
 			{
 				//아이템 코드 저장
 				SecondCode = SecondClick->GetItemCode();
-				m_SecondInvenItemNum = SecondClick->GetItemNum();
 
 				//아이템 교환
 				SecondClick->SetItemTexture(g_pUIvarius->m_mapItemInfo[FirstCode].Texture);
 				SecondClick->SetItemType(g_pUIvarius->m_mapItemInfo[FirstCode].ItemType);
-				SecondClick->SetItemNum(m_FirstInvenItemNum);
 				SecondClick->SetrcItem(g_pUIvarius->m_mapItemInfo[FirstCode].rc);
 				SecondClick->SetItemCode(FirstCode);
 
 				FirstClick->SetItemTexture(g_pUIvarius->m_mapItemInfo[SecondCode].Texture);
 				FirstClick->SetItemType(g_pUIvarius->m_mapItemInfo[SecondCode].ItemType);
-				FirstClick->SetItemNum(m_SecondInvenItemNum);
 				FirstClick->SetrcItem(g_pUIvarius->m_mapItemInfo[SecondCode].rc);
 				FirstClick->SetItemCode(SecondCode);
 			}
@@ -424,21 +416,18 @@ void cInventory::OnClick(cUIButton * pSender)
 				//조합 아이템 초기화
 				combine1->SetItemTexture(NULL);
 				combine1->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
-				combine1->SetItemNum(0);
 				combine1->SetrcItem(RECT{ 0,0,0,0 });
 				combine1->SetItemCode(StuffCode::STUFF_NONE);
 
 				//조합 아이템 초기화
 				combine2->SetItemTexture(NULL);
 				combine2->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
-				combine2->SetItemNum(0);
 				combine2->SetrcItem(RECT{ 0,0,0,0 });
 				combine2->SetItemCode(StuffCode::STUFF_NONE);
 
 				//조합 아이템 초기화
 				combine3->SetItemTexture(NULL);
 				combine3->SetItemType(eITEMTYPE::ITEMTYPE_NONE);
-				combine3->SetItemNum(0);
 				combine3->SetrcItem(RECT{ 0,0,0,0 });
 				combine3->SetItemCode(StuffCode::STUFF_NONE);
 
