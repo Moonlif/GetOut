@@ -193,7 +193,6 @@ void cInteract::CheckStuff(D3DXVECTOR3 playerPos)
 
 			if (dis < 8.0f)	//일정거리 미만이면
 			{
-				cout << dis << endl;
 				//화면에 손모양 표시 추가
 				//g_pData->함수호출
 
@@ -213,7 +212,7 @@ void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
 			m_vecStuff[STUFF_DOOR_PRISON]->SetRadius(0.01f);
 		}
-		else; //열쇠1가 필요하다는 경고창
+		else g_pData->TextOutWarningWord(string("'감옥 열쇠'가 필요합니다."));
 		return;
 	case STUFF_DOOR_1STROOM:
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
@@ -225,15 +224,15 @@ void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
 			m_vecStuff[STUFF_DOOR_1STTOILET]->SetRadius(0.01f);
 		}
-		else; //열쇠2가 필요하다는 경고창
+		else g_pData->TextOutWarningWord(string("'1층 열쇠'가 필요합니다."));
 		return;
 	case STUFF_BOARDBLOCK:
 		if (g_pData->GetUseItem() == STUFF_CROWBAR)
 		{
 			if (g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
-			else; //여자는 안된다는 경고창
+			else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
 		}
-		else; //크로우바가 필요하다는 경고창
+		else g_pData->TextOutWarningWord(string("'크로우바'가 필요합니다."));
 		if (m_n1FBlockCount > 3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
@@ -246,7 +245,7 @@ void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
 			m_vecStuff[STUFF_BOX1]->SetRadius(0.01f);
 		}
-		else; //여자는 밀수 없다는 경고창
+		else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
 		return;
 	case STUFF_CHEST3:
 		g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;
@@ -296,40 +295,54 @@ void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		return;
 	case STUFF_CROWBAR:
 		g_pData->GetItem(STUFF_CROWBAR);
+		g_pData->TextOutWarningWord(string("'크로우바'를 얻었습니다."));
 		return;
 	case STUFF_PAPER1:
 		if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST])
+		{
 			g_pData->GetItem(STUFF_PAPER1);
+			g_pData->TextOutWarningWord(string("'힌트1(Game)'을 얻었습니다."));
+		}
 		return;
 	case STUFF_PAPER2:
 		g_pData->GetItem(STUFF_PAPER2);
+		g_pData->TextOutWarningWord(string("'힌트2(Academy)'을 얻었습니다."));
 		return;
 	case STUFF_PAPER3:
 		g_pData->GetItem(STUFF_PAPER3);
+		g_pData->TextOutWarningWord(string("'힌트3(Seoul)'을 얻었습니다."));
 		return;
 	case STUFF_KEY1:
 		g_pData->GetItem(STUFF_KEY1);
+		g_pData->TextOutWarningWord(string("'감옥 열쇠'를 얻었습니다."));
 		return;
 	case STUFF_KEY2:
 		g_pData->GetItem(STUFF_KEY2);
+		g_pData->TextOutWarningWord(string("'1층 열쇠'를 얻었습니다."));
 		return;
 	case STUFF_KEY3:
 		g_pData->GetItem(STUFF_KEY3);
+		g_pData->TextOutWarningWord(string("'현관 열쇠'를 얻었습니다."));
 		return;
 	case STUFF_BRICK1:
 		g_pData->GetItem(STUFF_BRICK1);
+		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return;
 	case STUFF_BRICK2:
 		g_pData->GetItem(STUFF_BRICK2);
+		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return;
 	case STUFF_BRICK3:
 		g_pData->GetItem(STUFF_BRICK3);
+		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return;
 	case STUFF_BRICK4:
 		g_pData->GetItem(STUFF_BRICK4);
+		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return;
 	case STUFF_BRICK5:
 		g_pData->GetItem(STUFF_BRICK5);
+		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return;
 	case STUFF_BRICKPILE:
 		for (int i = 0; i < 5; ++i)
@@ -337,6 +350,7 @@ void cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			if (g_pData->m_bStuffSwitch[STUFF_BRICK1 + i] == false)
 			{
 				g_pData->GetItem(StuffCode(STUFF_BRICK1 + i));
+				g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 				return;
 			}
 		}

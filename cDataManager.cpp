@@ -155,6 +155,7 @@ void cDataManager::GetItem(StuffCode itemCode)
 	if (itemCode < STUFF_CROWBAR || itemCode > STUFF_BRICK5) return;
 
 	m_bStuffSwitch[itemCode] = false;
+	m_SetItem = itemCode;
 }
 
 
