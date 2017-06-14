@@ -11,6 +11,7 @@
 #define g_pSocketmanager cSocketManager::GetInstance()
 
 #define BUF_SIZE 100
+#define CLIENT_NUM 5
 #define HOSTIP "127.0.0.1"
 #define IN_PLAYER1 1 << 0
 #define IN_PLAYER2 1 << 1
@@ -31,6 +32,7 @@ class cSocketManager
 private:
 	SINGLETONE(cSocketManager);
 
+	// << : 서버와 통신하기 위해 필요한 변수들입니다.
 	WSADATA wsaData_CHAT, wsaData_DATA;
 	SOCKET hSocket_CHAT, hSocket_DATA;
 	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA, ClntAdr_DATA;
@@ -48,12 +50,30 @@ private:
 	SYNTHESIZE(int, nFlagNum, FlagNum);
 	SYNTHESIZE(bool, InitServer, InitServer);
 
-	// << : 클라이언트가 호스트가 되기 위해 필요한 데이터 입니다.
+	// << : 클라이언트간 통신하기 위해 필요한 변수들입니다.
+	int clntAdrSz;
+	SOCKET hSocket_Serv, hSocket_Clnt;
+	SOCKADDR_IN hostAdr, clntAdr;
+	HANDLE hHostThread;
 public:
-	void InitClient();
-	void Setup_DATA();
+	void Setup_Host();
+	void Connect_Client();
+	void Setup_DATA()
+	{
+		int nRet;
+		clock_t prevTime = clock();
+		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+		while (nRet != 0)
+		{
+			if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+			prevTime = clock();
+			cout << "DATA WSAStartup() error!" << endl;
+			nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+		}
+
+		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) INTERECT_SERVER, (void*)&hSocket_DATA, 0, NULL);
+	}
 	void Setup_CHAT();
-	void Update_DATA();
 	void Update();
 	void Calc_Position();
 	void Destroy();
