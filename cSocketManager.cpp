@@ -173,7 +173,7 @@ void cSocketManager::Destroy()
 /* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
 void cSocketManager::UpdatePosition(float  x, float y, float z)
 {
-	prevPosition = g_pData->m_vPosition1P;
+	prevPosition = g_pData->m_vPosition2P;
 	nextPosition = D3DXVECTOR3(x, y, z);
 	stStart = clock();
 }
@@ -181,7 +181,7 @@ void cSocketManager::UpdatePosition(float  x, float y, float z)
 /* 현재 회전값을 출발 회전값으로, 수신한 회전값을 목표 회전값으로 설정 */
 void cSocketManager::UpdateRotation(float Rotate)
 {
-	prevRotation = g_pData->m_vRotation1P;
+	prevRotation = g_pData->m_vRotation2P;
 	nextRotation = Rotate;
 }
 
