@@ -72,6 +72,23 @@ void cSocketManager::Connect_Client()
 {
 }
 
+/* 서버와 통신을 위한 스레드 동작 */
+void cSocketManager::Setup_DATA()
+{
+	int nRet;
+	clock_t prevTime = clock();
+	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+	while (nRet != 0)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "DATA WSAStartup() error!" << endl;
+		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
+	}
+
+	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) INTERECT_SERVER, (void*)&hSocket_DATA, 0, NULL);
+}
+
 /* 채팅 동작을 위한 소켓 초기화및 스레드 동작 */
 void cSocketManager::Setup_CHAT()
 {

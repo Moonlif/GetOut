@@ -58,21 +58,7 @@ private:
 public:
 	void Setup_Host();
 	void Connect_Client();
-	void Setup_DATA()
-	{
-		int nRet;
-		clock_t prevTime = clock();
-		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
-		while (nRet != 0)
-		{
-			if (prevTime + (ONE_SECOND * 2) > clock()) continue;
-			prevTime = clock();
-			cout << "DATA WSAStartup() error!" << endl;
-			nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
-		}
-
-		hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) INTERECT_SERVER, (void*)&hSocket_DATA, 0, NULL);
-	}
+	void Setup_DATA();
 	void Setup_CHAT();
 	void Update();
 	void Calc_Position();
