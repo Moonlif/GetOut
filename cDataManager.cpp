@@ -63,6 +63,7 @@ void cDataManager::Setup()
 		m_mapStuffMesh[STUFF_DOOR_1STTOILET] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_1STTOILET], "Objects/clickable/door", "PrisonDoor2.obj", 1);
 		m_mapStuffMesh[STUFF_DOOR_2NDROOM1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_2NDROOM1], "Objects/clickable/door", "WoodDoor.obj", 1);
 		m_mapStuffMesh[STUFF_DOOR_2NDROOM2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_2NDROOM2], "Objects/clickable/door", "PrisonDoor.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_FINAL] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_FINAL], "Objects/clickable/door", "PrisonDoor2.obj", 1);
 	}
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
@@ -148,7 +149,6 @@ void cDataManager::DropItem(StuffCode itemCode)
 	m_bStuffSwitch[itemCode] = true;
 	m_vStuffPosition[itemCode] = m_vPosition1P;
 	m_vStuffRotation[itemCode] = D3DXVECTOR3(0, m_vRotation1P, 0);
-	cout << "¹ö¸±¶§ : " << itemCode << endl;
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
@@ -157,7 +157,6 @@ void cDataManager::GetItem(StuffCode itemCode)
 
 	m_bStuffSwitch[itemCode] = false;
 	m_PickUpItemCode = itemCode;
-	cout << "ÁÞÀ»¶§ : " << itemCode << endl;
 }
 
 

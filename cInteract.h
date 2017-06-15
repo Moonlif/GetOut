@@ -25,5 +25,5 @@ public:
 	void Update();
 	void Render();
 	void CheckStuff(D3DXVECTOR3 playerPos);
-	void PickStuff(StuffCode stuffCode, bool lButton);
+	bool PickStuff(StuffCode stuffCode, bool lButton);
 };

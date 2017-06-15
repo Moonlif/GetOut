@@ -226,14 +226,14 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		///-------------------------------------------------------------
 		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
 		{
-			//플레이어가 선택되지 않았으면 리턴
-			if (g_pData->m_nPlayerNum1P == 0)
-			{
-				g_pData->TextOutWarningWord("캐릭터가 선택되지 않았습니다.");
-				return;
-			}
+			////플레이어가 선택되지 않았으면 리턴
+			//if (g_pData->m_nPlayerNum1P == 0)
+			//{
+			//	g_pData->TextOutWarningWord("캐릭터가 선택되지 않았습니다.");
+			//	return;
+			//}
 			//같은 플레이어 선택중이라면 게임시작 안됨
-			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
+			/*if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
 			{	
 				if (m_WhatIsYourNumber == 1)
 				{
@@ -244,7 +244,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 					g_pData->TextOutWarningWord("플레이어1과 다른 케릭을 선택해 주세요.");
 				}
 				return;
-			}
+			}*/
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
 		}
