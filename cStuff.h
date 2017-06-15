@@ -1,5 +1,6 @@
 #pragma once
 class cMtlTex;
+#include "cParticleSystem.h"
 
 class cStuff
 {
@@ -30,6 +31,8 @@ private:
 	LPD3DXMESH m_pMesh;									//오브젝트 메쉬정보
 	std::vector<cMtlTex*> m_vecMtlTex;					//오브젝트 머터리얼&텍스쳐 정보
 	LPD3DXMESH m_pMeshSphere;							//디버그용 반지름 시각화하기 위한 구체
+
+	cParticleSystem* m_pParticle;
 
 public:
 	void Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D3DXVECTOR3 adjust, float radius, float scaling, bool isOnMap);

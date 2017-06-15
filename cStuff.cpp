@@ -22,6 +22,7 @@ cStuff::cStuff()
 
 	, m_pMesh(NULL)
 	, m_pMeshSphere(NULL)
+	, m_pParticle(NULL)
 {
 }
 
@@ -62,6 +63,12 @@ void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D
 	}
 
 	D3DXCreateSphere(g_pD3DDevice, m_fRadius, 10, 10, &m_pMeshSphere, NULL);
+
+	if (m_eStuffCode >= STUFF_CROWBAR && m_eStuffCode <= STUFF_BRICK5)
+	{
+		m_pParticle = new cParticleSystem;
+		m_pParticle->Setup(8, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 10.0f, "Texture/alpha_sharp_tex.tga", &m_vPosition);
+	}
 }
 
 void cStuff::Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation, float switchIntensity)
@@ -110,6 +117,7 @@ void cStuff::Update()
 		}
 	}
 
+	if (m_pParticle && m_IsOnMap == true) m_pParticle->Update();
 }
 
 void cStuff::Render()
@@ -153,6 +161,8 @@ void cStuff::Render()
 		g_pD3DDevice->SetTexture(0, m_vecMtlTex[i]->GetTexture());
 		m_pMesh->DrawSubset(i);
 	}
+
+	if (m_pParticle && m_IsOnMap == true) m_pParticle->Render();
 
 	if (g_bDebug)
 	{
