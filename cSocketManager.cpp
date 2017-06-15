@@ -16,7 +16,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 void ReceiveNetworkID(SOCKET* pSocket);
 void ReceiveRoomName(SOCKET* pSocket);
 void ReceivePosition(LPVOID lpParam);
-void ReceiveAll(LPVOID lpParam);
+void ReceiveAllData(SOCKET* pSocket);
 
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
 void SendPosition(SOCKET* pSocket);
@@ -196,6 +196,30 @@ void cSocketManager::Destroy()
 	WSACleanup();
 }
 
+void cSocketManager::InitClientData(ST_ALL_DATA stData)
+{
+	// << : 플레이어 정보 초기화
+	ManPosition = D3DXVECTOR3(stData.manX, stData.manY, stData.manZ);
+	WomanPosition = D3DXVECTOR3(stData.womanX, stData.womanY, stData.womanZ);
+	ManRot = stData.manAngle;
+	WomanRot = stData.womanAngle;
+
+	for (int i = 0; i < INVENTORY_SIZE; ++i)
+	{
+		ManInventory[i] = (StuffCode)stData.manItem[i];
+		WomanInventory[i] = (StuffCode)stData.womanItem[i];
+	}
+
+	// << : 맵 정보 초기화
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		m_bStuffSwitch[i] = stData.mapIsRunning[i];
+		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
+		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
+	}
+}
+
+
 /* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
 void cSocketManager::UpdatePosition(float  x, float y, float z)
 {
@@ -297,6 +321,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			ReceiveRoomName(&hSocket);
 			break;
 		case FLAG_ALL_DATA:
+			ReceiveAllData(&hSocket);
 			break;
 		case FLAG_IP:
 			break;
@@ -305,9 +330,6 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		case FLAG_OBJECT_DATA:
 			break;
-		case FLAG_ALL:
-			break;
-
 		}
 	}
 	return 0;
@@ -354,13 +376,12 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		case FLAG_OBJECT_DATA:
 			break;
-		case FLAG_ALL:
-			break;
 		}
 	}
 
 	return 0;
 }
+
 /* 네트워크 아이디 수신 */
 void ReceiveNetworkID(SOCKET* pSocket)
 {
@@ -386,6 +407,15 @@ void ReceiveRoomName(SOCKET* pSocket)
 	else if (!IsOK)
 		cout << "해당 방 인원 초과" << endl;
 };
+
+/* 모든 데이터 수신 */
+void ReceiveAllData(SOCKET* pSocket)
+{
+	ST_ALL_DATA Recv;
+	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
+	g_pSocketmanager->InitClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);		// << : 좌표를 전송시켜보자
+}
 
 /* 좌표 수신 */
 void ReceivePosition(LPVOID lpParam)
@@ -417,13 +447,6 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Angle : " << stRecv.fAngle << endl;
 }
 
-/* 모든 데이터 수신 */
-void ReceiveAll(LPVOID lpParam)
-{
-	SOCKET hSocket = *(SOCKET*)lpParam;
-
-}
-
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 {
 	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
@@ -448,3 +471,4 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fAngle = g_pData->m_vRotation1P;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
+

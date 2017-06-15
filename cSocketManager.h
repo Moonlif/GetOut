@@ -15,6 +15,7 @@
 #define HOSTIP "127.0.0.1"
 #define IN_PLAYER1 1 << 0
 #define IN_PLAYER2 1 << 1
+#define INVENTORY_SIZE 25
 #define NAME_SIZE 20
 #define ONE_SECOND 1000
 #define OVERHEAD 300
@@ -63,14 +64,25 @@ private:
 	// << : 자신의 정보
 	char szRoomName[ROOM_NAME_SIZE] = "TEST";
 
+	// << : 수신한 데이터 버퍼
+	D3DXVECTOR3 ManPosition;
+	D3DXVECTOR3 WomanPosition;
+	float ManRot;
+	float WomanRot;
+	StuffCode ManInventory[INVENTORY_SIZE];
+	StuffCode WomanInventory[INVENTORY_SIZE];
+	bool m_bStuffSwitch[SWITCH_LASTNUM];			//아이템일 경우 맵에 있는게 true
+	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
+	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 public:
-	void Setup_Host();
 	void Connect_Client();
+	void Calc_Position();
+	void Destroy();
+	void InitClientData(ST_ALL_DATA stData);
+	void Setup_Host();
 	void Setup_DATA();
 	void Setup_CHAT();
 	void Update();
-	void Calc_Position();
-	void Destroy();
 	void UpdatePosition(float  x, float y, float z);
 	void UpdateRotation(float Rotate);
 };
@@ -105,27 +117,6 @@ struct ST_PLAYER_POSITION
 	float fAngle;
 	ST_PLAYER_POSITION() : nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
-};
-
-struct ST_ALL_DATA
-{
-	// << : Player Data
-	char  szRoomName[50] = { 0, };	// << : Key
-	int	  nPlayerIndex;				// << : Current Player Index
-	animationState eAnimState;		// << : Animation index
-	float fX;
-	float fY;
-	float fZ;
-	float fAngle;
-	// << : Object Data
-	float objectPosX[SWITCH_LASTNUM];	// << : PosX
-	float objectPosY[SWITCH_LASTNUM];	// << : PosY
-	float objectPosZ[SWITCH_LASTNUM];	// << : PosZ
-	float objectRotX[SWITCH_LASTNUM];	// << : RotX
-	float objectRotY[SWITCH_LASTNUM];	// << : RotY
-	float objectRotZ[SWITCH_LASTNUM];	// << : RotZ
-	StuffCode objectType[SWITCH_LASTNUM];	// << : objectType
-	bool objectRunning[SWITCH_LASTNUM];		// << : Is Object Run?
 };
 
 struct ST_CHAT
