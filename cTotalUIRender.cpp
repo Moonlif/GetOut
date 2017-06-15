@@ -4,6 +4,7 @@
 #include "cCharacterSelectScene.h"
 #include "cInventory.h"
 #include "cChat.h"
+#include "cGamePlay_UI.h"
 
 cTotalUIRender::cTotalUIRender()
 	:m_pChaSelectScene(NULL),
@@ -21,6 +22,7 @@ cTotalUIRender::~cTotalUIRender()
 	SAFE_DELETE(m_pInventory);
 	SAFE_DELETE(m_pChat);
 	SAFE_RELEASE(m_pFontWarning);
+	SAFE_DELETE(m_pGamePlay);
 }
 
 void cTotalUIRender::Setup()
@@ -33,6 +35,9 @@ void cTotalUIRender::Setup()
 
 	m_pChat = new cChat;
 	m_pChat->Setup();
+
+	m_pGamePlay = new cGamePlay_UI;
+	m_pGamePlay->Setup();
 
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 
@@ -47,6 +52,7 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Update();
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Update(camera);
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Update();
+	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen()) m_pGamePlay->Update();
 
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
@@ -59,15 +65,30 @@ void cTotalUIRender::Update(cCamera* camera)
 		if (g_pData->GetIsInvenOpen())
 		{
 			g_pData->SetIsInvenOpen(false);
-			g_pData->SetIsPossibleMove(true);
 		}
 		else
 		{
 			g_pData->SetIsInvenOpen(true);
-			g_pData->SetIsPossibleMove(false);
 		}
 
 	}
+
+	if (GetAsyncKeyState('0') & 0x0001)
+	{
+		SetItem(StuffCode::STUFF_BRICK1);
+		SetItem(StuffCode::STUFF_BRICK2);
+		SetItem(StuffCode::STUFF_KEY1);
+		SetItem(StuffCode::STUFF_KEY2);
+		SetItem(StuffCode::STUFF_KEY3);
+		SetItem(StuffCode::STUFF_PAPER1);
+	}
+
+	if (g_pData->GetIsLoadItem())
+	{
+		m_pInventory->LoadInvenInfo();
+		g_pData->SetIsLoadItem(false);
+	}
+
 	//경고 문구 띄우기
 	if (g_pData->GetisWarning()) LimitWarningTextOutTime();
 
@@ -77,28 +98,6 @@ void cTotalUIRender::Update(cCamera* camera)
 		SetItem(g_pData->GetPickUpItemCode());
 		g_pData->SetPickUpItemCode(StuffCode::STUFF_NONE);
 	}
-
-	//인벤토리 테스트용
-	if (GetAsyncKeyState('0') & 0x0001)
-	{
-		static int nRnd = 0;
-		if (nRnd == 1)	m_pInventory->SetItem(StuffCode::STUFF_PAPER1);
-		else if (nRnd == 2)	m_pInventory->SetItem(StuffCode::STUFF_PAPER2);
-		else if (nRnd == 3)	m_pInventory->SetItem(StuffCode::STUFF_PAPER3);
-		else if (nRnd == 4)	m_pInventory->SetItem(StuffCode::STUFF_BRICK1);
-		else if (nRnd == 5)	m_pInventory->SetItem(StuffCode::STUFF_BRICK2);
-		else if (nRnd == 6)	m_pInventory->SetItem(StuffCode::STUFF_BRICK3);
-		else if (nRnd == 7)	m_pInventory->SetItem(StuffCode::STUFF_BRICK4);
-		else if (nRnd == 8)	m_pInventory->SetItem(StuffCode::STUFF_BRICK5);
-		else if (nRnd == 9)	m_pInventory->SetItem(StuffCode::STUFF_CROWBAR);
-		else if (nRnd == 10)	m_pInventory->SetItem(StuffCode::STUFF_KEY1);
-		else if (nRnd == 11)	m_pInventory->SetItem(StuffCode::STUFF_KEY2);
-		else if (nRnd == 12)	m_pInventory->SetItem(StuffCode::STUFF_KEY3);
-		
-		nRnd++;
-		if (nRnd > 12) nRnd = 0;
-	}
-
 }
 
 void cTotalUIRender::Render()
@@ -107,6 +106,7 @@ void cTotalUIRender::Render()
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Render();
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
 	if (m_pChat) m_pChat->Render();
+	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen()) m_pGamePlay->Render();
 
 	//스타트씬 클릭되면 케릭터셀렉씬 셋업하는과정
 	if (!m_pStartScene->GetIsStartSceneOpen())

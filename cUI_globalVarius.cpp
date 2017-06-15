@@ -5,6 +5,7 @@ cUI_globalVarius::cUI_globalVarius()
 	:m_CurClickItemType(eITEMTYPE::ITEMTYPE_NONE)
 {
 	SetItemInfo();
+	D3DXMatrixIdentity(&m_matCameraRot);
 }
 
 
@@ -13,6 +14,11 @@ cUI_globalVarius::~cUI_globalVarius()
 }
 
 
+
+void cUI_globalVarius::SetSound()
+{
+	
+}
 
 void cUI_globalVarius::SetItemInfo()
 {

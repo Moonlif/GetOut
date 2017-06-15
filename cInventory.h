@@ -36,6 +36,9 @@ public:
 	eUITAG CarcCuruntPtInven();
 	StuffCode GetPreparedUsingItem();
 
+	void SaveInvenInfo();
+	void LoadInvenInfo();
+
 	virtual void OnClick(cUIButton* pSender);
 };
 

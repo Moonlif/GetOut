@@ -19,6 +19,6 @@ private:
 public:
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 	cUIInvenItem* FindEmptyInven();
-
+	
 };
 

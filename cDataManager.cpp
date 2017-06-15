@@ -8,10 +8,14 @@ cDataManager::cDataManager()
 	:m_IsInvenOpen(false)
 	, m_IsStartedGame(false)
 	, m_IsOnChat(false)
-	, m_IsMiniGamePrisonBreak(false)
-	, m_IsPossibleMove(false)
 	, m_PickUpItemCode(StuffCode::STUFF_NONE)
+	, m_IsLoadItem(false)
 {
+	for (int i = 0; i < TOTALINVENSIZE; ++i)
+	{
+		m_arrSaveInvenItem[i] = StuffCode::STUFF_NONE;
+		m_arrLoadInvenItem[i] = StuffCode::STUFF_NONE;
+	}
 }
 
 
@@ -166,3 +170,4 @@ void cDataManager::TextOutWarningWord(string str)
 	m_isWarning = true;
 	m_strWarningWord = str;
 }
+

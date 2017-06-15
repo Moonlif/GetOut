@@ -190,6 +190,7 @@ struct ST_ASTAR
 #include "cObjectManager.h"
 #include "cFontManager.h"
 #include "cTimeManager.h"
+#include "cSoundManager.h"
 #include "cRandom.h"
 
 //¿µÇö

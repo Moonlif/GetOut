@@ -193,6 +193,7 @@ struct CHATINFO
 #define CHATTIME			300
 #define CHATWORDHEIGHT		30
 #define CHATWORDWIDTH		(CHATWORDHEIGHT / 2)
+#define TOTALINVENSIZE		25
 
 enum animationState
 {

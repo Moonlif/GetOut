@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #define g_pData cDataManager::GetInstance()
 
+
 class cMtlTex;
 
 class cDataManager
@@ -11,19 +12,21 @@ private:
 
 	list<string> m_listChat_SEND;
 
-	//영현
-	SYNTHESIZE(bool, m_IsOnChat, IsOnChat)
-	SYNTHESIZE(bool, m_IsStartedGame, IsStartedGame)
-	SYNTHESIZE(bool, m_IsInvenOpen, IsInvenOpen)
-	SYNTHESIZE(StuffCode, m_UseItem, UseItem)
-	SYNTHESIZE(bool, m_IsMiniGamePrisonBreak, IsMiniGamePrisonBreak)
+	//영현 - UI
+	SYNTHESIZE(bool,		m_IsOnChat, IsOnChat)
+	SYNTHESIZE(bool,		m_IsStartedGame, IsStartedGame)
+	SYNTHESIZE(bool,		m_IsInvenOpen, IsInvenOpen)
+	SYNTHESIZE(StuffCode,	m_UseItem, UseItem)
+	SYNTHESIZE(StuffCode,	m_PickUpItemCode, PickUpItemCode)
 
-	SYNTHESIZE(bool, m_IsPossibleMove, IsPossibleMove)
-	SYNTHESIZE(StuffCode, m_PickUpItemCode, PickUpItemCode)
+	//영현 - 아이템 정보 저장
+	StuffCode				m_arrSaveInvenItem[TOTALINVENSIZE];
+	StuffCode				m_arrLoadInvenItem[TOTALINVENSIZE];
+	SYNTHESIZE(bool,		m_IsLoadItem, IsLoadItem)
 
-	//경고문구 띄우기
-	SYNTHESIZE(bool,					m_isWarning, isWarning);
-	SYNTHESIZE(string,					m_strWarningWord, WarningWord);
+	//영현 - 경고문구 띄우기
+	SYNTHESIZE(bool,		m_isWarning, isWarning)
+	SYNTHESIZE(string,		m_strWarningWord, WarningWord)
 	
 public:
 	//정훈 - 오브젝트용
@@ -59,5 +62,7 @@ public:
 	void GetItem(StuffCode itemCode);
 
 	void TextOutWarningWord(string str);
+	void SaveInvenInfo(int Index, StuffCode code) { m_arrSaveInvenItem[Index] = code; }
+	StuffCode LoadInvenInfo(int Index) { return m_arrLoadInvenItem[Index]; }
 };
 
