@@ -28,6 +28,7 @@
 #define ROOM_NAME_SIZE 50
 #define SEND_PER_SECOND 2
 
+struct ST_ALL_DATA;
 
 class cSocketManager
 {

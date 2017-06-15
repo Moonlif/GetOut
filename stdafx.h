@@ -180,34 +180,6 @@ struct ST_ASTAR
 	POINT parent;
 };
 
-// << : 지상 소켓과 관련된 구조체 입니다.
-struct ST_ALL_DATA
-{
-	// << : 플레이어 데이터
-	float manX;
-	float manY;
-	float manZ;
-	float manAngle;
-	int manAnim;
-	int manItem[25];
-
-	float womanX;
-	float womanY;
-	float womanZ;
-	float womanAngle;
-	int womanAnim;
-	int womanItem[25];
-
-	// << : 맵 데이터
-	float mapX[30];
-	float mapY[30];
-	float mapZ[30];
-	float mapRotX[30];
-	float mapRotY[30];
-	float mapRotZ[30];
-	bool mapIsRunning[30];
-};
-
 #include "cObject.h"
 #include "iMap.h"
 #include "Info.h"

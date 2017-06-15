@@ -21,6 +21,33 @@ void ReceiveAllData(SOCKET* pSocket);
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
 void SendPosition(SOCKET* pSocket);
 
+struct ST_ALL_DATA
+{
+	// << : 플레이어 데이터
+	float manX;
+	float manY;
+	float manZ;
+	float manAngle;
+	int manAnim;
+	int manItem[25];
+
+	float womanX;
+	float womanY;
+	float womanZ;
+	float womanAngle;
+	int womanAnim;
+	int womanItem[25];
+
+	// << : 맵 데이터
+	float mapX[30];
+	float mapY[30];
+	float mapZ[30];
+	float mapRotX[30];
+	float mapRotY[30];
+	float mapRotZ[30];
+	bool mapIsRunning[30];
+}; 
+
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 	, stStart(clock())
@@ -312,23 +339,23 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 
 		switch (stFlag.eFlag)
 		{
-		case FLAG_NONE:
+		case FLAG::FLAG_NONE:
 			break;
-		case FLAG_NETWORK_ID:
+		case FLAG::FLAG_NETWORK_ID:
 			ReceiveNetworkID(&hSocket);
 			break;
-		case FLAG_ROOM_NAME:
+		case FLAG::FLAG_ROOM_NAME:
 			ReceiveRoomName(&hSocket);
 			break;
-		case FLAG_ALL_DATA:
+		case FLAG::FLAG_ALL_DATA:
 			ReceiveAllData(&hSocket);
 			break;
-		case FLAG_IP:
+		case FLAG::FLAG_IP:
 			break;
-		case FLAG_POSITION:
+		case FLAG::FLAG_POSITION:
 			ReceivePosition(&hSocket);
 			break;
-		case FLAG_OBJECT_DATA:
+		case FLAG::FLAG_OBJECT_DATA:
 			break;
 		}
 	}
@@ -389,7 +416,7 @@ void ReceiveNetworkID(SOCKET* pSocket)
 	recv(*pSocket, (char*)&nID, sizeof(int), 0);
 	g_pSocketmanager->SetNetworkID(nID);
 	cout << "네트워크 아이디 " << nID << endl;
-	g_pSocketmanager->SetFlagNum(FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
 }
 
 /* 방이 연결 가능한지 확인 */
@@ -401,11 +428,14 @@ void ReceiveRoomName(SOCKET* pSocket)
 	if (IsOK)
 	{
 		cout << "해당 방에 연결되었습니다." << endl;
-		g_pSocketmanager->SetFlagNum(FLAG_ALL_DATA);
+		g_pSocketmanager->SetFlagNum(FLAG::FLAG_ALL_DATA);
 
 	}
 	else if (!IsOK)
+	{
 		cout << "해당 방 인원 초과" << endl;
+		g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);	// << : 클라이언트에서 방이름을 재설정 해줘야 합니다.
+	}
 };
 
 /* 모든 데이터 수신 */
@@ -447,15 +477,18 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Angle : " << stRecv.fAngle << endl;
 }
 
+/* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 {
 	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
 	pFlag->nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
 	pFlag->nPlayerIndex = g_pData->m_nPlayerNum1P;
 	sprintf_s(pFlag->szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
-	send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
+	if(pFlag->eFlag != FLAG::FLAG_NONE)	// << : 요청할 내용이 없다면 전송하지 않습니다.
+		send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
 }
 
+/* 자신의 좌표를 서버에게 전송합니다 */
 void SendPosition(SOCKET* pSocket)
 {
 	SOCKET hSocket = *pSocket;
@@ -471,4 +504,3 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fAngle = g_pData->m_vRotation1P;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
-
