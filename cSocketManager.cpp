@@ -296,6 +296,8 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		case FLAG_ROOM_NAME:
 			ReceiveRoomName(&hSocket);
 			break;
+		case FLAG_ALL_DATA:
+			break;
 		case FLAG_IP:
 			break;
 		case FLAG_POSITION:
@@ -372,12 +374,18 @@ void ReceiveNetworkID(SOCKET* pSocket)
 /* 방이 연결 가능한지 확인 */
 void ReceiveRoomName(SOCKET* pSocket)
 {
+	// << : 연결이 가능하다면 모든데이터를 수신하는 단계로 , 연결이 안된다면 방이름을 바꾸도록
 	int IsOK = 0;
 	recv(*pSocket, (char*)&IsOK, sizeof(int), 0);
+	if (IsOK)
+	{
+		cout << "해당 방에 연결되었습니다." << endl;
+		g_pSocketmanager->SetFlagNum(FLAG_ALL_DATA);
 
-	// < : 만약 입장 가능하다면 Init All로 , 불가능 하다면 ReceiveRoomName 그대로 ?
-}
-
+	}
+	else if (!IsOK)
+		cout << "해당 방 인원 초과" << endl;
+};
 
 /* 좌표 수신 */
 void ReceivePosition(LPVOID lpParam)
@@ -421,7 +429,7 @@ void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
 	pFlag->nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
 	pFlag->nPlayerIndex = g_pData->m_nPlayerNum1P;
-	sprintf_s(pFlag->szRoomName, "DEFAULT", 7);
+	sprintf_s(pFlag->szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
 	send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
 }
 

@@ -60,7 +60,8 @@ private:
 	SYNTHESIZE(bool, InitServer, InitServer);
 	SYNTHESIZE(int, nNetworkID, NetworkID);
 
-	char szRoomName[ROOM_NAME_SIZE] = { 0, };
+	// << : 자신의 정보
+	char szRoomName[ROOM_NAME_SIZE] = "TEST";
 
 public:
 	void Setup_Host();
@@ -79,10 +80,10 @@ enum FLAG
 	FLAG_NONE = 1 << 0,
 	FLAG_NETWORK_ID = 1 << 1,
 	FLAG_ROOM_NAME = 1 << 2,
-	FLAG_IP = 1 << 3,
-	FLAG_POSITION = 1 << 4,
-	FLAG_OBJECT_DATA = 1 << 5,
-	FLAG_ALL = 1 << 6,
+	FLAG_ALL_DATA = 1 << 3,
+	FLAG_IP = 1 << 4,
+	FLAG_POSITION = 1 << 5,
+	FLAG_OBJECT_DATA = 1 << 6
 };
 
 struct ST_FLAG
