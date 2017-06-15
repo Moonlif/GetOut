@@ -12,7 +12,7 @@
 
 #define BUF_SIZE 100
 #define CLIENT_NUM 5
-#define HOSTIP "127.0.0.1"
+#define HOSTIP "127.127.127.127"
 #define IN_PLAYER1 1 << 0
 #define IN_PLAYER2 1 << 1
 #define INVENTORY_SIZE 25
@@ -41,6 +41,7 @@ private:
 	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA, ClntAdr_DATA;
 	HANDLE hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
 	HANDLE hDataThread;
+	char HostIP[16] = { 0, };
 
 	// << : 클라이언트간 통신하기 위해 필요한 변수들입니다.
 	int clntAdrSz;
@@ -80,6 +81,7 @@ public:
 	void Calc_Position();
 	void Destroy();
 	void InitClientData(ST_ALL_DATA stData);
+	void SetIP(int First, int Second, int Third, int Fourth);
 	void Setup_Host();
 	void Setup_DATA();
 	void Setup_CHAT();

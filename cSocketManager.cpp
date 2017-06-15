@@ -67,6 +67,8 @@ cSocketManager::cSocketManager()
 	nextPosition.x = 0;
 	nextPosition.y = 0;
 	nextPosition.z = 0;
+
+	sprintf_s(HostIP, "%s", "127.0.0.1", 16);
 }
 
 cSocketManager::~cSocketManager()
@@ -95,31 +97,35 @@ void cSocketManager::Setup_Host()
 
 	// << : 바인딩이 끝나고 스레드에 진입하면 호스팅 중임을 알려준다.
 
-	//if (listen(hSocket_Serv, CLIENT_NUM) == SOCKET_ERROR)
-	//	cout << "Server_HOST listen() Error" << endl;
-
-	//clntAdrSz = sizeof(clntAdr);
-	//hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
-	//if (hSocket_Clnt > 0)
-	//	cout << " 호스트 데이터 수신 " << endl;
-
-	// << : 이부분은 크리티컬 섹션으로 처리합니다.
-
-	
-	//while (true)
-	//{
-	//	clntAdrSz = sizeof(clntAdr);
-	//	hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
-	//	if (hSocket_Clnt > 0)
-	//	{
-	//		// << : 다른 클라이언트가 연결하면 스레드로 좌표를 계속 받게 처리한다.
-	//	}
-	//}
+	// << : accept 부분까지 크리티컬 섹션으로 처리합니다.
 }
 
 /* 이미 호스트가 있다면 해당 호스트와 연결하는 함수입니다. */
 void cSocketManager::Connect_Client()
 {
+}
+
+/* IP를 설정하는 부분 */
+void cSocketManager::SetIP(int First, int Second, int Third, int Fourth)
+{
+	if (First > 255 || Second > 255 || Third > 255 || Fourth > 255 ||
+		First < 0 || Second < 0 || Third < 0 || Fourth < 0)
+	{
+		cout << "잘못된 IP 주소 입력" << endl;
+		return;
+	}
+	char addrFirst[10] = { 0, };
+	char addrSecond[10] = { 0, };
+	char addrThird[10] = { 0, };
+	char addrFourth[10] = { 0, };
+
+	_itoa_s(First, addrFirst, 10);
+	_itoa_s(Second, addrSecond, 10);
+	_itoa_s(Third, addrThird, 10);
+	_itoa_s(Fourth, addrFourth, 10);
+
+	string szFullIP = string(addrFirst) + "." + string(addrSecond) + "." + string(addrThird) + "." + string(addrFourth);
+	cout << szFullIP << endl;
 }
 
 /* 서버와 통신을 위한 스레드 동작 */
@@ -158,7 +164,7 @@ void cSocketManager::Setup_CHAT()
 
 	memset(&ServAdr_CHAT, 0, sizeof(ServAdr_CHAT));
 	ServAdr_CHAT.sin_family = AF_INET;
-	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HOSTIP);
+	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HostIP);
 	ServAdr_CHAT.sin_port = PORT_CHAT_SERVER;
 
 	bool bValid = true;
@@ -185,6 +191,8 @@ void cSocketManager::Setup_CHAT()
 
 void cSocketManager::Update()
 {
+	if (GetAsyncKeyState(VK_NUMPAD5) & 0x0001)
+		g_pSocketmanager->SetIP(192, 168, 255, 4);
 	Calc_Position(); // < : 좌표를 보정해서 계산합니다.
 	if (InitServer)
 	{
