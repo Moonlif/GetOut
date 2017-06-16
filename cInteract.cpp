@@ -11,6 +11,7 @@ cInteract::cInteract()
 	, m_n2FButton1Count(0)
 	, m_n2FButton2Count(0)
 	, m_nBrickCount(0)
+	, m_pParticleFog(NULL)
 {
 }
 
@@ -21,6 +22,8 @@ cInteract::~cInteract()
 	{
 		SAFE_DELETE(it);
 	}
+	
+	SAFE_DELETE(m_pParticleFog);
 }
 
 void cInteract::Setup()
@@ -72,6 +75,14 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_DOOR_2NDROOM1]->Setup(STUFF_DOOR_2NDROOM1, D3DXVECTOR3(-13.3f, 28.1f, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.4f, true);
 	m_vecStuff[STUFF_DOOR_2NDROOM2]->Setup(STUFF_DOOR_2NDROOM2, D3DXVECTOR3(-5.5f, 28, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.25f, true);
 	m_vecStuff[STUFF_DOOR_FINAL]->Setup(STUFF_DOOR_FINAL, D3DXVECTOR3(18, 16, -18), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 4), 5.0f, 0.25f, true);
+
+	D3DXCOLOR stColor;
+	stColor.r = 100;
+	stColor.g = 100;
+	stColor.b = 100;
+	m_vPositionFog = D3DXVECTOR3(0, 15, 0);
+	m_pParticleFog = new cParticleSystem;
+	m_pParticleFog->Setup(100, 10, stColor, 100.0f, 1000.0f, "Texture/alpha_fog_tex.tga", &m_vPositionFog);
 }
 
 void cInteract::Update()
@@ -192,6 +203,8 @@ void cInteract::Update()
 	{
 		it->Update();
 	}
+
+	m_pParticleFog->Update();
 }
 
 void cInteract::Render()
@@ -200,6 +213,8 @@ void cInteract::Render()
 	{
 		it->Render();
 	}
+
+	m_pParticleFog->Render();
 }
 
 void cInteract::CheckStuff(D3DXVECTOR3 playerPos)

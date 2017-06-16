@@ -24,6 +24,9 @@ void cParticleSystem::Setup(int vertexSize, float radius, D3DXCOLOR vertexColor,
 	m_vecParticleVertex.resize(vertexSize);
 	m_fRadius = radius;
 	m_stColor = vertexColor;
+	m_fMinSize = minSize;
+	m_fMaxSize = maxSize;
+
 	for (int i = 0; i < m_vecParticleVertex.size(); ++i)
 	{
 		float fRadius = RND->getFloatFromTo(0.0f, m_fRadius);
@@ -97,17 +100,28 @@ void cParticleSystem::Update()
 			D3DXVec3TransformCoord(&m_vecParticleVertex[i].p, &m_vecParticleVertex[i].p, &matWorld);
 		}
 	}
-		
+
 	m_stColor.a = nAlpha;
+	int a, r, g, b;
+	a = (int)m_stColor.a;
+	r = (int)m_stColor.r;
+	g = (int)m_stColor.g;
+	b = (int)m_stColor.b;
 	for (int i = 0; i < m_vecParticleVertex.size(); ++i)
 	{
-		if (i % 2 == 0) m_vecParticleVertex[i].c = D3DCOLOR_ARGB(255 - nAlpha, 255, 255, 255);
-		else m_vecParticleVertex[i].c = D3DCOLOR_ARGB(nAlpha, 255, 255, 255);
+		if (i % 2 == 0)
+		{
+			m_vecParticleVertex[i].c = D3DCOLOR_ARGB(255 - a, r, g, b);
+		}
+		else m_vecParticleVertex[i].c = D3DCOLOR_ARGB(a, r, g, b);
 	}
 }
 
 void cParticleSystem::Render()
 {
+	g_pD3DDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(m_fMinSize));
+	g_pD3DDevice->SetRenderState(D3DRS_POINTSIZE_MAX, FtoDw(m_fMaxSize));
+
 	D3DXMATRIXA16 matWorld;
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixTranslation(&matWorld, m_pPosition->x, m_pPosition->y, m_pPosition->z);

@@ -66,8 +66,14 @@ void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D
 
 	if (m_eStuffCode >= STUFF_CROWBAR && m_eStuffCode <= STUFF_BRICK5)
 	{
+		D3DXCOLOR stColor;
+		stColor.a = 255;
+		stColor.r = 255;
+		stColor.g = 255;
+		stColor.b = 255;
+
 		m_pParticle = new cParticleSystem;
-		m_pParticle->Setup(8, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 10.0f, "Texture/alpha_sharp_tex.tga", &m_vPosition);
+		m_pParticle->Setup(8, 1.0f, stColor, 0.0f, 10.0f, "Texture/alpha_item_tex.tga", &m_vPosition);
 	}
 }
 
