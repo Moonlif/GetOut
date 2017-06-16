@@ -92,6 +92,9 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	///-------------------------------------------------------------
 	//						게임스타트 텍스트 변화
 	///-------------------------------------------------------------
+	cUIImageView* p1Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
+	cUIImageView* p2Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
+
 
 	cUITextView* text = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));	
@@ -101,8 +104,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	{		
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
-		cUIImageView* p1Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
-		cUIImageView* p2Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 
 		///-------------------------------------------------------------
@@ -194,34 +195,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		}
 
 		///-------------------------------------------------------------
-		//						상대방 1P, 2P 띄우기
-		///-------------------------------------------------------------
-		if (g_pData->m_nPlayerNum2P != 0)
-		{
-			//상대방이 1P일 때
-			if (m_WhatIsYourNumber == 2)
-			{
-				p1Text->SetIsHidden(false);
-				p1Text->SetAlpha(100);
-				//남자를 선택하고 있을 때
-				if (g_pData->m_nPlayerNum2P == 1)	p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));			
-				//여자를 선택하고 있을 때
-				else p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));				
-			}
-			//상대방이 2P일 때
-			else if (m_WhatIsYourNumber == 1)
-			{
-				p2Text->SetIsHidden(false);
-				p2Text->SetAlpha(100);
-				//남자를 선택하고 있을 때
-				if (g_pData->m_nPlayerNum2P == 1)	p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
-				//여자를 선택하고 있을 때
-				else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
-			}
-		}
-
-
-		///-------------------------------------------------------------
 		//						게임 시작하려고 할 시
 		///-------------------------------------------------------------
 		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
@@ -248,8 +221,37 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
 		}
+
+
 	}
 
+
+	///-------------------------------------------------------------
+	//						상대방 1P, 2P 띄우기
+	///-------------------------------------------------------------
+		if (g_pData->m_nPlayerNum2P != 0)
+		{
+			//상대방이 1P일 때
+			if (m_WhatIsYourNumber == 2)
+			{
+				p1Text->SetIsHidden(false);
+				p1Text->SetAlpha(100);
+				//남자를 선택하고 있을 때
+				if (g_pData->m_nPlayerNum2P == 1)	p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));			
+				//여자를 선택하고 있을 때
+				else p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));				
+			}
+			//상대방이 2P일 때
+			else if (m_WhatIsYourNumber == 1)
+			{
+				p2Text->SetIsHidden(false);
+				p2Text->SetAlpha(100);
+				//남자를 선택하고 있을 때
+				if (g_pData->m_nPlayerNum2P == 1)	p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
+				//여자를 선택하고 있을 때
+				else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
+			}
+		}
 }
 
 void cCharacterSelectScene::UpdateBeforGameStart()

@@ -68,6 +68,8 @@ void cCamera::Update()
 	D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
 	matR = matRX * matRY;
 
+	g_pUIvarius->m_matCameraRot = matR;
+
 	if (g_pData->GetIsStartedGame()) m_vEye = D3DXVECTOR3(0, m_fCameraHeight, m_fCameraDistance);
 	else m_vEye = D3DXVECTOR3(0, m_fCameraHeight, -m_fCameraDistance);
 
