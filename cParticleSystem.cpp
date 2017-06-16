@@ -3,15 +3,21 @@
 
 
 cParticleSystem::cParticleSystem()
-	: m_pTexture(NULL)
-	, m_pPosition(NULL)
+	: m_pPosition(NULL)
+	, m_nAlpha(0)
+	, m_nDelta(0)
+	, m_nAlphaCount(0)
+	, m_nRepaetCount(0)
+	, m_fRadius(0.0f)
+	, m_fMinSize(0.0f)
+	, m_fMaxSize(0.0f)
+	, m_pTexture(NULL)
 {
 }
 
 
 cParticleSystem::~cParticleSystem()
 {
-	SAFE_DELETE(m_pPosition);
 }
 
 DWORD FtoDw(float f)
@@ -19,20 +25,39 @@ DWORD FtoDw(float f)
 	return *((DWORD*)&f);
 }
 
-void cParticleSystem::Setup(int vertexSize, float radius, D3DXCOLOR vertexColor, float minSize, float maxSize, char* textureFile, D3DXVECTOR3* position)
+void cParticleSystem::Setup(eParticleType type, D3DXVECTOR3* position, int delta, int repeat, int vertexNum, float radius, D3DXCOLOR vertexColor, float minSize, float maxSize, char* textureFile)
 {
-	m_vecParticleVertex.resize(vertexSize);
+	m_eType = type;
+	m_pPosition = position;
+	m_nDelta = delta;
+	m_nRepaetCount = repeat;
+
+	m_vecParticleVertex.resize(vertexNum);
 	m_fRadius = radius;
 	m_stColor = vertexColor;
 	m_fMinSize = minSize;
 	m_fMaxSize = maxSize;
+	m_pTexture = g_pTextureManager->GetTexture(textureFile);
 
+	//make vertex
 	for (int i = 0; i < m_vecParticleVertex.size(); ++i)
 	{
 		float fRadius = RND->getFloatFromTo(0.0f, m_fRadius);
 		m_vecParticleVertex[i].p = D3DXVECTOR3(0, 0, fRadius);
 
-		D3DXVECTOR3 vAngle = D3DXVECTOR3(D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f));
+		D3DXVECTOR3 vAngle; 
+		switch (m_eType)
+		{
+		case cParticleSystem::E_PARTICLE_TYPE_SPEHRE:
+			vAngle = D3DXVECTOR3(D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f));
+			break;
+		case cParticleSystem::E_PARTICLE_TYPE_SPREAD:
+			vAngle = D3DXVECTOR3(0, D3DXToRadian(rand() % 3600 / 10.0f), 0);
+			break;
+		default:
+			break;
+		}
+		
 		D3DXMATRIX matRX, matRY, matRZ, matWorld;
 		D3DXMatrixRotationX(&matRX, vAngle.x);
 		D3DXMatrixRotationY(&matRY, vAngle.y);
@@ -42,8 +67,6 @@ void cParticleSystem::Setup(int vertexSize, float radius, D3DXCOLOR vertexColor,
 		D3DXVec3TransformCoord(&m_vecParticleVertex[i].p, &m_vecParticleVertex[i].p, &matWorld);
 		m_vecParticleVertex[i].c = vertexColor;
 	}
-	m_pTexture = g_pTextureManager->GetTexture(textureFile);
-	m_pPosition = position;
 
 	g_pD3DDevice->SetRenderState(D3DRS_POINTSCALEENABLE, true);
 	g_pD3DDevice->SetRenderState(D3DRS_POINTSIZE, FtoDw(5.0f));
@@ -67,41 +90,57 @@ void cParticleSystem::Setup(int vertexSize, float radius, D3DXCOLOR vertexColor,
 
 void cParticleSystem::Update()
 {
-	static int nAlpha = 0;
-	static int nDelta = 2;
-
-	nAlpha += nDelta;
-	if (nAlpha > 255)
+	m_nAlpha += m_nDelta;
+	if (m_nAlpha > 255)
 	{
-		nAlpha = 255;
-		nDelta *= -1;
+		m_nAlpha = 255;
+		m_nDelta *= -1;
 	}
 
-	if (nAlpha < 0)
+	if (m_nAlpha < 0)
 	{
-		nAlpha = 0;
-		nDelta *= -1;
+		m_nAlpha = 0;
+		m_nDelta *= -1;
 	}
 
-	if (nAlpha == 0)
+	if (m_nAlpha == 0)
 	{
-		for (int i = 0; i < m_vecParticleVertex.size(); ++i)
+		m_nAlphaCount++;
+
+		if (m_nAlphaCount > m_nRepaetCount - 1)
 		{
-			float fRadius = RND->getFloatFromTo(0.0f, m_fRadius);
-			m_vecParticleVertex[i].p = D3DXVECTOR3(0, 0, fRadius);
+			m_nAlphaCount = 0;
 
-			D3DXVECTOR3 vAngle = D3DXVECTOR3(D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f));
-			D3DXMATRIX matRX, matRY, matRZ, matWorld;
-			D3DXMatrixRotationX(&matRX, vAngle.x);
-			D3DXMatrixRotationY(&matRY, vAngle.y);
-			D3DXMatrixRotationZ(&matRZ, vAngle.z);
-			matWorld = matRX * matRY * matRZ;
+			for (int i = 0; i < m_vecParticleVertex.size(); ++i)
+			{
+				float fRadius = RND->getFloatFromTo(0.0f, m_fRadius);
+				m_vecParticleVertex[i].p = D3DXVECTOR3(0, 0, fRadius);
 
-			D3DXVec3TransformCoord(&m_vecParticleVertex[i].p, &m_vecParticleVertex[i].p, &matWorld);
+				D3DXVECTOR3 vAngle;
+				switch (m_eType)
+				{
+				case cParticleSystem::E_PARTICLE_TYPE_SPEHRE:
+					vAngle = D3DXVECTOR3(D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f), D3DXToRadian(rand() % 3600 / 10.0f));
+					break;
+				case cParticleSystem::E_PARTICLE_TYPE_SPREAD:
+					vAngle = D3DXVECTOR3(0, D3DXToRadian(rand() % 3600 / 10.0f), 0);
+					break;
+				default:
+					break;
+				}
+				
+				D3DXMATRIX matRX, matRY, matRZ, matWorld;
+				D3DXMatrixRotationX(&matRX, vAngle.x);
+				D3DXMatrixRotationY(&matRY, vAngle.y);
+				D3DXMatrixRotationZ(&matRZ, vAngle.z);
+				matWorld = matRX * matRY * matRZ;
+
+				D3DXVec3TransformCoord(&m_vecParticleVertex[i].p, &m_vecParticleVertex[i].p, &matWorld);
+			}
 		}
 	}
 
-	m_stColor.a = nAlpha;
+	m_stColor.a = m_nAlpha;
 	int a, r, g, b;
 	a = (int)m_stColor.a;
 	r = (int)m_stColor.r;

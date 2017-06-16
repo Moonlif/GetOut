@@ -77,12 +77,12 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_DOOR_FINAL]->Setup(STUFF_DOOR_FINAL, D3DXVECTOR3(18, 16, -18), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 4), 5.0f, 0.25f, true);
 
 	D3DXCOLOR stColor;
-	stColor.r = 100;
+	stColor.r = 0;
 	stColor.g = 100;
-	stColor.b = 100;
-	m_vPositionFog = D3DXVECTOR3(0, 15, 0);
+	stColor.b = 0;
+	m_vPositionFog = D3DXVECTOR3(-33, 14, -15);
 	m_pParticleFog = new cParticleSystem;
-	m_pParticleFog->Setup(100, 10, stColor, 100.0f, 1000.0f, "Texture/alpha_fog_tex.tga", &m_vPositionFog);
+	m_pParticleFog->Setup(cParticleSystem::eParticleType::E_PARTICLE_TYPE_SPREAD, &m_vPositionFog, 2, 0, 50, 10, stColor, 1000.0f, 3000.0f, "Texture/alpha_fog_tex.tga");
 }
 
 void cInteract::Update()

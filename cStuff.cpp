@@ -73,7 +73,7 @@ void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D
 		stColor.b = 255;
 
 		m_pParticle = new cParticleSystem;
-		m_pParticle->Setup(8, 1.0f, stColor, 0.0f, 10.0f, "Texture/alpha_item_tex.tga", &m_vPosition);
+		m_pParticle->Setup(cParticleSystem::eParticleType::E_PARTICLE_TYPE_SPEHRE, &m_vPosition, 8, 2, 10, 1.0f, stColor, 0.0f, 20.0f, "Texture/alpha_item_tex.tga");
 	}
 }
 
