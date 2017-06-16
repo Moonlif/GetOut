@@ -64,5 +64,8 @@ public:
 	void TextOutWarningWord(string str);
 	void SaveInvenInfo(int Index, StuffCode code) { m_arrSaveInvenItem[Index] = code; }
 	StuffCode LoadInvenInfo(int Index) { return m_arrLoadInvenItem[Index]; }
+
+
+	void AddSound();
 };
 

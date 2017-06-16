@@ -45,9 +45,6 @@ void cMainGame::Setup()
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
-	g_pSoundManager->AddSound("00_laugh", "Sound/EffectSound/00_laugh.ogg", true, false);
-	g_pSoundManager->Play("00_laugh", 1.0f);
-	
 	//코드 추가
 	{
 		g_pData->Setup();
@@ -73,14 +70,14 @@ void cMainGame::Setup()
 		m_pTotalUIRender->Setup();
 
 		//test light
-		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
-		D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(-1, -1, -1));
+		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f),
+		D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f),	D3DXVECTOR3(-1, -1, -1));
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
 	}
-	g_pData->SetIsStartedGame(true);
+	/*g_pData->SetIsStartedGame(true);
 	g_pD3DDevice->LightEnable(0, true);
-	m_pCamera->SetCameraDistance(50.0f);
+	m_pCamera->SetCameraDistance(50.0f);*/
 
 	g_pSocketmanager->Setup_CHAT();
 	g_pSocketmanager->Setup_DATA();

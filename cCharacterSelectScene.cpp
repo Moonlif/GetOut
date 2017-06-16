@@ -39,6 +39,8 @@ void cCharacterSelectScene::Setup()
 	//메쉬, 라이트 셋업
 	SetMesh();
 
+	//사운드 시작
+	g_pSoundManager->Play("CharacterSelectScene", 1.0f);
 }
 
 void cCharacterSelectScene::Update(cCamera* camera)
@@ -210,14 +212,17 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			{	
 				if (m_WhatIsYourNumber == 1)
 				{
-					g_pData->TextOutWarningWord("플레이어2와 다른 케릭을 선택해 주세요.");
+					g_pData->TextOutWarningWord("플레이어2와 다른 캐릭을 선택해 주세요.");
 				}
 				else if (m_WhatIsYourNumber == 2)
 				{
-					g_pData->TextOutWarningWord("플레이어1과 다른 케릭을 선택해 주세요.");
+					g_pData->TextOutWarningWord("플레이어1과 다른 캐릭을 선택해 주세요.");
 				}
 				return;
 			}
+
+			g_pSoundManager->Stop("CharacterSelectScene");
+			g_pSoundManager->Play("LoadingScene",1.0f);
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
 		}
@@ -337,6 +342,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			img6->SetIsHidden(true);
 			g_pData->SetIsStartedGame(true);
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
+			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
 			break;
 		default:
@@ -393,11 +399,11 @@ D3DXVECTOR3 cCharacterSelectScene::RandomCircle(D3DXVECTOR3 pos, float range)
 
 void cCharacterSelectScene::OnClick(cUIButton * pSender)
 {
-	if (pSender->GetTag() == eUITAG::E_CHARACTERSELECT_BUTTON_START)
+	/*if (pSender->GetTag() == eUITAG::E_CHARACTERSELECT_BUTTON_START)
 	{
 		m_pCamera->ReTarget(&m_vRetargetPos);
 		m_isDeleteBackground = true;
-	}
+	}*/
 }
 
 void cCharacterSelectScene::SetBackground()
@@ -431,14 +437,14 @@ void cCharacterSelectScene::SetBackground()
 	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	ExplainImage->AddChild(pPlyer2Image);
 
-	
-
-	/*cUIButton*	pStartButton = new cUIButton("UI/button/master_button_normal.png", "UI/button/master_button_over.png",
-		"UI/button/master_button_selected.png", D3DXVECTOR3(970, 560, 0));
+	cUIButton*	pStartButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
+		"UI/button/BlackButton_Down.png", D3DXVECTOR3(40, 490, 0));
 	pStartButton->SetTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
-	pStartButton->SetScaling(D3DXVECTOR3(1.0f, 0.9f, 0));
+	pStartButton->SetScaling(D3DXVECTOR3(2.0f, 0.45f, 0));
 	pStartButton->SetDelegate(this);
-	m_pRoot->AddChild(pStartButton);*/
+	pStartButton->SetAlpha(200);
+	ExplainImage->AddChild(pStartButton);
+
 	cUITextView* text = new cUITextView("GAME START", D3DXVECTOR3(60, 500, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
 		ST_SIZEN(250, 40), 20, 40, 900);
 	text->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);

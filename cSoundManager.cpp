@@ -58,12 +58,6 @@ void cSoundManager::Update()
 {
 	//사운드 시스템을 계속적으로 업데이트 해준다
 	_system->update();
-
-	//볼륨이 바뀌거나 재생이 끝난 사운드를 채널에서 빼는 등
-	//다양한 작업을 자동으로 해준다.
-
-	/*cout << _curruntTime << endl;
-	cout << _isPlaying << endl;*/
 }
 
 
@@ -104,7 +98,7 @@ void cSoundManager::Play(string keyName, float volume)
 	arrSoundsIter iter = _mTotalSounds.begin();
 
 	int count = 0;
-
+	
 	for (iter; iter != _mTotalSounds.end(); ++iter, count++)
 	{
 		if (keyName == iter->first)

@@ -28,6 +28,8 @@ void cStartScene::Setup()
 		ST_SIZEN(500, 200), 20, 20, 500, "±¼¸²Ã¼");
 	m_pStartSceneRoot->AddChild(m_pStartText);
 
+	g_pSoundManager->Play("StartScene", 1.0f);
+
 	//	m_pStartText->SetIsHidden(true);
 	//m_IsStartSceneOpen = false;
 }
@@ -81,13 +83,16 @@ void cStartScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		m_pStartText->SetIsHidden(true);
 		m_IsStartSceneOpen = false;
+		g_pSoundManager->Stop("StartScene");
 	case WM_LBUTTONDOWN:
 		m_pStartText->SetIsHidden(true);
 		m_IsStartSceneOpen = false;
+		g_pSoundManager->Stop("StartScene");
 		break;
 	case WM_RBUTTONDOWN:
 		m_pStartText->SetIsHidden(true);
 		m_IsStartSceneOpen = false;
+		g_pSoundManager->Stop("StartScene");
 		break;
 	}
 }
