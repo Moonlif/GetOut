@@ -202,6 +202,9 @@ void cInventory::SetItem(StuffCode ItemName)
 	EmptyInven->SetItemType(g_pUIvarius->m_mapItemInfo[ItemName].ItemType);
 	EmptyInven->SetrcItem(g_pUIvarius->m_mapItemInfo[ItemName].rc);
 	EmptyInven->SetItemCode(ItemName);
+
+	//서버에 아이템 저장
+	SaveInvenInfo();
 }
 
 //아이템 옮기기
@@ -326,6 +329,9 @@ void cInventory::MoveItem()
 				FirstClick->SetItemCode(SecondCode);
 			}
 
+			//서버에 아이템 저장
+			//SaveInvenInfo();
+
 			//마우스에 렌더하는 값 초기화
 			m_IsPick = false;
 			m_pTexture = NULL;
@@ -387,6 +393,37 @@ StuffCode cInventory::GetPreparedUsingItem()
 {
 	cUIInvenItem* item = (cUIInvenItem*)m_pInven->FindChildByTag(eUITAG::INVENTORY_USINGITEM);
 	return item->GetItemCode();
+}
+
+//인벤내 아이템 서버에 저장
+void cInventory::SaveInvenInfo()
+{
+	for (int i = 0; i < m_pInven->GetChild().size(); ++i)
+	{
+		cUIInvenItem* p = (cUIInvenItem*)m_pInven->GetChild()[i];
+		g_pData->SaveInvenInfo(i, p->GetItemCode());
+	}
+}
+
+void cInventory::LoadInvenInfo()
+{
+	for (int i = 0; i < m_pInven->GetChild().size(); ++i)
+	{
+		//인벤
+		cUIInvenItem* p = (cUIInvenItem*)m_pInven->GetChild()[i];
+		//저장된 코드
+		StuffCode code = g_pData->LoadInvenInfo(i);
+		//코드로 불러오는 아이템 인포
+		ITEMINFO itemInfo;
+		itemInfo = g_pUIvarius->m_mapItemInfo[code];
+
+		p->SetItemTexture(itemInfo.Texture);
+		p->SetItemType(itemInfo.ItemType);
+		p->SetrcItem(itemInfo.rc);
+		p->SetItemCode(code);
+	}
+
+
 }
 
 void cInventory::OnClick(cUIButton * pSender)
