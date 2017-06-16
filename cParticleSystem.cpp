@@ -23,6 +23,7 @@ void cParticleSystem::Setup(int vertexSize, float radius, D3DXCOLOR vertexColor,
 {
 	m_vecParticleVertex.resize(vertexSize);
 	m_fRadius = radius;
+	m_stColor = vertexColor;
 	for (int i = 0; i < m_vecParticleVertex.size(); ++i)
 	{
 		float fRadius = RND->getFloatFromTo(0.0f, m_fRadius);

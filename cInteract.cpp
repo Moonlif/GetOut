@@ -275,7 +275,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			if (g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
 			else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
 		}
-		else g_pData->TextOutWarningWord(string("'크로우바'가 필요합니다."));
+		else g_pData->TextOutWarningWord(string("'빠루'가 필요합니다."));
 		if (m_n1FBlockCount > 3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
