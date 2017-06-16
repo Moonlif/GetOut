@@ -75,34 +75,64 @@ cSocketManager::~cSocketManager()
 {
 }
 
-/* 호스트가 없다면 자신이 호스트가 됩니다.*/
-void cSocketManager::Setup_Host()
+/* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
+void cSocketManager::Calc_Position()
 {
-	// << :
-	int nRet;
-	nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_HOST);
+	stCurrent = clock();
+	float Devide = stCurrent - stStart;
+	if (Devide == 0) Devide = ONE_SECOND;
+	m_fT = (float)(Devide) / (float)(ONE_SECOND);
+	if (m_fT > 1) m_fT = 1;
 
-	hSocket_Serv = socket(PF_INET, SOCK_STREAM, 0);
+	D3DXVECTOR3 posInterval = nextPosition - prevPosition;
+	float rotInterval = nextRotation - prevRotation;
 
-	memset(&hostAdr, 0, sizeof(hostAdr));
-	hostAdr.sin_family = AF_INET;
-	hostAdr.sin_addr.s_addr = htonl(INADDR_ANY);
-	hostAdr.sin_port = PORT_DATA_CLIENT;
-	bool bValid = 1;
-	setsockopt(hSocket_Serv, SOL_SOCKET, SO_REUSEADDR, (const char *)&bValid, sizeof(bValid));
-	if (bind(hSocket_Serv, (SOCKADDR*)&hostAdr, sizeof(hostAdr)) == SOCKET_ERROR)
-		cout << "Server_HOST bind() Error" << endl;
-	// >> : 바인딩 현재 정상으로 됨
-
-
-	// << : 바인딩이 끝나고 스레드에 진입하면 호스팅 중임을 알려준다.
-
-	// << : accept 부분까지 크리티컬 섹션으로 처리합니다.
+	g_pData->m_vPosition2P = prevPosition + (posInterval * m_fT);
+	g_pData->m_vRotation2P = prevRotation + (rotInterval * m_fT);
 }
 
-/* 이미 호스트가 있다면 해당 호스트와 연결하는 함수입니다. */
-void cSocketManager::Connect_Client()
+/* 모든 스레드를 종료하고 소켓을 닫습니다 */
+void cSocketManager::Destroy()
 {
+	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
+	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
+
+	CloseHandle(hChatSend);
+	CloseHandle(hChatRecv);
+
+	closesocket(hSocket_CHAT);
+	closesocket(hSocket_DATA);
+	WSACleanup();
+}
+
+/* IP를 얻어오는 부분 */
+char * cSocketManager::GetIP()
+{
+	return HostIP;
+}
+
+/* 서버로부터 수신한 초기 데이터를 클라이언트에 적용합니다 */
+void cSocketManager::InitClientData(ST_ALL_DATA stData)
+{
+	// << : 플레이어 정보 초기화
+	ManPosition = D3DXVECTOR3(stData.manX, stData.manY, stData.manZ);
+	WomanPosition = D3DXVECTOR3(stData.womanX, stData.womanY, stData.womanZ);
+	ManRot = stData.manAngle;
+	WomanRot = stData.womanAngle;
+
+	for (int i = 0; i < INVENTORY_SIZE; ++i)
+	{
+		ManInventory[i] = (StuffCode)stData.manItem[i];
+		WomanInventory[i] = (StuffCode)stData.womanItem[i];
+	}
+
+	// << : 맵 정보 초기화
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		m_bStuffSwitch[i] = stData.mapIsRunning[i];
+		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
+		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
+	}
 }
 
 /* IP를 설정하는 부분 */
@@ -189,6 +219,7 @@ void cSocketManager::Setup_CHAT()
 	}
 }
 
+/* 싱글톤 업데이트 */
 void cSocketManager::Update()
 {
 	if (GetAsyncKeyState(VK_NUMPAD5) & 0x0001)
@@ -200,60 +231,6 @@ void cSocketManager::Update()
 		// << : 서버로부터 호스트를 해라 라는 신호가 들어오면 스레드를 동작시킨다 ?
 	}
 }
-
-/* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
-void cSocketManager::Calc_Position()
-{
-	stCurrent = clock();
-	float Devide = stCurrent - stStart;
-	if (Devide == 0) Devide = ONE_SECOND;
-	m_fT = (float)(Devide) / (float)(ONE_SECOND);
-	if (m_fT > 1) m_fT = 1;
-
-	D3DXVECTOR3 posInterval = nextPosition - prevPosition;
-	float rotInterval = nextRotation - prevRotation;
-	
-	g_pData->m_vPosition2P = prevPosition + (posInterval * m_fT);
-	g_pData->m_vRotation2P = prevRotation + (rotInterval * m_fT);
-}
-
-/* 모든 스레드를 종료하고 소켓을 닫습니다 */
-void cSocketManager::Destroy()
-{
-	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
-	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
-
-	CloseHandle(hChatSend);
-	CloseHandle(hChatRecv);
-
-	closesocket(hSocket_CHAT);
-	closesocket(hSocket_DATA);
-	WSACleanup();
-}
-
-void cSocketManager::InitClientData(ST_ALL_DATA stData)
-{
-	// << : 플레이어 정보 초기화
-	ManPosition = D3DXVECTOR3(stData.manX, stData.manY, stData.manZ);
-	WomanPosition = D3DXVECTOR3(stData.womanX, stData.womanY, stData.womanZ);
-	ManRot = stData.manAngle;
-	WomanRot = stData.womanAngle;
-
-	for (int i = 0; i < INVENTORY_SIZE; ++i)
-	{
-		ManInventory[i] = (StuffCode)stData.manItem[i];
-		WomanInventory[i] = (StuffCode)stData.womanItem[i];
-	}
-
-	// << : 맵 정보 초기화
-	for (int i = 0; i < SWITCH_LASTNUM; ++i)
-	{
-		m_bStuffSwitch[i] = stData.mapIsRunning[i];
-		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
-		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
-	}
-}
-
 
 /* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
 void cSocketManager::UpdatePosition(float  x, float y, float z)
@@ -316,13 +293,14 @@ unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
 	return 0;
 }
 
+/* 서버로 요청을 전송하는 스레드 함수 */
 unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN addr;
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_addr.s_addr = inet_addr(g_pSocketmanager->GetIP());
 	addr.sin_port = PORT_DATA_SERVER_OUT;
 
 	clock_t prevTime = clock();
@@ -370,6 +348,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	return 0;
 }
 
+/* 서버에서 요청을 수신하는 스레드 함수 */
 unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -377,7 +356,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 	int strLen;
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
+	addr.sin_addr.s_addr = inet_addr(g_pSocketmanager->GetIP());
 	addr.sin_port = PORT_DATA_SERVER_IN;
 
 	clock_t prevTime = clock();

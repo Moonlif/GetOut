@@ -77,12 +77,11 @@ private:
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 public:
-	void Connect_Client();
 	void Calc_Position();
 	void Destroy();
+	char* GetIP();
 	void InitClientData(ST_ALL_DATA stData);
 	void SetIP(int First, int Second, int Third, int Fourth);
-	void Setup_Host();
 	void Setup_DATA();
 	void Setup_CHAT();
 	void Update();
