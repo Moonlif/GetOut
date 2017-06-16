@@ -5,7 +5,7 @@ class cWall
 {
 private:
 	/********************
-		지하
+	지하
 	*********************/
 	std::vector<cRectMake*> m_vecB1F;
 	std::vector<cRectMake*> m_vecFF;
@@ -15,13 +15,13 @@ private:
 	cRectMake* m_pB1Up_1;
 
 	cRectMake* m_pB1Left;
-	
+
 	cRectMake* m_pB1Down;
 	cRectMake* m_pB1Down_1;
 	cRectMake* m_pB1Down_2;
-	
+
 	cRectMake* m_pB1Right;
-	
+
 	//계단
 	cRectMake* m_pB1Stairs;
 	cRectMake* m_pB1Stairs_1;
@@ -38,7 +38,7 @@ private:
 	cRectMake* m_pB1RoomRight3_1;
 
 	/********************
-		1층
+	1층
 	*********************/
 	cRectMake* m_pFFUp;
 	cRectMake* m_pFFUp_1;
@@ -46,13 +46,13 @@ private:
 	cRectMake* m_pFFLeft_1;
 
 	cRectMake* m_pFFDown;
-	
+
 
 	//현관 벽
 	cRectMake* m_pFFDoorR1;
 	cRectMake* m_pFFDoorR2;
 	cRectMake* m_pFFDoorR3;
-	
+
 
 	//화장실 아래
 	cRectMake* m_pFFDown_1;
@@ -70,7 +70,7 @@ private:
 	cRectMake* m_pFFBathRoomU1_1;
 	cRectMake* m_pFFBathRoomU2;
 	cRectMake* m_pFFBathRoomU2_1;
-	
+
 	//방 오른쪽 벽
 	cRectMake* m_pFFRoomR1;
 	cRectMake* m_pFFRoomR1_1;
@@ -93,7 +93,7 @@ private:
 	cRectMake* m_pFFStairs5;
 	cRectMake* m_pFFStairs5_1;
 	/********************
-		2층
+	2층
 	*********************/
 	cRectMake* m_pSFUp;
 	cRectMake* m_pSFLeft;
@@ -109,7 +109,10 @@ private:
 	cRectMake* m_pSFLRoom2_1;
 	cRectMake* m_pSFLRoom3;
 	cRectMake* m_pSFLRoom3_1;
-
+	//>>>17.06.15
+	cRectMake* m_pSFLeftArrowPrint;
+	cRectMake* m_pSFRightArrowPrint;
+	////////////<<
 	cRectMake* m_pSFRRoom1;
 	cRectMake* m_pSFRRoom1_1;
 	cRectMake* m_pSFRRoom2;
@@ -117,7 +120,7 @@ private:
 	cRectMake* m_pSFRRoom3;
 	cRectMake* m_pSFRRoom3_1;
 
-	
+
 public:
 	cWall();
 	~cWall();

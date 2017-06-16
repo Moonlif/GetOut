@@ -17,7 +17,7 @@ private:
 	cObjectSurface* m_pObjSurface;
 
 
-	//::vector<cMapObject*> vecMapObj;
+	std::vector<cMapObject*> vecMapObj;
 	cMapObject* m_pObjShackles;
 	cMapObject* m_pObjPrisonbar;
 	cMapObject* m_pObjPrisonbarRow;
@@ -39,7 +39,9 @@ private:
 	cMapObject* m_pStonetable;
 	cMapObject* m_pBookPile1;
 	cMapObject* m_pBookRow;
-	
+
+	cMapObject* m_pRock;
+
 public:
 	cMap();
 	~cMap();
@@ -48,7 +50,7 @@ public:
 	void Render();
 	void RenderObject();
 	cSurface* getSurface() { return m_pSurface; };
-	cObjectSurface* getObjSurface(){ return m_pObjSurface; };
+	cObjectSurface* getObjSurface() { return m_pObjSurface; };
 	bool GetSurfaceHeight(IN float x, OUT float & y, IN float z);
 	bool GetObjectSurface(IN float x, OUT float & y, IN float z);
 	bool GetPassSurface(IN float x, OUT float & y, IN float z);
