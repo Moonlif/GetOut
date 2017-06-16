@@ -69,8 +69,8 @@ void cCeiling::Setup()
 
 	//첫방 천장
 	m_pB1FRoom = new cRectMake;
-	m_pB1FRoom->Setup(D3DXVECTOR3(CENTERX + 8, FF, CENTERZ + 0)
-		, D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 0)
+	m_pB1FRoom->Setup(D3DXVECTOR3(CENTERX + 8, FF, CENTERZ - 1)
+		, D3DXVECTOR3(CENTERX + 12, FF, CENTERZ - 1)
 		, D3DXVECTOR3(CENTERX + 12, FF, CENTERZ + 4)
 		, D3DXVECTOR3(CENTERX + 8, FF, CENTERZ + 4)
 		, "Texture/maps/castlebase_ceiling03.dds");
