@@ -220,6 +220,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			}
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
+			// << : 여기서 초기화 및 좌표 전송하게 변경해야함
 		}
 
 

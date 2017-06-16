@@ -13,14 +13,14 @@
 #define BUF_SIZE 100
 #define CLIENT_NUM 5
 #define HOSTIP "127.127.127.127"
-#define IN_PLAYER1 1 << 0
-#define IN_PLAYER2 1 << 1
+#define IN_MAN 1 << 0
+#define IN_WOMAN 1 << 1
 #define INVENTORY_SIZE 25
 #define NAME_SIZE 20
 #define ONE_SECOND 1000
 #define OVERHEAD 300
-#define OUT_PLAYER1 1 << 4
-#define OUT_PLAYER2 1 << 5
+#define OUT_MAN 1 << 4
+#define OUT_WOMAN 1 << 5
 #define PORT_DATA_SERVER_OUT 1234
 #define PORT_DATA_SERVER_IN 1235
 #define PORT_DATA_CLIENT 10111
@@ -95,7 +95,7 @@ enum FLAG
 	FLAG_NETWORK_ID = 1 << 1,
 	FLAG_ROOM_NAME = 1 << 2,
 	FLAG_ALL_DATA = 1 << 3,
-	FLAG_IP = 1 << 4,
+	FLAG_GENDER = 1 << 4,
 	FLAG_POSITION = 1 << 5,
 	FLAG_OBJECT_DATA = 1 << 6
 };
@@ -119,6 +119,10 @@ struct ST_PLAYER_POSITION
 	float fAngle;
 	ST_PLAYER_POSITION() : nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
+};
+
+struct ST_OBJECT_DATA
+{
 };
 
 struct ST_CHAT

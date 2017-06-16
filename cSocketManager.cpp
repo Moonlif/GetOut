@@ -15,10 +15,14 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 // << : 분리된 함수들
 void ReceiveNetworkID(SOCKET* pSocket);
 void ReceiveRoomName(SOCKET* pSocket);
+void ReceiveGender(SOCKET* pSocket);
 void ReceivePosition(LPVOID lpParam);
 void ReceiveAllData(SOCKET* pSocket);
+void ReceiveObject(SOCKET* pSocket);
 
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
+void SendNetworkID(SOCKET* pSocket, int ID);
+void SendGender(SOCKET* pSocket);
 void SendPosition(SOCKET* pSocket);
 
 struct ST_ALL_DATA
@@ -67,7 +71,6 @@ cSocketManager::cSocketManager()
 	nextPosition.x = 0;
 	nextPosition.y = 0;
 	nextPosition.z = 0;
-
 	sprintf_s(HostIP, "%s", "127.0.0.1", 16);
 }
 
@@ -122,8 +125,8 @@ void cSocketManager::InitClientData(ST_ALL_DATA stData)
 
 	for (int i = 0; i < INVENTORY_SIZE; ++i)
 	{
-		ManInventory[i] = (StuffCode)stData.manItem[i];
-		WomanInventory[i] = (StuffCode)stData.womanItem[i];
+		ManInventory[i] = (StuffCode)stData.manItem[i];		// << : 남자 인벤토리
+		WomanInventory[i] = (StuffCode)stData.womanItem[i];	// << : 여자 인벤토리
 	}
 
 	// << : 맵 정보 초기화
@@ -133,6 +136,8 @@ void cSocketManager::InitClientData(ST_ALL_DATA stData)
 		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
 		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
 	}
+	// << : 남자 누른뒤 시작하면 남자 인벤정보 불러오게
+	// << : 여자 누른뒤 시작하면 여자 인벤정보 불러오게
 }
 
 /* IP를 설정하는 부분 */
@@ -336,7 +341,8 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		case FLAG::FLAG_ALL_DATA:
 			ReceiveAllData(&hSocket);
 			break;
-		case FLAG::FLAG_IP:
+		case FLAG::FLAG_GENDER:
+			SendGender(&hSocket);
 			break;
 		case FLAG::FLAG_POSITION:
 			ReceivePosition(&hSocket);
@@ -370,25 +376,26 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
 	}
 
-	ST_FLAG stFlag;
-	while (strLen = recv(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0) != 0)
+	FLAG eFlag;
+	while (strLen = recv(hSocket, (char*)&eFlag, sizeof(FLAG), 0) != 0)
 	{
-		stFlag.nNetworkID = g_pSocketmanager->GetNetworkID();
 		if (strLen == -1) break;
-		cout << stFlag.szRoomName << endl;
-		cout << stFlag.eFlag << endl;
-		cout << stFlag.nPlayerIndex << endl;
+		cout << eFlag << endl;
 
-		switch (stFlag.eFlag)
+		switch (eFlag)
 		{
-		case FLAG_NONE:
+		case FLAG::FLAG_NONE:
 			break;
-		case FLAG_IP:
+		case FLAG::FLAG_NETWORK_ID:
+			SendNetworkID(&hSocket, g_pSocketmanager->GetNetworkID());
 			break;
-		case FLAG_POSITION:
+		case FLAG::FLAG_GENDER:
+			ReceiveGender(&hSocket);
+			break;
+		case FLAG::FLAG_POSITION:
 			SendPosition(&hSocket);
 			break;
-		case FLAG_OBJECT_DATA:
+		case FLAG::FLAG_OBJECT_DATA:
 			break;
 		}
 	}
@@ -425,13 +432,18 @@ void ReceiveRoomName(SOCKET* pSocket)
 	}
 };
 
-/* 모든 데이터 수신 */
-void ReceiveAllData(SOCKET* pSocket)
+/* 2P의 성별을 받아옵니다 */
+void ReceiveGender(SOCKET* pSocket)
 {
-	ST_ALL_DATA Recv;
-	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
-	g_pSocketmanager->InitClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
-	g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);		// << : 좌표를 전송시켜보자
+	int Gender;
+	recv(*pSocket, (char*)&Gender, sizeof(int), 0);
+	
+	if (Gender == IN_MAN)
+		g_pData->m_nPlayerNum2P = 1;
+	else if (Gender == IN_WOMAN)
+		g_pData->m_nPlayerNum2P = 2;
+	else
+		g_pData->m_nPlayerNum2P = 0;
 }
 
 /* 좌표 수신 */
@@ -443,12 +455,12 @@ void ReceivePosition(LPVOID lpParam)
 	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
 	cout << "접속중인 플레이어 ";
-	if (stRecv.nPlayerIndex & IN_PLAYER1)
+	if (stRecv.nPlayerIndex & IN_MAN)
 	{
 		g_pData->m_nPlayerNum2P = 1;
 		cout << "1P" << " ";
 	}
-	else if (stRecv.nPlayerIndex & IN_PLAYER2)
+	else if (stRecv.nPlayerIndex & IN_WOMAN)
 	{
 		g_pData->m_nPlayerNum2P = 2;
 		cout << "2P" << " ";
@@ -464,6 +476,31 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Angle : " << stRecv.fAngle << endl;
 }
 
+/* 모든 데이터 수신 */
+void ReceiveAllData(SOCKET* pSocket)
+{
+	ST_ALL_DATA Recv;
+	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
+	g_pSocketmanager->InitClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
+}
+
+/* 자신의 성별을 서버에게 전송합니다 */
+void SendGender(SOCKET* pSocket)
+{
+	ST_FLAG stSend;
+	stSend.eFlag = FLAG::FLAG_GENDER;
+	stSend.nNetworkID = g_pSocketmanager->GetNetworkID();
+	if (g_pData->m_nPlayerNum1P == 1)
+		stSend.nPlayerIndex = OUT_MAN;
+	else if (g_pData->m_nPlayerNum1P == 2)
+		stSend.nPlayerIndex = OUT_WOMAN;
+	sprintf_s(stSend.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
+	send(*pSocket, (char*)&stSend, sizeof(ST_FLAG), 0);	// << : 자신이 선택한 성별을 전송합니다.
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);
+	// << : 게임 시작하면 받은 데이터 설정하고 Position 전송 , 수신 하도록
+}
+
 /* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 {
@@ -475,15 +512,22 @@ void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 		send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
 }
 
+/* 서버에게 자신의 NetworkID를 알려줍니다 */
+void SendNetworkID(SOCKET* pSocket, int ID)
+{
+	int NetworkID = ID;
+	send(*pSocket, (char*)&NetworkID, sizeof(int), 0);
+}
+
 /* 자신의 좌표를 서버에게 전송합니다 */
 void SendPosition(SOCKET* pSocket)
 {
 	SOCKET hSocket = *pSocket;
 	ST_PLAYER_POSITION stSend;
 	if (g_pData->m_nPlayerNum1P == 1)
-		stSend.nPlayerIndex = OUT_PLAYER1;
+		stSend.nPlayerIndex = OUT_MAN;
 	else if (g_pData->m_nPlayerNum1P == 2)
-		stSend.nPlayerIndex = OUT_PLAYER2;
+		stSend.nPlayerIndex = OUT_WOMAN;
 	sprintf_s(stSend.szRoomName, "DEFAULT", 7);
 	stSend.fX = g_pData->m_vPosition1P.x;
 	stSend.fY = g_pData->m_vPosition1P.y;
@@ -491,3 +535,8 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fAngle = g_pData->m_vRotation1P;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
+
+void ReceiveObject(SOCKET* pSocket)
+{
+}
+
