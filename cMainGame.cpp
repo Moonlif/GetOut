@@ -142,7 +142,7 @@ void cMainGame::Render()
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
-		if (m_pChat) m_pChat->Render(200,200,50,50);
+		if (m_pChat) m_pChat->Render(200,200,500,30);
 	}
 
 	g_pD3DDevice->EndScene();

@@ -96,7 +96,7 @@ void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int H
 	//이름입력 핸들 생성
 	m_hWndNaming = CreateWindow("edit", "",
 		WS_CHILD | WS_BORDER,
-		startX, startY, Width, Height, g_hWnd, HMENU(nHandle), hInst, NULL);
+		startX, startY, startX + Width, startY + Height, g_hWnd, HMENU(nHandle), hInst, NULL);
 
 	//폰트 생성
 	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
