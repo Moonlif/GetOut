@@ -4,6 +4,7 @@
 #include "cChat.h"
 #include "cMap.h"
 #include "cTotalUIRender.h"
+#include "cUIButton.h"
 #include "cInteract.h"
 #include "CharacterManager.h"
 #include "MonsterManager.h"
@@ -28,7 +29,6 @@ private:
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;
-	cChat*				m_pChat;
 
 	//interact
 	cInteract* m_pInteract;

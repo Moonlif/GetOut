@@ -1,5 +1,8 @@
 #include "cSocketManager.h"
 #include "stdafx.h"
+#include "cUIObject.h"
+#include "cUIButton.h"
+#include "cChat.h"
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -62,6 +65,8 @@ cSocketManager::cSocketManager()
 	, nextRotation(0.0f)
 	, InitServer(false)
 	, nNetworkID(-1)
+	, m_pUIRoot(NULL)
+	, m_pTextBox(NULL)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -97,6 +102,10 @@ void cSocketManager::Calc_Position()
 /* 모든 스레드를 종료하고 소켓을 닫습니다 */
 void cSocketManager::Destroy()
 {
+	SAFE_DELETE(m_pUIRoot);
+	SAFE_DELETE(m_pTextBox);
+	SAFE_RELEASE(m_pSprite);
+
 	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
 	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
 
@@ -138,6 +147,30 @@ void cSocketManager::InitClientData(ST_ALL_DATA stData)
 	}
 	// << : 남자 누른뒤 시작하면 남자 인벤정보 불러오게
 	// << : 여자 누른뒤 시작하면 여자 인벤정보 불러오게
+}
+
+/* 버튼 등 초기설정 수행 */
+void cSocketManager::Setup()
+{
+	// << : 버튼 설정
+	{
+		D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
+
+		cUIButton* pButtonOK = new cUIButton;
+		pButtonOK->SetTexture(
+			"UI/button/Submit_Up.png",
+			"UI/button/Submit_Over.png",
+			"UI/button/Submit_Down.png");
+		pButtonOK->SetPosition(135, 330);
+		//pButtonOK->SetDelegate(this);
+		pButtonOK->SetTag(E_BUTTON_OK);
+		m_pUIRoot = pButtonOK;
+	}
+
+	{
+		m_pTextBox = new cChat;
+		m_pTextBox->Setup(1, 200, 200, 50, 50);
+	}
 }
 
 /* IP를 설정하는 부분 */
@@ -229,12 +262,11 @@ void cSocketManager::Update()
 {
 	if (GetAsyncKeyState(VK_NUMPAD5) & 0x0001)
 		g_pSocketmanager->SetIP(192, 168, 255, 4);
+	if (m_pUIRoot)
+		m_pUIRoot->Update();
+	if (m_pTextBox)
+		m_pTextBox->Update_ForSocket();
 	Calc_Position(); // < : 좌표를 보정해서 계산합니다.
-	if (InitServer)
-	{
-		SetInitServer(false);
-		// << : 서버로부터 호스트를 해라 라는 신호가 들어오면 스레드를 동작시킨다 ?
-	}
 }
 
 /* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
@@ -250,6 +282,14 @@ void cSocketManager::UpdateRotation(float Rotate)
 {
 	prevRotation = g_pData->m_vRotation2P;
 	nextRotation = Rotate;
+}
+
+void cSocketManager::UIRender()
+{
+	if (m_pUIRoot)
+		m_pUIRoot->Render(m_pSprite);
+	if (m_pTextBox)
+		m_pTextBox->Render(200, 200, 50, 50);
 }
 
 /* 채팅을 전송하는 스레드 */

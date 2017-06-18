@@ -10,7 +10,6 @@ cMainGame::cMainGame()
 	, m_pSkybox(NULL)
 	, m_pTotalUIRender(NULL)
 	, m_pInteract(NULL)
-	, m_pChat(NULL)
 {
 }
 
@@ -30,7 +29,6 @@ cMainGame::~cMainGame()
 
 		//ui
 		SAFE_DELETE(m_pTotalUIRender);
-		SAFE_DELETE(m_pChat);
 
 		//interact
 		SAFE_DELETE(m_pInteract);
@@ -46,6 +44,8 @@ void cMainGame::Setup()
 {
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
+
+	g_pSocketmanager->Setup();
 
 	g_pSoundManager->AddSound("00_laugh", "Sound/EffectSound/00_laugh.ogg", true, false);
 	g_pSoundManager->Play("00_laugh", 1.0f);
@@ -74,9 +74,6 @@ void cMainGame::Setup()
 		m_pTotalUIRender = new cTotalUIRender;
 		m_pTotalUIRender->Setup();
 
-		m_pChat = new cChat;
-		m_pChat->Setup(1,200,200,50,50);
-
 		//test light
 		g_pLightManager->SetDirectionLight(eLIGHT::D_MAIN_LIGHT, D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),
 		D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f),	D3DXVECTOR3(-1, -1, -1));
@@ -87,8 +84,8 @@ void cMainGame::Setup()
 	//g_pD3DDevice->LightEnable(0, true);
 	//m_pCamera->SetCameraDistance(50.0f);
 
-	g_pSocketmanager->Setup_CHAT();
-	g_pSocketmanager->Setup_DATA();
+	//g_pSocketmanager->Setup_CHAT();
+	//g_pSocketmanager->Setup_DATA();
 }
 
 void cMainGame::Update()
@@ -117,7 +114,6 @@ void cMainGame::Update()
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
-		if (m_pChat) m_pChat->Update_ForSocket();
 	}
 }
 
@@ -142,7 +138,8 @@ void cMainGame::Render()
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
-		if (m_pChat) m_pChat->Render(200,200,500,30);
+
+		g_pSocketmanager->UIRender();
 	}
 
 	g_pD3DDevice->EndScene();

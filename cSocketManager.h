@@ -29,6 +29,8 @@
 #define SEND_PER_SECOND 2
 
 struct ST_ALL_DATA;
+class cUIObject;
+class cChat;
 
 class cSocketManager
 {
@@ -76,17 +78,26 @@ private:
 	bool m_bStuffSwitch[SWITCH_LASTNUM];			//아이템일 경우 맵에 있는게 true
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
+
+	// << : 입력창을 렌더하기 위한 변수들
+	LPD3DXSPRITE m_pSprite;
+	cUIObject* m_pUIRoot;
+	cChat*	m_pTextBox;
+
 public:
 	void Calc_Position();
 	void Destroy();
 	char* GetIP();
 	void InitClientData(ST_ALL_DATA stData);
+	void Setup();
 	void SetIP(int First, int Second, int Third, int Fourth);
 	void Setup_DATA();
 	void Setup_CHAT();
 	void Update();
 	void UpdatePosition(float  x, float y, float z);
 	void UpdateRotation(float Rotate);
+
+	void UIRender();
 };
 
 enum FLAG

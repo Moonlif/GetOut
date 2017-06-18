@@ -1,6 +1,14 @@
 #pragma once
 #include "cUIObject.h"
 
+enum
+{
+	E_BUTTON_OK = 11,
+	E_BUTTON_CANCEL,
+	E_BUTTON_EXIT,
+	E_TEXT_VIEW,
+};
+
 class cUIButton;
 class iButtonDelegate
 {
@@ -30,6 +38,7 @@ protected:
 	SYNTHESIZE(iButtonDelegate*,	m_pDelegate, Delegate);
 	SYNTHESIZE(int,					m_nAlpha, Alpha)
 public:
+	virtual void SetTexture(char* szNormal, char* szOver, char* szSelect);
 	virtual void Update() override;
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 };
