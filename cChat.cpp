@@ -54,17 +54,20 @@ void cChat::Update_ForSocket()
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;
 
-	if (GetKeyState(VK_F1) & 0x0001)
+	if (GetAsyncKeyState(VK_F1) & 0x0001)
 	{
 		SetFocus(m_hWndNaming);
 	}
-	if (GetKeyState(VK_F2) & 0x0001)
+	if (GetAsyncKeyState(VK_F2) & 0x0001)
 	{
 		SetWindowText(m_hWndNaming, NULL);
 	}
-	if (GetKeyState(VK_F3) & 0x0001)
+	if (GetAsyncKeyState(VK_F3) & 0x0001)
 	{
+		g_pSocketmanager->SetIP(m_strChat);
+		SetWindowText(m_hWndNaming, NULL);
 	}
+
 	if (m_pRoot) m_pRoot->Update();
 
 }

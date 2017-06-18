@@ -215,6 +215,16 @@ void cSocketManager::SetIP(int First, int Second, int Third, int Fourth)
 	Setup_DATA();
 }
 
+void cSocketManager::SetIP(string szIP)
+{
+	string szFullIP = szIP;
+	
+	sprintf_s(HostIP, "%s", szFullIP.c_str(), sizeof(HostIP));
+
+	Setup_CHAT();
+	Setup_DATA();
+}
+
 /* 서버와 통신을 위한 스레드 동작 */
 void cSocketManager::Setup_DATA()
 {
