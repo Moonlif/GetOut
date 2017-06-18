@@ -106,11 +106,11 @@ void cSocketManager::Destroy()
 	SAFE_DELETE(m_pTextBox);
 	SAFE_RELEASE(m_pSprite);
 
-	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
-	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
-
+	hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
 	CloseHandle(hChatSend);
 	CloseHandle(hChatRecv);
+	CloseHandle(hDataRecv_Serv);
+	CloseHandle(hDataSend_Serv);
 
 	closesocket(hSocket_CHAT);
 	closesocket(hSocket_DATA);
@@ -422,6 +422,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		}
 	}
+	closesocket(hSocket);
 	return 0;
 }
 
@@ -470,7 +471,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		}
 	}
-
+	closesocket(hSocket);
 	return 0;
 }
 
