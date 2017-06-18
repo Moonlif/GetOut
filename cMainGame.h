@@ -1,6 +1,7 @@
 #pragma once
 #include "cCamera.h"
 
+#include "cChat.h"
 #include "cMap.h"
 #include "cTotalUIRender.h"
 #include "cInteract.h"
@@ -27,6 +28,7 @@ private:
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;
+	cChat*				m_pChat;
 
 	//interact
 	cInteract* m_pInteract;

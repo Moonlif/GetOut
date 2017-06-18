@@ -25,6 +25,15 @@ void cChat::Setup()
 	SetBackground();
 }
 
+void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
+{
+	//채팅 셋
+	SetChildWindow(nHandle,startX, startY, Width, Height);
+
+	//배경
+	SetBackground();
+}
+
 void cChat::Update()
 {
 	//채팅 업데이트
@@ -33,11 +42,37 @@ void cChat::Update()
 	if (m_pRoot) m_pRoot->Update();
 }
 
+void cChat::Update_ForSocket()
+{
+	//이름 입력
+	char str[256];
+
+	//챗 찾기
+	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
+
+	GetWindowText(m_hWndNaming, str, strlen(str));
+	m_strChat = str;
+
+	if (GetKeyState(VK_NUMPAD1) & 0x0001)
+	{
+		SetFocus(m_hWndNaming);
+	}
+	if (m_pRoot) m_pRoot->Update();
+
+}
+
 void cChat::Render()
 {
 	//렌더
 	RenderChat();
 
+	if (m_pRoot) m_pRoot->Render(m_pSprite);
+}
+
+void cChat::Render(int startX, int startY, int Width, int Height)
+{
+	RenderChat(startX, startY, Width, Height);
+	
 	if (m_pRoot) m_pRoot->Render(m_pSprite);
 }
 
@@ -49,6 +84,19 @@ void cChat::SetChildWindow()
 	m_hWndNaming = CreateWindow("edit", "",
 		WS_CHILD | WS_BORDER,
 		0, WINSIZEY - CHATWORDHEIGHT * 10, 250, 20, g_hWnd, HMENU(0), hInst, NULL);
+
+	//폰트 생성
+	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
+}
+
+void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int Height)
+{
+	//WS_VISIBLE
+
+	//이름입력 핸들 생성
+	m_hWndNaming = CreateWindow("edit", "",
+		WS_CHILD | WS_BORDER,
+		startX, startY, Width, Height, g_hWnd, HMENU(nHandle), hInst, NULL);
 
 	//폰트 생성
 	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
@@ -123,6 +171,28 @@ void cChat::RenderChat()
 	else if (g_pData->m_nPlayerNum1P == 2)
 	{
 		m_strChat = "Player2: " + m_strChat;
+		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+	}
+	else
+	{
+		color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+	}
+	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
+}
+
+void cChat::RenderChat(int startX, int startY, int Width, int Height)
+{
+	//if (!g_pData->GetIsOnChat()) return;
+	//이름 렌더
+	RECT rc{ startX, startY, startX + Width, startY + Height };
+
+	D3DXCOLOR color;
+	if (g_pData->m_nPlayerNum1P == 1)
+	{
+		color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+	}
+	else if (g_pData->m_nPlayerNum1P == 2)
+	{
 		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
 	}
 	else
