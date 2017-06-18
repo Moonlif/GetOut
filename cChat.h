@@ -1,6 +1,7 @@
 #pragma once
 #include "cObject.h"
 class cUIObject;
+class cUIButton;
 
 class cChat : public cObject
 {
@@ -29,6 +30,7 @@ public:
 	void RenderChat();
 	void RenderChat(int startX, int startY, int Width, int Height);
 
+	void CopyToSock();
 	void SetBackground();
 };
 

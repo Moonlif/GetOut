@@ -84,8 +84,6 @@ void cMainGame::Setup()
 	//g_pD3DDevice->LightEnable(0, true);
 	//m_pCamera->SetCameraDistance(50.0f);
 
-	//g_pSocketmanager->Setup_CHAT();
-	//g_pSocketmanager->Setup_DATA();
 }
 
 void cMainGame::Update()

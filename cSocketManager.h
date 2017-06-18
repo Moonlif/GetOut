@@ -31,6 +31,7 @@
 struct ST_ALL_DATA;
 class cUIObject;
 class cChat;
+#include "cUIButton.h"
 
 class cSocketManager
 {

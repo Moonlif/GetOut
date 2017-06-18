@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cChat.h"
 #include "cUIchat.h"
+#include "cUIButton.h"
 
 cChat::cChat()
 	:m_hWndNaming(NULL)
@@ -53,9 +54,16 @@ void cChat::Update_ForSocket()
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;
 
-	if (GetKeyState(VK_NUMPAD1) & 0x0001)
+	if (GetKeyState(VK_F1) & 0x0001)
 	{
 		SetFocus(m_hWndNaming);
+	}
+	if (GetKeyState(VK_F2) & 0x0001)
+	{
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetKeyState(VK_F3) & 0x0001)
+	{
 	}
 	if (m_pRoot) m_pRoot->Update();
 
@@ -200,6 +208,11 @@ void cChat::RenderChat(int startX, int startY, int Width, int Height)
 		color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
 	}
 	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
+}
+
+void cChat::CopyToSock()
+{
+
 }
 
 void cChat::SetBackground()

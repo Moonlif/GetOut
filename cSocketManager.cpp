@@ -152,21 +152,35 @@ void cSocketManager::InitClientData(ST_ALL_DATA stData)
 /* 버튼 등 초기설정 수행 */
 void cSocketManager::Setup()
 {
-	// << : 버튼 설정
-	{
-		D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
+	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-		cUIButton* pButtonOK = new cUIButton;
-		pButtonOK->SetTexture(
+	// Submit 버튼 초기화
+	{
+		cUIButton* pButtonSubmit = new cUIButton;
+		pButtonSubmit->SetTexture(
 			"UI/button/Submit_Up.png",
 			"UI/button/Submit_Over.png",
 			"UI/button/Submit_Down.png");
-		pButtonOK->SetPosition(135, 330);
+		pButtonSubmit->SetPosition(135, 330);
 		//pButtonOK->SetDelegate(this);
-		pButtonOK->SetTag(E_BUTTON_OK);
-		m_pUIRoot = pButtonOK;
+		pButtonSubmit->SetTag(E_BUTTON_OK);
+		m_pUIRoot = pButtonSubmit;
 	}
 
+	// Reset 버튼 초기화
+	{
+		cUIButton* pButtonReset = new cUIButton;
+		pButtonReset->SetTexture(
+		"UI/button/Reset_Up.png",
+		"UI/button/Reset_Over.png",
+		"UI/button/Reset_Down.png");
+		pButtonReset->SetPosition(135, 0);
+		//pButtonReset->SetDelegate(this);
+		pButtonReset->SetTag(E_BUTTON_OK);
+		m_pUIRoot->AddChild(pButtonReset);
+	}
+
+	// << : Button과 TextBox를 연동시켜야 한다.
 	{
 		m_pTextBox = new cChat;
 		m_pTextBox->Setup(1, 200, 200, 50, 50);
@@ -194,6 +208,11 @@ void cSocketManager::SetIP(int First, int Second, int Third, int Fourth)
 
 	string szFullIP = string(addrFirst) + "." + string(addrSecond) + "." + string(addrThird) + "." + string(addrFourth);
 	cout << szFullIP << endl;
+
+	sprintf_s(HostIP, "%s", szFullIP.c_str(),sizeof(HostIP));
+
+	Setup_CHAT();
+	Setup_DATA();
 }
 
 /* 서버와 통신을 위한 스레드 동작 */
@@ -261,7 +280,9 @@ void cSocketManager::Setup_CHAT()
 void cSocketManager::Update()
 {
 	if (GetAsyncKeyState(VK_NUMPAD5) & 0x0001)
-		g_pSocketmanager->SetIP(192, 168, 255, 4);
+	{
+		g_pSocketmanager->SetIP(127, 0, 0, 1);
+	}
 	if (m_pUIRoot)
 		m_pUIRoot->Update();
 	if (m_pTextBox)
