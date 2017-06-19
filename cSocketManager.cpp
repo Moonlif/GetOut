@@ -21,12 +21,13 @@ void ReceiveRoomName(SOCKET* pSocket);
 void ReceiveGender(SOCKET* pSocket);
 void ReceivePosition(SOCKET* pSocket);
 void ReceiveAllData(SOCKET* pSocket);
-void ReceiveObject(SOCKET* pSocket);
+void ReceiveObjectData(SOCKET* pSocket);
 
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
 void SendNetworkID(SOCKET* pSocket, int ID, bool* bConnected);
 void SendGender(SOCKET* pSocket);
 void SendPosition(SOCKET* pSocket);
+void SendObjectData(SOCKET* pSocket);
 
 struct ST_ALL_DATA
 {
@@ -502,6 +503,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 			ReceivePosition(&hSocket);
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
+			ReceiveObjectData(&hSocket);
 			break;
 		}
 	}
@@ -633,7 +635,17 @@ void SendPosition(SOCKET* pSocket)
 }
 
 /* 물체와 맵의 정보를 수신 (구현 예정)*/
-void ReceiveObject(SOCKET* pSocket)
+void ReceiveObjectData(SOCKET* pSocket)
 {
+	ST_OBJECT_DATA stData;
+	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
+	
+	// << : 수신한 데이터를 버퍼에 적용후 클래스에 적용시킨다.
+	// << : 맵정보만 담을 구조체가 하나 필요함
 }
 
+void SendObjectData(SOCKET* pSocket)
+{
+	ST_OBJECT_DATA stData;
+	
+}
