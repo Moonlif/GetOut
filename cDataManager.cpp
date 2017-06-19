@@ -11,6 +11,7 @@ cDataManager::cDataManager()
 	, m_PickUpItemCode(StuffCode::STUFF_NONE)
 	, m_IsLoadItem(false)
 {
+
 	for (int i = 0; i < TOTALINVENSIZE; ++i)
 	{
 		m_arrSaveInvenItem[i] = StuffCode::STUFF_NONE;
@@ -18,13 +19,15 @@ cDataManager::cDataManager()
 	}
 }
 
-
 cDataManager::~cDataManager()
 {
 }
 
 void cDataManager::Setup()
 {
+	//사운드 추가
+	AddSound();
+
 	//정훈 - 충돌 오브젝트 정보
 	{
 		cObjLoader loader;
@@ -199,9 +202,18 @@ void cDataManager::GetItem(StuffCode itemCode)
 	else g_pSoundManager->Play("pick_generic", 0.5f);
 }
 
-
+//경고문구 띄우기
 void cDataManager::TextOutWarningWord(string str)
 {
 	m_isWarning = true;
 	m_strWarningWord = str;
+}
+
+//사운드 추가
+void cDataManager::AddSound()
+{
+	//영현
+	g_pSoundManager->AddSound("StartScene", "Sound/Background/StartScene.ogg", true, true);
+	g_pSoundManager->AddSound("LoadingScene", "Sound/Background/LoadingScene.ogg", true, true);
+	g_pSoundManager->AddSound("CharacterSelectScene", "Sound/Background/CharacterSelectScene.ogg", true, true);
 }

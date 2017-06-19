@@ -44,7 +44,7 @@ void cMainGame::Setup()
 {
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
-	
+
 	//코드 추가
 	{
 		g_pData->Setup();
@@ -62,11 +62,8 @@ void cMainGame::Setup()
 		m_pMap->Setup();
 
 		//interact
-		if (g_pData->m_isSetup)
-		{
-			m_pInteract = new cInteract;
-			m_pInteract->Setup();
-		}
+		m_pInteract = new cInteract;
+		m_pInteract->Setup();
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;

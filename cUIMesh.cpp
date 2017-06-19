@@ -4,6 +4,7 @@
 
 cUIMesh::cUIMesh()
 	:m_pMesh(NULL)
+	, m_nCountAnim(0.0f)
 {
 
 
@@ -12,7 +13,9 @@ cUIMesh::cUIMesh()
 cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 	:m_pMesh(NULL)
 	, m_pSkinnedMesh(NULL)
+	, m_nCountAnim(0.0f)
 {
+
 	m_eType = meshType;
 	m_vPosition = pos;
 	switch (meshType)
@@ -25,14 +28,14 @@ cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 		break;
 	case cUIMesh::MALE:
 		m_pSkinnedMesh = new SkinnedMesh("Male/", "Male.X");
-		m_pSkinnedMesh->SetAnimationIndex(3);
+		m_pSkinnedMesh->SetAnimationIndexBlend(1);
 		m_pSkinnedMesh->SetSpeed(0.0f);
 		m_pSkinnedMesh->SetSize(1.7f);
 		m_pSkinnedMesh->SetPosition(m_vPosition);
 		break;
 	case cUIMesh::FEMALE:
 		m_pSkinnedMesh = new SkinnedMesh("Female/", "Female.X");
-		m_pSkinnedMesh->SetAnimationIndex(3);
+		m_pSkinnedMesh->SetAnimationIndexBlend(1);
 		m_pSkinnedMesh->SetSpeed(0.0f);
 		m_pSkinnedMesh->SetSize(1.2f);
 		m_pSkinnedMesh->SetPosition(m_vPosition);
@@ -48,26 +51,6 @@ cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 	m_stMtl.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
 	m_stMtl.Diffuse = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
 	m_stMtl.Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
-
-	/*playerType = type;
-
-	if (playerType == MALE)
-	{
-		player = new SkinnedMesh("Male/", "Male.X");
-		player_Weapon = new SkinnedMesh("Male_Weapon/", "Male_Weapon.X");
-
-		player_Weapon->SetPosition(position);
-		player_Weapon->SetAnimationIndex(3);
-		player_Weapon->SetSpeed(0.0f);
-
-		player_Weapon->SetSize(1.8f);
-		player->SetSize(1.8f);
-	}
-	else if (playerType == FEMALE) player = new SkinnedMesh("Female/", "Female.X");
-
-	player->SetPosition(position);
-	player->SetAnimationIndex(3);
-	player->SetSpeed(0.0f);*/
 }
 
 
@@ -75,6 +58,43 @@ cUIMesh::~cUIMesh()
 {
 	SAFE_RELEASE(m_pMesh);
 	SAFE_DELETE(m_pSkinnedMesh);
+}
+
+void cUIMesh::Update()
+{
+	if (m_isHidden)
+	{
+		m_nCountAnim = 0;
+		m_pSkinnedMesh->SetAnimationIndexBlend(1);
+		return;
+	}
+
+	if (m_eType == cUIMesh::MALE)
+	{
+		if (m_nCountAnim >= 2.0f)
+		{
+			m_pSkinnedMesh->SetAnimationIndexBlend(3);
+		}
+		if(!m_isHidden)m_nCountAnim += g_pTimeManager->GetElapsedTime();
+
+		//0 Á×À½
+		//1 ÃÑ½î±â
+		//2 ´Þ¸®±â
+	}
+	else if (m_eType == cUIMesh::FEMALE)
+	{
+		if (m_nCountAnim >= 2.0f)
+		{
+			m_pSkinnedMesh->SetAnimationIndexBlend(3);
+		}
+		m_nCountAnim += g_pTimeManager->GetElapsedTime();
+		if (!m_isHidden)m_nCountAnim += g_pTimeManager->GetElapsedTime();
+		//0 Á×À½
+		//1 °ø°Ý
+		//2 ´Þ¸®±â
+	}
+
+	cUIObject::Update();
 }
 
 void cUIMesh::Render(LPD3DXSPRITE pSprite)
