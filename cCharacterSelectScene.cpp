@@ -149,7 +149,12 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
-			g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
+			{
+				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+			}
 
 			//1p일 때
 			if (m_WhatIsYourNumber == 1)
@@ -181,7 +186,12 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
-			g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
+			{
+				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+			}
 		
 			//1p일 때
 			if (m_WhatIsYourNumber == 1)

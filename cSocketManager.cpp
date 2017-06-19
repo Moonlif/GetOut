@@ -132,6 +132,7 @@ char * cSocketManager::GetRoomName()
 	return szRoomName;
 }
 
+/* 게임 시작시 다른 클래스들 초기화 */
 void cSocketManager::InitClientData()
 {
 	/* 남자 정보 로딩 상황 */
@@ -139,7 +140,8 @@ void cSocketManager::InitClientData()
 	{
 		m_pPlMan->SetPosition(ManPosition);
 		m_pPlMan->SetRotation(ManRot);
-		memcpy_s(g_pData->m_arrLoadInvenItem, sizeof(g_pData->m_arrLoadInvenItem), &ManInventory[INVENTORY_SIZE], sizeof(ManInventory));
+		for (int i = 0; i < INVENTORY_SIZE; ++i)
+			g_pData->m_arrLoadInvenItem[i] = ManInventory[i];
 		g_pData->SetIsLoadItem(true);
 	}
 	/* 여자 정보 로딩 상황 */
@@ -147,7 +149,8 @@ void cSocketManager::InitClientData()
 	{
 		m_pPlWoman->SetPosition(WomanPosition);
 		m_pPlWoman->SetRotation(WomanRot);
-		memcpy_s(g_pData->m_arrLoadInvenItem, sizeof(g_pData->m_arrLoadInvenItem), &WomanInventory[INVENTORY_SIZE], sizeof(WomanInventory));
+		for (int i = 0; i < INVENTORY_SIZE; ++i)
+			g_pData->m_arrLoadInvenItem[i] = WomanInventory[i];
 		g_pData->SetIsLoadItem(true);
 	}
 	/* 맵정보 로딩 */
@@ -181,8 +184,6 @@ void cSocketManager::RecvClientData(ST_ALL_DATA stData)
 		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
 		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
 	}
-	// << : 남자 누른뒤 시작하면 남자 인벤정보 불러오게
-	// << : 여자 누른뒤 시작하면 여자 인벤정보 불러오게
 }
 
 /* 버튼 등 초기설정 수행 */
