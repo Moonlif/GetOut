@@ -45,9 +45,6 @@ private:
 	HANDLE hDataThread;
 	char HostIP[16] = { 0, };
 
-	char name[NAME_SIZE] = "[DEFAULT]";
-	char msg[BUF_SIZE];
-
 	// << : 좌표 계산을 위해 필요한 변수들
 	D3DXVECTOR3 prevPosition, nextPosition;
 	float prevRotation, nextRotation;
@@ -61,6 +58,8 @@ private:
 
 	// << : 자신의 정보
 	char szRoomName[ROOM_NAME_SIZE] = "TEST";
+	char name[NAME_SIZE] = "[DEFAULT]";
+	char msg[BUF_SIZE];
 
 	// << : 수신한 데이터 버퍼
 	D3DXVECTOR3 ManPosition;
@@ -87,6 +86,8 @@ public:
 	void Setup();
 	void SetIP(int First, int Second, int Third, int Fourth);
 	void SetIP(string szIP);
+	void SetMyName(string szName);
+	void SetRoomName(string szName);
 	void Setup_DATA();
 	void Setup_CHAT();
 	void Update();

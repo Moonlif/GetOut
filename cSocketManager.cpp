@@ -230,6 +230,18 @@ void cSocketManager::SetIP(string szIP)
 	Setup_DATA();
 }
 
+void cSocketManager::SetMyName(string szName)
+{
+	string Name = szName;
+	sprintf_s(name, "%s", Name.c_str(), sizeof(name));
+}
+
+void cSocketManager::SetRoomName(string szName)
+{
+	string Name = szName;
+	sprintf_s(szRoomName, "%s", Name.c_str(), sizeof(szRoomName));
+}
+
 /* 서버와 통신을 위한 스레드 동작 */
 void cSocketManager::Setup_DATA()
 {
@@ -294,10 +306,6 @@ void cSocketManager::Setup_CHAT()
 /* 싱글톤 업데이트 */
 void cSocketManager::Update()
 {
-	if (GetAsyncKeyState(VK_NUMPAD5) & 0x0001)
-	{
-		g_pSocketmanager->SetIP(127, 0, 0, 1);
-	}
 	if (m_pUIRoot)
 		m_pUIRoot->Update();
 	if (m_pTextBox)
@@ -398,6 +406,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 
 	clock_t prevTime = clock();
 	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	int nCnt = 0;
 	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
 	while (result == SOCKET_ERROR)
 	{
@@ -405,6 +414,8 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		prevTime = clock();
 		cout << "SEND 스레드 연결 재시도중" << endl;
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+		nCnt++;
+		if (nCnt > 5) return 0;	// << : 5번 이상 시도하면 함수 꺼버림
 	}
 
 	ST_FLAG stFlag;
@@ -457,6 +468,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 
 	clock_t prevTime = clock();
 	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	int nCnt = 0;
 	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
 	while (result == SOCKET_ERROR)
 	{
@@ -464,6 +476,8 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 		prevTime = clock();
 		cout << "RECV 스레드 연결 재시도중" << endl;
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+		nCnt++;
+		if (nCnt > 5) return 0;	// << : 5번 이상 시도시 스레드 꺼버림
 	}
 
 	FLAG eFlag;

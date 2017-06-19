@@ -56,15 +56,29 @@ void cChat::Update_ForSocket()
 
 	if (GetAsyncKeyState(VK_F1) & 0x0001)
 	{
-		SetFocus(m_hWndNaming);
+		SetFocus(g_hWnd);
 	}
 	if (GetAsyncKeyState(VK_F2) & 0x0001)
 	{
-		SetWindowText(m_hWndNaming, NULL);
+		SetFocus(m_hWndNaming);
 	}
 	if (GetAsyncKeyState(VK_F3) & 0x0001)
 	{
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetAsyncKeyState(VK_F4) & 0x0001)
+	{
 		g_pSocketmanager->SetIP(m_strChat);
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetAsyncKeyState(VK_F5) & 0x0001)
+	{
+		g_pSocketmanager->SetMyName(m_strChat);
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetAsyncKeyState(VK_F6) & 0x0001)
+	{
+		g_pSocketmanager->SetRoomName(m_strChat);
 		SetWindowText(m_hWndNaming, NULL);
 	}
 
