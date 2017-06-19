@@ -28,17 +28,16 @@ void cRectMake::Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3
 	_verTex.p = v;	m_vecBottomVertex.push_back(_verTex);
 	_verTex.t = D3DXVECTOR2(0, 1.0f);
 	_verTex.p = v1; m_vecBottomVertex.push_back(_verTex);
-
+	_verTex.n = n;
 	_verTex.t = D3DXVECTOR2(1, 1.0f);
 	_verTex.p = v2;	m_vecBottomVertex.push_back(_verTex);
 	_verTex.t = D3DXVECTOR2(0, 0);
 	_verTex.p = v;	m_vecBottomVertex.push_back(_verTex);
-
+	_verTex.n = n;
 	_verTex.t = D3DXVECTOR2(1, 1.0f);
 	_verTex.p = v2;	m_vecBottomVertex.push_back(_verTex);
 	_verTex.t = D3DXVECTOR2(1, 0);
 	_verTex.p = v3;	m_vecBottomVertex.push_back(_verTex);
-
 	ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
 	m_stMtl.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 	m_stMtl.Diffuse = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);

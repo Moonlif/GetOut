@@ -6,6 +6,7 @@
 #include "cObjLoader.h"
 #include "cMapObject.h"
 #include "cObjectSurface.h"
+#include "cParticleSystem.h"
 
 class cMap
 {
@@ -15,6 +16,7 @@ private:
 	cWall*			m_pWall;
 	cCeiling*		m_pCeiling;
 	cObjectSurface* m_pObjSurface;
+	
 
 
 	std::vector<cMapObject*> vecMapObj;
@@ -39,14 +41,19 @@ private:
 	cMapObject* m_pStonetable;
 	cMapObject* m_pBookPile1;
 	cMapObject* m_pBookRow;
+	cMapObject* m_pLamp;
 
 	cMapObject* m_pRock;
 
+
+	cParticleSystem* m_pParticle;
+	D3DXVECTOR3 m_pPos;
 public:
 	cMap();
 	~cMap();
 	void Setup();
 	void SetupObject();
+	void Update();
 	void Render();
 	void RenderObject();
 	cSurface* getSurface() { return m_pSurface; };

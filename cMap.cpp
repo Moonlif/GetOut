@@ -15,7 +15,8 @@ cMap::~cMap()
 	SAFE_DELETE(m_pSurface);
 	SAFE_DELETE(m_pCeiling);
 	SAFE_DELETE(m_pObjSurface);
-
+	SAFE_DELETE(m_pParticle);
+	
 	for each (auto it in vecMapObj)
 	{
 		SAFE_DELETE(it);
@@ -24,6 +25,31 @@ cMap::~cMap()
 
 void cMap::Setup()
 {
+
+	D3DXCOLOR stColor;
+	stColor.r = 255;
+	stColor.g = 127;
+	stColor.b = 39;
+	m_pPos = D3DXVECTOR3(-10.5, 8.4, 5);
+	m_pParticle = new cParticleSystem;
+	m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
+	
+	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
+	
+	/*
+	g_pLightManager->SetPointLight(eLIGHT::P_B1F_ROOM,
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXVECTOR3(0,1,5), 100.0f);
+		*/
+	/*
+	g_pLightManager->SetPointLight(eLIGHT::P_B1F_PRISON,
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXVECTOR3(5, 1, 5), 10.0f);
+	*/
 	m_pFloor = new cFloor;
 	m_pFloor->Setup();
 	m_pWall = new cWall;
@@ -78,6 +104,10 @@ void cMap::SetupObject()
 			, D3DXVECTOR3(CENTERX + 9.2, B1F, CENTERZ + 4.2)
 			, D3DXVECTOR3(CENTERX + 11.2, B1F, CENTERZ + 4.2)
 			, D3DXVECTOR3(CENTERX + 11.2, B1F, CENTERZ + 3.3), 0);
+
+		m_pLamp = new cMapObject;
+		m_pLamp->Setup("Objects/map", "hanging_lantern_wall.obj");
+		vecMapObj.push_back(m_pLamp);
 
 	}
 
@@ -135,6 +165,13 @@ void cMap::SetupObject()
 			, D3DXVECTOR3(CENTERX + 9.9, FF, CENTERZ - 1)
 			, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 1)
 			, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 3), 1);
+
+
+		//¹æ ¹Ú½º
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 3.3, FF, CENTERZ + 0)
+			, D3DXVECTOR3(CENTERX + 3.3, FF, CENTERZ + 2.5)
+			, D3DXVECTOR3(CENTERX + 5.1, FF, CENTERZ + 2.5)
+			, D3DXVECTOR3(CENTERX + 5.1, FF, CENTERZ + 0), 1);
 	}
 	/*****************************
 	2 Ãþ
@@ -217,15 +254,23 @@ void cMap::SetupObject()
 	}
 }
 
+void cMap::Update()
+{
+	m_pParticle->Update();
+}
+
 
 void cMap::Render()
 {
 	//m_pSurface->Render();
 	//m_pObjSurface->RenderSurface();
+	
 	m_pFloor->Render();
 	m_pWall->Render();
 	m_pCeiling->Render();
+	
 	RenderObject();
+	//m_pParticle->Render();
 }
 
 void cMap::RenderObject()
@@ -263,6 +308,15 @@ void cMap::RenderObject()
 	m_pStonetable->Render(0.1, 3, 12, -12, 0);
 	m_pBookPile1->Render(0.1, -17, 27.5, -11.5, 0);
 
+	m_pObjBox->Render(1, -31.5, 13, 9, 0);
+	m_pObjBox->Render(1, -31.5, 15, 5, 0);
+	m_pObjBox->Render(1, -31.5, 13, 6, 0);
+	m_pObjBox->Render(1, -31.5, 15, 12, 0);
+	m_pObjBox->Render(1, -31.5, 13, 12, 0);
+	m_pObjBox->Render(1, -31.5, 15, 10, 0);
+	m_pObjBox->Render(1, -31.5, 13, 10, 0);
+
+	m_pLamp->Render(0.1, -11, 6, 5, 0);
 }
 
 
@@ -271,8 +325,8 @@ bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
 
 	int floor;
 	if (y >= 22)floor = 2;
-	if (y >= 11.8 && y < 22) floor = 1;
-	if (y < 11.8) floor = 0;
+	if (y >= 11 && y < 22) floor = 1;
+	if (y < 11) floor = 0;
 
 	{
 		D3DXVECTOR3 vec[200];
@@ -326,8 +380,8 @@ bool cMap::GetObjectSurface(IN float x, OUT float & y, IN float z)
 	if (isTrapIng) return false;
 	int floor;
 	if (y >= 22)floor = 2;
-	if (y >= 11.8 && y < 22) floor = 1;
-	if (y < 11.8) floor = 0;
+	if (y >= 11 && y < 22) floor = 1;
+	if (y < 11) floor = 0;
 	{
 		D3DXVECTOR3 vec[200];
 		D3DXMATRIXA16 matS, matWorld;
@@ -431,6 +485,8 @@ bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 		return true;
 	}
 	else if (y < 0 && isTrapIng == true) {
+		
+		g_pSoundManager->Play("break_wood", 1.0f);
 		isTrapIng = false;
 		isTrapOpen = true;
 	}

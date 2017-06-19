@@ -129,6 +129,7 @@ void cSurface::Setup()
 	InsertVector(1, v0, v1, v2, v3, m_pFFLivingRoom2);
 
 	//방
+	
 	m_pFFRoom = new cRectMake;
 	v0 = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ - 0.2);
 	v1 = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 3.7);
@@ -136,7 +137,8 @@ void cSurface::Setup()
 	v3 = D3DXVECTOR3(CENTERX + 5.7, FF, CENTERZ - 0.2);
 	m_pFFRoom->Setup(v0, v1, v2, v3, NULL);
 	InsertVector(1, v0, v1, v2, v3, m_pFFRoom);
-
+	
+	
 	m_pFFRoom1 = new cRectMake;
 	v0 = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2.25);
 	v1 = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4);
@@ -144,7 +146,7 @@ void cSurface::Setup()
 	v3 = D3DXVECTOR3(CENTERX + 3.67, FF, CENTERZ + 2.25);
 	m_pFFRoom1->Setup(v0, v1, v2, v3, NULL);
 	InsertVector(1, v0, v1, v2, v3, m_pFFRoom1);
-
+	
 	//화장실
 
 	m_pFFBathRoom = new cRectMake;
@@ -299,15 +301,16 @@ void cSurface::PassSetup()
 	PassInput(v0, v1, v2, v3, SWITCH_FIRSTFLOOR_WOODBOARD1, m_pWoodWay);
 
 	//무너진 천장
+	
 	m_pFFCollision = new cRectMake;
-	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 2);
+	v0.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 1);
 	v1.p = D3DXVECTOR3(CENTERX + 3, FF, CENTERZ + 4);
 	v2.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 4);
-	v3.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 2);
+	v3.p = D3DXVECTOR3(CENTERX + 4.3, FF, CENTERZ + 1);
 	m_pFFCollision->Setup(v0.p, v1.p, v2.p, v3.p, NULL);
 	PassInput(v0, v1, v2, v3, SWITCH_FIRSTFLOOR_TRAP, m_pFFCollision);
 
-
+	
 }
 
 void cSurface::InsertVector(int floor, D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, cRectMake* rec)
