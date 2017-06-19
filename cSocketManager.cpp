@@ -547,12 +547,21 @@ void ReceiveGender(SOCKET* pSocket)
 	int Gender;
 	recv(*pSocket, (char*)&Gender, sizeof(int), 0);
 	
-	if (Gender == IN_MAN)
+	if (Gender == OUT_MAN)
+	{
 		g_pData->m_nPlayerNum2P = 1;
-	else if (Gender == IN_WOMAN)
+		cout << "2P는 남자입니다 " << endl;
+	}
+	else if (Gender == OUT_WOMAN)
+	{
 		g_pData->m_nPlayerNum2P = 2;
+		cout << "2P는 여자입니다 " << endl;
+	}
 	else
+	{
 		g_pData->m_nPlayerNum2P = 0;
+		cout << "2P는 없거나 고르지 않았습니다." << endl;
+	}
 }
 
 /* 좌표 수신 */

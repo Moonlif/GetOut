@@ -46,7 +46,7 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update(cCamera* camera)
 {
-	cout << g_pSoundManager->GetIsPlaying("CharacterSelectScene") << endl;
+	//cout << g_pSoundManager->GetIsPlaying("CharacterSelectScene") << endl;
 
 	m_pCamera = camera;
 	//첫 배경 알파값 업데이트
