@@ -162,8 +162,8 @@ void cSocketManager::Setup()
 			"UI/button/Submit_Over.png",
 			"UI/button/Submit_Down.png");
 		pButtonSubmit->SetPosition(135, 330);
-		//pButtonOK->SetDelegate(this);
-		pButtonSubmit->SetTag(E_BUTTON_OK);
+		pButtonSubmit->SetDelegate(this);
+		pButtonSubmit->SetTag(E_IP_OK);
 		m_pUIRoot = pButtonSubmit;
 	}
 
@@ -175,8 +175,8 @@ void cSocketManager::Setup()
 		"UI/button/Reset_Over.png",
 		"UI/button/Reset_Down.png");
 		pButtonReset->SetPosition(135, 0);
-		//pButtonReset->SetDelegate(this);
-		pButtonReset->SetTag(E_BUTTON_OK);
+		pButtonReset->SetDelegate(this);
+		pButtonReset->SetTag(E_IP_RESET);
 		m_pUIRoot->AddChild(pButtonReset);
 	}
 
@@ -321,6 +321,18 @@ void cSocketManager::UIRender()
 		m_pUIRoot->Render(m_pSprite);
 	if (m_pTextBox)
 		m_pTextBox->Render(200, 200, 50, 50);
+}
+
+void cSocketManager::OnClick(cUIButton * pSender)
+{
+	if (pSender->GetTag() == E_IP_OK)
+	{
+		int a = 3;
+	}
+	else if (pSender->GetTag() == E_IP_RESET)
+	{
+		int b = 4;
+	}
 }
 
 /* 채팅을 전송하는 스레드 */

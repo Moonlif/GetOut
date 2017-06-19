@@ -33,7 +33,7 @@ class cUIObject;
 class cChat;
 #include "cUIButton.h"
 
-class cSocketManager
+class cSocketManager : public iButtonDelegate
 {
 private:
 	SINGLETONE(cSocketManager);
@@ -93,6 +93,8 @@ public:
 	void UpdateRotation(float Rotate);
 
 	void UIRender();
+
+	virtual void OnClick(cUIButton* pSender) override;
 };
 
 enum FLAG

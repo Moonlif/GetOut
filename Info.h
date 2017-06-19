@@ -164,7 +164,11 @@ enum eUITAG
 	CHAT_TEXT1,
 };
 
-
+enum eButtonTag
+{
+	E_IP_OK,
+	E_IP_RESET
+};
 enum eITEMTYPE
 {
 	ITEMTYPE_NONE,

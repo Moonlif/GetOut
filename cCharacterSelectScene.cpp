@@ -144,6 +144,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
 			
 
 			//1p일 때
@@ -176,6 +177,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
 		
 
 			//1p일 때
@@ -339,6 +341,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pData->SetIsStartedGame(true);
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			m_pCamera->SetCameraDistance(0.1f);
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
 			break;
 		default:
 			break;
