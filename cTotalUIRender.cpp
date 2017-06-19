@@ -52,7 +52,7 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Update();
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Update(camera);
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Update();
-	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen()) m_pGamePlay->Update();
+	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen() && g_pData->m_isHandOn) m_pGamePlay->Update();
 
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
@@ -106,7 +106,7 @@ void cTotalUIRender::Render()
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Render();
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
 	if (m_pChat) m_pChat->Render();
-	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen()) m_pGamePlay->Render();
+	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen() && g_pData->m_isHandOn) m_pGamePlay->Render();
 
 	//스타트씬 클릭되면 케릭터셀렉씬 셋업하는과정
 	if (!m_pStartScene->GetIsStartSceneOpen())

@@ -10,6 +10,7 @@ cDataManager::cDataManager()
 	, m_IsOnChat(false)
 	, m_PickUpItemCode(StuffCode::STUFF_NONE)
 	, m_IsLoadItem(false)
+	, m_isHandOn(false)
 {
 
 	for (int i = 0; i < TOTALINVENSIZE; ++i)

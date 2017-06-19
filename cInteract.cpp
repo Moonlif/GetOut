@@ -241,13 +241,14 @@ void cInteract::CheckStuff(D3DXVECTOR3 playerPos)
 			if (dis < 8.0f)	//일정거리 미만이면
 			{
 				//화면에 손모양 표시 추가
-				//g_pData->함수호출
+				g_pData->m_isHandOn = true;
 
 				if (keyState > 0)
 				{
 					if (PickStuff(it->GetStuffCode(), lButton) == true) break;
 				}
 			}
+			else g_pData->m_isHandOn = false;
 		}
 	}
 }

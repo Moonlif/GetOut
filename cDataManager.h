@@ -30,6 +30,7 @@ private:
 	
 public:
 	//정훈 - 오브젝트용
+	bool m_isHandOn;
 	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 
