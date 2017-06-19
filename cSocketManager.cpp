@@ -19,12 +19,12 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 void ReceiveNetworkID(SOCKET* pSocket);
 void ReceiveRoomName(SOCKET* pSocket);
 void ReceiveGender(SOCKET* pSocket);
-void ReceivePosition(LPVOID lpParam);
+void ReceivePosition(SOCKET* pSocket);
 void ReceiveAllData(SOCKET* pSocket);
 void ReceiveObject(SOCKET* pSocket);
 
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
-void SendNetworkID(SOCKET* pSocket, int ID);
+void SendNetworkID(SOCKET* pSocket, int ID, bool* bConnected);
 void SendGender(SOCKET* pSocket);
 void SendPosition(SOCKET* pSocket);
 
@@ -121,6 +121,11 @@ void cSocketManager::Destroy()
 char * cSocketManager::GetIP()
 {
 	return HostIP;
+}
+
+char * cSocketManager::GetRoomName()
+{
+	return szRoomName;
 }
 
 /* 서버로부터 수신한 초기 데이터를 클라이언트에 적용합니다 */
@@ -428,13 +433,14 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			SendGender(&hSocket);
 			break;
 		case FLAG::FLAG_POSITION:
-			ReceivePosition(&hSocket);
+			SendPosition(&hSocket);
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
 			break;
 		}
 	}
 	closesocket(hSocket);
+	cout << "SEND 스레드가 종료되었습니다 " << endl;
 	return 0;
 }
 
@@ -461,29 +467,32 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 	}
 
 	FLAG eFlag;
-	while (strLen = recv(hSocket, (char*)&eFlag, sizeof(FLAG), 0) != 0)
+	bool isConnected = true;
+	while (isConnected)
 	{
+		strLen = recv(hSocket, (char*)&eFlag, sizeof(FLAG), 0);
 		if (strLen == -1) break;
-		cout << eFlag << endl;
+		//cout << eFlag << endl;
 
 		switch (eFlag)
 		{
 		case FLAG::FLAG_NONE:
 			break;
 		case FLAG::FLAG_NETWORK_ID:
-			SendNetworkID(&hSocket, g_pSocketmanager->GetNetworkID());
+			SendNetworkID(&hSocket, g_pSocketmanager->GetNetworkID(), &isConnected);
 			break;
 		case FLAG::FLAG_GENDER:
 			ReceiveGender(&hSocket);
 			break;
 		case FLAG::FLAG_POSITION:
-			SendPosition(&hSocket);
+			ReceivePosition(&hSocket);
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
 			break;
 		}
 	}
 	closesocket(hSocket);
+	cout << "RECV스레드가 종료되었습니다 " << endl;
 	return 0;
 }
 
@@ -531,28 +540,12 @@ void ReceiveGender(SOCKET* pSocket)
 }
 
 /* 좌표 수신 */
-void ReceivePosition(LPVOID lpParam)
+void ReceivePosition(SOCKET* pSocket)
 {
-	SOCKET hSocket = *(SOCKET*)lpParam;
 	ST_PLAYER_POSITION stRecv;
-	recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
+	recv(*pSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
 	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
-	cout << "접속중인 플레이어 ";
-	if (stRecv.nPlayerIndex & IN_MAN)
-	{
-		g_pData->m_nPlayerNum2P = 1;
-		cout << "1P" << " ";
-	}
-	else if (stRecv.nPlayerIndex & IN_WOMAN)
-	{
-		g_pData->m_nPlayerNum2P = 2;
-		cout << "2P" << " ";
-	}
-	else
-	{
-		cout << "없음" << " ";
-	}
 
 	cout << "X좌표 : " << stRecv.fX << " ";
 	cout << "Y좌표 : " << stRecv.fY << " ";
@@ -582,6 +575,8 @@ void SendGender(SOCKET* pSocket)
 	sprintf_s(stSend.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
 	send(*pSocket, (char*)&stSend, sizeof(ST_FLAG), 0);	// << : 자신이 선택한 성별을 전송합니다.
 	g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);
+
+	cout << "Send Gender " << stSend.nPlayerIndex << endl;
 	// << : 게임 시작하면 받은 데이터 설정하고 Position 전송 , 수신 하도록
 }
 
@@ -597,10 +592,11 @@ void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 }
 
 /* 서버에게 자신의 NetworkID를 알려줍니다 */
-void SendNetworkID(SOCKET* pSocket, int ID)
+void SendNetworkID(SOCKET* pSocket, int ID,bool* bConnected)
 {
 	int NetworkID = ID;
-	send(*pSocket, (char*)&NetworkID, sizeof(int), 0);
+	int result = send(*pSocket, (char*)&NetworkID, sizeof(int), 0);
+	if (result == -1) *bConnected = false;
 }
 
 /* 자신의 좌표를 서버에게 전송합니다 */
@@ -612,12 +608,14 @@ void SendPosition(SOCKET* pSocket)
 		stSend.nPlayerIndex = OUT_MAN;
 	else if (g_pData->m_nPlayerNum1P == 2)
 		stSend.nPlayerIndex = OUT_WOMAN;
-	sprintf_s(stSend.szRoomName, "DEFAULT", 7);
+	// << : 현재 방이름 복사
+	sprintf_s(stSend.szRoomName, "%s", g_pSocketmanager->GetRoomName(), sizeof(stSend.szRoomName));
 	stSend.fX = g_pData->m_vPosition1P.x;
 	stSend.fY = g_pData->m_vPosition1P.y;
 	stSend.fZ = g_pData->m_vPosition1P.z;
 	stSend.fAngle = g_pData->m_vRotation1P;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+	cout << "Send Position Function" << endl;
 }
 
 void ReceiveObject(SOCKET* pSocket)

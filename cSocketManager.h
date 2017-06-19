@@ -82,6 +82,7 @@ public:
 	void Calc_Position();
 	void Destroy();
 	char* GetIP();
+	char* GetRoomName();
 	void InitClientData(ST_ALL_DATA stData);
 	void Setup();
 	void SetIP(int First, int Second, int Third, int Fourth);
