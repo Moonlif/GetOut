@@ -23,7 +23,10 @@ private:
 	SkinnedMesh*		m_pSkinnedMesh;
 	LPD3DXMESH			m_pMesh;
 	D3DMATERIAL9		m_stMtl;
+
+	float				m_nCountAnim;
 public:
+	virtual void Update() override;
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 };
 

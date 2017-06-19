@@ -45,6 +45,8 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update(cCamera* camera)
 {
+	cout << g_pSoundManager->GetIsPlaying("CharacterSelectScene") << endl;
+
 	m_pCamera = camera;
 	//첫 배경 알파값 업데이트
 	UpdateSetFirstBackground();
@@ -229,8 +231,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 
 	}
-
-
+	
 	///-------------------------------------------------------------
 	//						상대방 1P, 2P 띄우기
 	///-------------------------------------------------------------
@@ -437,13 +438,13 @@ void cCharacterSelectScene::SetBackground()
 	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	ExplainImage->AddChild(pPlyer2Image);
 
-	cUIButton*	pStartButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
+	/*cUIButton*	pStartButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
 		"UI/button/BlackButton_Down.png", D3DXVECTOR3(40, 490, 0));
 	pStartButton->SetTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
 	pStartButton->SetScaling(D3DXVECTOR3(2.0f, 0.45f, 0));
 	pStartButton->SetDelegate(this);
 	pStartButton->SetAlpha(200);
-	ExplainImage->AddChild(pStartButton);
+	ExplainImage->AddChild(pStartButton);*/
 
 	cUITextView* text = new cUITextView("GAME START", D3DXVECTOR3(60, 500, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
 		ST_SIZEN(250, 40), 20, 40, 900);

@@ -11,7 +11,7 @@ public:
 
 	void Destroy();
 	void UpdateAndRender();
-	void SetAnimationIndex(int index);
+	void SetAnimationIndex(int indexz);
 	void SetAnimationIndexBlend(int nIndex);
 
 	void SetRandomTrackPosition(); // 테스트용
