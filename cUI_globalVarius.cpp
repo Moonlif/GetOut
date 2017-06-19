@@ -24,7 +24,7 @@ void cUI_globalVarius::SetItemInfo()
 {
 	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY1, "UI/Item/key_study.tga");
 	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY2, "UI/Item/key_tomb.tga");
-	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY3, "UI/Item/key_laboratory.tga");
+	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY3, "UI/Item/SeoulGameAcademy.png");
 
 	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER1, "UI/Item/academy.png");
 	SetItem(eITEMTYPE::ITEMTYPE_COMBINE, StuffCode::STUFF_PAPER2, "UI/Item/game.png");
@@ -37,6 +37,8 @@ void cUI_globalVarius::SetItemInfo()
 	SetItem(eITEMTYPE::ITEMTYPE_THROW, StuffCode::STUFF_BRICK5, "UI/Item/Brick.png");
 
 	SetItem(eITEMTYPE::ITEMTYPE_ATTACK, StuffCode::STUFF_CROWBAR, "UI/Item/crowbar.tga");
+
+	SetItem(eITEMTYPE::ITEMTYPE_ATTACK, StuffCode::STUFF_KEY3, "UI/Item/crowbar.tga");
 }
 
 void cUI_globalVarius::SetItem(eITEMTYPE itemType, StuffCode itemCode, char * fullPath)

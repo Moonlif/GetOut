@@ -469,7 +469,7 @@ void cInventory::OnClick(cUIButton * pSender)
 				combine3->SetItemCode(StuffCode::STUFF_NONE);
 
 				//아이템 생성
-				SetItem(StuffCode::STUFF_KEY1);
+				SetItem(StuffCode::STUFF_KEY3);
 				return;
 			}
 			else
