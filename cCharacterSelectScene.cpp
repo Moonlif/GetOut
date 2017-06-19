@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cCharacterSelectScene.h"
 
+
 #include "cUIImageView.h"
 #include "cUIObject.h"
 #include "cUIMesh.h"
@@ -148,7 +149,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
-
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
 
 			//1p일 때
 			if (m_WhatIsYourNumber == 1)
@@ -180,8 +181,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
-
-
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+		
 			//1p일 때
 			if (m_WhatIsYourNumber == 1)
 			{
@@ -227,6 +228,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pSoundManager->Play("LoadingScene", 1.0f);
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
+			// << : 여기서 초기화 및 좌표 전송하게 변경해야함
 		}
 
 
@@ -345,6 +347,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
 			break;
 		default:
 			break;

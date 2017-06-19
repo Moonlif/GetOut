@@ -84,21 +84,27 @@ void cDataManager::Setup()
 		m_bStuffSwitch[SWITCH_ONMAP_CROWBAR] = true;
 		m_vStuffPosition[SWITCH_ONMAP_CROWBAR] = D3DXVECTOR3(-40, 12.2f, 12);
 		m_vStuffRotation[SWITCH_ONMAP_CROWBAR] = D3DXVECTOR3(0, D3DX_PI / 2.2f, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_PAPER1] = true;
 		m_vStuffPosition[SWITCH_ONMAP_PAPER1] = D3DXVECTOR3(10, 0.7f, 18);
 		m_vStuffRotation[SWITCH_ONMAP_PAPER1] = D3DXVECTOR3(0, 0, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_PAPER2] = true;
 		m_vStuffPosition[SWITCH_ONMAP_PAPER2] = D3DXVECTOR3(-38, 12.7f, -6);
 		m_vStuffRotation[SWITCH_ONMAP_PAPER2] = D3DXVECTOR3(0, 0, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_PAPER3] = true;
 		m_vStuffPosition[SWITCH_ONMAP_PAPER3] = D3DXVECTOR3(-17.5f, 27.7f, -10.5f);
 		m_vStuffRotation[SWITCH_ONMAP_PAPER3] = D3DXVECTOR3(0, 0, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_KEY1] = true;
 		m_vStuffPosition[SWITCH_ONMAP_KEY1] = D3DXVECTOR3(-14.0f, 0.3f, 1.5f);
 		m_vStuffRotation[SWITCH_ONMAP_KEY1] = D3DXVECTOR3(0, D3DX_PI / 2.5f, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_KEY2] = true;
 		m_vStuffPosition[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(-30, 12.3f, -13);
 		m_vStuffRotation[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(0, 0.3f, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_KEY3] = false;
 		m_vStuffPosition[SWITCH_ONMAP_KEY3] = D3DXVECTOR3(0, 0, 0);
 		m_vStuffRotation[SWITCH_ONMAP_KEY3] = D3DXVECTOR3(0, 0, 0);

@@ -45,6 +45,8 @@ void cMainGame::Setup()
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
+	g_pSocketmanager->Setup();
+
 	//코드 추가
 	{
 		g_pData->Setup();
@@ -78,9 +80,6 @@ void cMainGame::Setup()
 	//g_pData->SetIsStartedGame(true);
 	//g_pD3DDevice->LightEnable(0, true);
 	//m_pCamera->SetCameraDistance(50.0f);
-
-	g_pSocketmanager->Setup_CHAT();
-	g_pSocketmanager->Setup_DATA();
 }
 
 void cMainGame::Update()
@@ -133,6 +132,8 @@ void cMainGame::Render()
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
+
+		g_pSocketmanager->UIRender();
 	}
 
 	g_pD3DDevice->EndScene();

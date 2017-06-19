@@ -180,7 +180,6 @@ struct ST_ASTAR
 	POINT parent;
 };
 
-
 #include "cObject.h"
 #include "iMap.h"
 #include "Info.h"
