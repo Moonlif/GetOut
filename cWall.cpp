@@ -208,8 +208,8 @@ void cWall::SetupFF()
 
 		//泅包率 寒1
 		m_pFFDoorR1 = new cRectMake;
-		m_pFFDoorR1->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3.5)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.5)
+		m_pFFDoorR1->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3.65)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.65)
 			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 4)
 			, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4)
 			, "Texture/maps/images.jpg");
@@ -219,17 +219,17 @@ void cWall::SetupFF()
 		m_pFFDoorR2 = new cRectMake;
 		m_pFFDoorR2->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ + 4)
 			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ + 4)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.5)
-			, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 2.5)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.6)
+			, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 2.6)
 			, "Texture/maps/images.jpg");
 		m_vecFF.push_back(m_pFFDoorR2);
 	
 		//泅包率 寒3
 		m_pFFDoorR3 = new cRectMake;
-		m_pFFDoorR3->Setup(D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 2.5)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.5)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.5)
-			, D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 3.5)
+		m_pFFDoorR3->Setup(D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 2.6)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.6)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.65)
+			, D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 3.65)
 			, "Texture/maps/images.jpg");
 		m_vecFF.push_back(m_pFFDoorR3);
 			
