@@ -19,6 +19,7 @@ private:
 	SYNTHESIZE(bool, m_IsMiniGamePrisonBreak, IsMiniGamePrisonBreak)
 
 	SYNTHESIZE(bool, m_IsPossibleMove, IsPossibleMove)
+	SYNTHESIZE(bool, m_IsCollisionWall, IsCollisionWall)
 public:
 	//정훈 - 오브젝트용
 	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;

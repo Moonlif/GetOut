@@ -5,8 +5,8 @@ class Monster
 {
 private:
 	SYNTHESIZE(D3DXVECTOR3, position, position);
+	SYNTHESIZE(float, rotY, rotY);
 	D3DXVECTOR3		direction;
-	float			rotY;
 
 	animationState monAni;
 	SkinnedMesh* monster;

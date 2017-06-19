@@ -10,6 +10,7 @@ cDataManager::cDataManager()
 	, m_IsOnChat(false)
 	, m_IsMiniGamePrisonBreak(false)
 	, m_IsPossibleMove(false)
+	, m_IsCollisionWall(false)
 {
 }
 

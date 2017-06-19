@@ -20,6 +20,7 @@ public:
 	inline void SetRotation(float rotation) { rotationAngle = rotation; }
 	inline void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
 	inline void SetSpeed(float speed) { aniSpeed = speed; }
+	inline void SetRender(bool is) { isRender = is; }
 
 	inline const LPD3DXVECTOR3 GetPositionAdress() { return &position; }
 	inline BoundingShere* GetBoundingSphere() { return &boundingSphere; }
@@ -41,10 +42,12 @@ private:
 	float size = 1.0f;
 	float rotationAngle = 0.0f;
 	float aniSpeed = 0.0f;
-
+	
 	float m_fBlendTime;
 	float m_fPassedBlendTime;
 	bool m_isAnimBlend;
+	
+	bool isRender = true;
 
 private:
 	SkinnedMesh();

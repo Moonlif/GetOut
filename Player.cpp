@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "Player.h"
-
 Player::Player()
 	: position(D3DXVECTOR3(0, 0, 4))
 	, checkPosition(D3DXVECTOR3(0,0,0))
 	, headPosition(D3DXVECTOR3(0, 0, 0))
 	, direction(D3DXVECTOR3(0, 0, 1))
 	, rotY(0.0f)
+	, isDraw(true)
 	, player(NULL)
 	, player_Weapon(NULL)
 	, playerType(MALE)
@@ -70,9 +70,11 @@ void Player::Update(cMap* pMap)
 		break;
 	}
 
-	//캐릭터 이동관련 함수
 	pMap->GetMovePossible(position.x, position.y, position.z);
+	//캐릭터 이동관련 함수
 	MoveCharacter(pMap);
+	//벽과 충돌중인지 체크
+	CheckPosition(pMap);
 
 	//채팅켜지면 IDLE 상태로 변경
 	if (g_pData->GetIsOnChat())
@@ -162,6 +164,17 @@ void Player::Update(D3DXVECTOR3 pos, float rot, animationState ani, cMap* pMap)
 
 void Player::Render()
 {
+	if (isDraw)
+	{
+		if (player) player->SetRender(true);
+		if (player_Weapon) player_Weapon->SetRender(true);
+	}
+	else
+	{
+		if (player) player->SetRender(false);
+		if (player_Weapon) player_Weapon->SetRender(false);
+	}
+
 	if (playerType == MALE_WEAPON)
 	{
 		if (player_Weapon) player_Weapon->UpdateAndRender();
@@ -290,5 +303,20 @@ void Player::MoveCharacter(cMap* pMap)
 				}
 			}
 		}
+	}
+}
+
+void Player::CheckPosition(cMap* pMap)
+{
+	float checkPoint = 3.0f;
+
+	checkPosition = position - (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
+	if (!pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
+	{
+		g_pData->SetIsCollisionWall(true);
+	}
+	else if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
+	{
+		g_pData->SetIsCollisionWall(false);
 	}
 }

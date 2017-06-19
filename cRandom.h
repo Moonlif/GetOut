@@ -32,5 +32,14 @@ public:
 		float rnd = (float)rand() / (float)RAND_MAX;
 		return (rnd * (toNum - fromNum) + fromNum);
 	}
+
+	//>> 06_14 Ãß°¡
+	void GetVector(D3DXVECTOR3& out, D3DXVECTOR3& max, D3DXVECTOR3& min)
+	{
+		out.x = getFloatFromTo(max.x, min.x);
+		out.y = getFloatFromTo(max.y, min.y);
+		out.z = getFloatFromTo(max.z, min.z);
+	}
+	//<<
 };
 

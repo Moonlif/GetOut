@@ -26,7 +26,11 @@ void CharacterManager::Update(cMap* cmap)
 {
 	if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum1P == 1)
 	{
-		if (m_p1Player) m_p1Player->Update(cmap);
+		if (m_p1Player)
+		{
+			m_p1Player->Update(cmap);
+			m_p1Player->SetDraw(false);
+		}
 		if (m_p2Player) m_p2Player->Update(g_pData->m_vPosition2P,
 			g_pData->m_vRotation2P,
 			g_pData->m_eAnimState2P,
@@ -34,7 +38,11 @@ void CharacterManager::Update(cMap* cmap)
 	}
 	else if (g_pData->GetIsStartedGame() && g_pData->m_nPlayerNum1P == 2)
 	{
-		if (m_p2Player) m_p2Player->Update(cmap);
+		if (m_p2Player)
+		{
+			m_p2Player->Update(cmap);
+			m_p2Player->SetDraw(false);
+		}
 		if (m_p1Player) m_p1Player->Update(g_pData->m_vPosition2P,
 			g_pData->m_vRotation2P,
 			g_pData->m_eAnimState2P,
