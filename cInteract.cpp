@@ -91,7 +91,7 @@ void cInteract::Update()
 	if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] && m_vecStuff[STUFF_BOARDBLOCK]->GetSwitch() == false)
 		m_vecStuff[STUFF_BOARDBLOCK]->Reposition(D3DXVECTOR3(-28, 12.15f, 3.8f), D3DXVECTOR3(0, D3DX_PI / 2.0f, D3DX_PI / 2.0f), 0.1f);
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] && m_vecStuff[STUFF_BOX1]->GetSwitch() == false)
-		m_vecStuff[STUFF_BOX1]->Reposition(D3DXVECTOR3(-5.0f, 0, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0));
+		m_vecStuff[STUFF_BOX1]->Reposition(D3DXVECTOR3(-5.0f, 0, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), 0.04f);
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] && m_vecStuff[STUFF_CHEST3]->GetSwitch() == false)
 		m_vecStuff[STUFF_CHEST3]->Reposition(D3DXVECTOR3(10, 6, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, -D3DX_PI / 2.0f));
 	if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] && m_vecStuff[STUFF_TRAP]->GetSwitch() == false)
@@ -134,11 +134,11 @@ void cInteract::Update()
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] = true;
 	else g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] = false;
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] && m_vecStuff[STUFF_DOOR_2NDROOM2]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 18), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.03f);
+		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 18), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.01f);
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == false && m_vecStuff[STUFF_DOOR_2NDROOM2]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.03f);
+		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.01f);
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] && m_vecStuff[STUFF_DOOR_FINAL]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_FINAL]->Reposition(m_vecStuff[STUFF_DOOR_FINAL]->GetPosition(), D3DXVECTOR3(0, D3DX_PI, 0));
+		m_vecStuff[STUFF_DOOR_FINAL]->Reposition(m_vecStuff[STUFF_DOOR_FINAL]->GetPosition(), D3DXVECTOR3(0, D3DX_PI, 0), 0.01f);
 	
 	//act button1 & button2 (on 2nd floor)
 	m_n2FButton1Count = 0;
@@ -289,7 +289,11 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 	case STUFF_BOARDBLOCK:
 		if (g_pData->GetUseItem() == STUFF_CROWBAR)
 		{
-			if (g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
+			if (g_pData->m_nPlayerNum1P == 1)
+			{
+				g_pSoundManager->Play("1st_woodblock", 0.5f);
+				m_n1FBlockCount++;
+			}
 			else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
 		}
 		else g_pData->TextOutWarningWord(string("'빠루'가 필요합니다."));

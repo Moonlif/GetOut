@@ -31,8 +31,8 @@ void cMap::Setup()
 	stColor.g = 127;
 	stColor.b = 39;
 	m_pPos = D3DXVECTOR3(-10.5, 8.4, 5);
-	m_pParticle = new cParticleSystem;
-	m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
+	//m_pParticle = new cParticleSystem;
+	//m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
 	
 	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
 	

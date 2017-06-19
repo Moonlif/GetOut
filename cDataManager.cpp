@@ -126,24 +126,23 @@ void cDataManager::Setup()
 		g_pSoundManager->AddSound("pick_knife", "Sound/EffectSound/Interaction/pick_knife.ogg", false, false);
 		g_pSoundManager->AddSound("pick_paper", "Sound/EffectSound/Interaction/pick_paper.ogg", false, false);
 
-		g_pSoundManager->AddSound("drop_key", "Sound/EffectSound/25_drop_key.ogg", false, false);
-		g_pSoundManager->AddSound("drop_generic", "Sound/EffectSound/pickaxe_charge.ogg", false, false);
+		g_pSoundManager->AddSound("drop_key", "Sound/EffectSound/Interaction/25_drop_key.ogg", false, false);
+		g_pSoundManager->AddSound("drop_generic", "Sound/EffectSound/Interaction/pickaxe_charge.ogg", false, false);
 
-		//g_pSoundManager->AddSound("door_prison", "Sound/EffectSound/door_safety_open.ogg", false, false);
-		//g_pSoundManager->AddSound("door_1stRoom", "Sound/EffectSound/door_mansion_open.ogg", false, false);
-		//g_pSoundManager->AddSound("door_1stToilet", "Sound/EffectSound/door_large_castle_open.ogg", false, false);
-		//g_pSoundManager->AddSound("door_2ndRoom1", "Sound/EffectSound/move_gate.ogg", false, false);
-		//g_pSoundManager->AddSound("door_2ndRoom2", "Sound/EffectSound/01_door.ogg", false, false);
-		//g_pSoundManager->AddSound("door_final", "Sound/EffectSound/29_exit_door.ogg", false, false);
+		g_pSoundManager->AddSound("door_prison", "Sound/EffectSound/Interaction/door_prison_open.ogg", false, false);
+		g_pSoundManager->AddSound("door_1stRoom", "Sound/EffectSound/Interaction/door_mansion_close.ogg", false, false);
+		g_pSoundManager->AddSound("door_2ndRoom1", "Sound/EffectSound/Interaction/01_door.ogg", false, false);
+		g_pSoundManager->AddSound("door_2ndRoom2", "Sound/EffectSound/Interaction/move_gate.ogg", false, false);
+		g_pSoundManager->AddSound("door_final", "Sound/EffectSound/Interaction/29_exit_door.ogg", false, false);
 
-		//g_pSoundManager->AddSound("base_box", "Sound/EffectSound/door_level_wood_close.ogg", false, false);
-		//g_pSoundManager->AddSound("base_chest", "Sound/EffectSound/gameplay_open_chest.ogg", false, false);
-		//g_pSoundManager->AddSound("1st_wood1", "Sound/EffectSound/16_ladder_down.ogg", false, false);
-		//g_pSoundManager->AddSound("1st_wood2", "Sound/EffectSound/04_place_wood.ogg", false, false);
-		//g_pSoundManager->AddSound("1st_woodblock", "Sound/EffectSound/18_touch_bridge1.ogg", false, false);
-		//g_pSoundManager->AddSound("2nd_button", "Sound/EffectSound/roll_rock.ogg", false, false);
-		//g_pSoundManager->AddSound("2nd_valve", "Sound/EffectSound/13_attach_wheel.ogg", false, false);
-		//g_pSoundManager->AddSound("2nd_valvelock", "Sound/EffectSound/12_valve_stuck.ogg", false, false);
+		g_pSoundManager->AddSound("base_box", "Sound/EffectSound/Interaction/door_level_wood_close.ogg", false, false);
+		g_pSoundManager->AddSound("base_chest", "Sound/EffectSound/Interaction/gameplay_open_chest.ogg", false, false);
+		g_pSoundManager->AddSound("1st_wood1", "Sound/EffectSound/Interaction/16_ladder_down.ogg", false, false);
+		g_pSoundManager->AddSound("1st_wood2", "Sound/EffectSound/Interaction/04_place_wood.ogg", false, false);
+		g_pSoundManager->AddSound("1st_woodblock", "Sound/EffectSound/Interaction/18_touch_bridge1.ogg", false, false);
+		g_pSoundManager->AddSound("2nd_button", "Sound/EffectSound/Interaction/roll_rock.ogg", false, false);
+		g_pSoundManager->AddSound("2nd_valve", "Sound/EffectSound/Interaction/13_attach_wheel.ogg", false, false);
+		g_pSoundManager->AddSound("2nd_valvelock", "Sound/EffectSound/Interaction/12_valve_stuck.ogg", false, false);
 
 	}
 }
@@ -193,7 +192,7 @@ void cDataManager::DropItem(StuffCode itemCode)
 	m_vStuffRotation[itemCode] = D3DXVECTOR3(0, m_vRotation1P, 0);
 
 	if (itemCode == STUFF_KEY1 || itemCode == STUFF_KEY2 || itemCode == STUFF_KEY3) g_pSoundManager->Play("drop_key", 0.5f);
-	else g_pSoundManager->Play("drop_generic", 0.5f);
+	else g_pSoundManager->Play("drop_generic", 0.4f);
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
