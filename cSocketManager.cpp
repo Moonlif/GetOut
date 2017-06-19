@@ -380,13 +380,13 @@ unsigned int _stdcall RECV_CHAT(LPVOID lpParam)
 	return 0;
 }
 
-/* 클라이언트 (2P)와 상호작용하는 스레드 */
+/* 클라이언트 (2P)와 상호작용하는 스레드 (미구현)*/
 unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
 {
 	return 0;
 }
 
-/* 서버로 요청을 전송하는 스레드 함수 */
+/* 요청을 전송하는 스레드 */
 unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -411,7 +411,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	// >> : 맨처음 데이터를 받아올때 네트워크 아이디도 받아와야함
 	while (true)
 	{
-		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
+		if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock()) continue;
 		prevTime = clock();
 
 		SendFlag(&hSocket,&stFlag);
@@ -444,7 +444,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	return 0;
 }
 
-/* 서버에서 요청을 수신하는 스레드 함수 */
+/* 요청을 수신하는 스레드 */
 unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -618,6 +618,7 @@ void SendPosition(SOCKET* pSocket)
 	cout << "Send Position Function" << endl;
 }
 
+/* 물체와 맵의 정보를 수신 (구현 예정)*/
 void ReceiveObject(SOCKET* pSocket)
 {
 }

@@ -12,13 +12,12 @@
 
 #define BUF_SIZE 100
 #define CLIENT_NUM 5
-#define HOSTIP "127.127.127.127"
 #define IN_MAN 1 << 0
 #define IN_WOMAN 1 << 1
 #define INVENTORY_SIZE 25
 #define NAME_SIZE 20
 #define ONE_SECOND 1000
-#define OVERHEAD 300
+#define OVERHEAD 100
 #define OUT_MAN 1 << 4
 #define OUT_WOMAN 1 << 5
 #define PORT_DATA_SERVER_OUT 1234
@@ -26,7 +25,7 @@
 #define PORT_DATA_CLIENT 10111
 #define PORT_CHAT_SERVER 9090
 #define ROOM_NAME_SIZE 50
-#define SEND_PER_SECOND 2
+#define SEND_PER_SECOND 1
 
 struct ST_ALL_DATA;
 class cUIObject;
@@ -55,6 +54,7 @@ private:
 	clock_t stStart, stCurrent, stUpdateTime;
 	float m_fT;
 
+	// << : 현재 연결 상황을 저장할 변수
 	SYNTHESIZE(int, nFlagNum, FlagNum);
 	SYNTHESIZE(bool, InitServer, InitServer);
 	SYNTHESIZE(int, nNetworkID, NetworkID);
