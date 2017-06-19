@@ -49,21 +49,21 @@ void cMainGame::Setup()
 	{
 		g_pData->Setup();
 		
-		////character
-		//m_pCharacter = new CharacterManager;
-		//m_pCharacter->Setup();
-		//m_pMonsterManager = new MonsterManager;
-		//m_pMonsterManager->Setup();
-		//m_pSkybox = new SkyBox;
-		//m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
+		//character
+		m_pCharacter = new CharacterManager;
+		m_pCharacter->Setup();
+		m_pMonsterManager = new MonsterManager;
+		m_pMonsterManager->Setup();
+		m_pSkybox = new SkyBox;
+		m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
 
-		////map
-		//m_pMap = new cMap;
-		//m_pMap->Setup();
+		//map
+		m_pMap = new cMap;
+		m_pMap->Setup();
 
-		////interact
-		//m_pInteract = new cInteract;
-		//m_pInteract->Setup();
+		//interact
+		m_pInteract = new cInteract;
+		m_pInteract->Setup();
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
@@ -93,19 +93,19 @@ void cMainGame::Update()
 	{
 		//map
 
-		////character
-		//if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update(m_pMap);
-		//static bool start = false;
-		//if (g_pData->GetIsStartedGame() && start == false)
-		//{
-		//	start = true;
-		//	m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
-		//}
+		//character
+		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update(m_pMap);
+		static bool start = false;
+		if (g_pData->GetIsStartedGame() && start == false)
+		{
+			start = true;
+			m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
+		}
 
-		//if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Update();
+		if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Update();
 
-		////interact
-		//if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
+		//interact
+		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
@@ -120,16 +120,16 @@ void cMainGame::Render()
 
 	//코드 추가
 	{
-		////map
-		//if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
+		//map
+		if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
 
-		////character
-		//if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
-		//if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Render();
-		//if (m_pSkybox && g_pData->GetIsStartedGame()) m_pSkybox->Render();
+		//character
+		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
+		if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Render();
+		if (m_pSkybox && g_pData->GetIsStartedGame()) m_pSkybox->Render();
 
-		////interact stuff
-		//if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
+		//interact stuff
+		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
