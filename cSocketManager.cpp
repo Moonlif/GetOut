@@ -3,6 +3,7 @@
 #include "cUIObject.h"
 #include "cUIButton.h"
 #include "cChat.h"
+#include "Player.h"
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -68,6 +69,8 @@ cSocketManager::cSocketManager()
 	, nNetworkID(-1)
 	, m_pUIRoot(NULL)
 	, m_pTextBox(NULL)
+	, m_pPlMan(NULL)
+	, m_pPlWoman(NULL)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -129,8 +132,35 @@ char * cSocketManager::GetRoomName()
 	return szRoomName;
 }
 
+void cSocketManager::InitClientData()
+{
+	/* 남자 정보 로딩 상황 */
+	if (g_pData->m_nPlayerNum1P == 1 && m_pPlMan)
+	{
+		m_pPlMan->SetPosition(ManPosition);
+		m_pPlMan->SetRotation(ManRot);
+		memcpy_s(g_pData->m_arrLoadInvenItem, sizeof(g_pData->m_arrLoadInvenItem), &ManInventory[INVENTORY_SIZE], sizeof(ManInventory));
+		g_pData->SetIsLoadItem(true);
+	}
+	/* 여자 정보 로딩 상황 */
+	else if (g_pData->m_nPlayerNum1P == 2 && m_pPlWoman)
+	{
+		m_pPlWoman->SetPosition(WomanPosition);
+		m_pPlWoman->SetRotation(WomanRot);
+		memcpy_s(g_pData->m_arrLoadInvenItem, sizeof(g_pData->m_arrLoadInvenItem), &WomanInventory[INVENTORY_SIZE], sizeof(WomanInventory));
+		g_pData->SetIsLoadItem(true);
+	}
+	/* 맵정보 로딩 */
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		g_pData->m_bStuffSwitch[i] = m_bStuffSwitch[i];
+		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
+		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
+	}
+}
+
 /* 서버로부터 수신한 초기 데이터를 클라이언트에 적용합니다 */
-void cSocketManager::InitClientData(ST_ALL_DATA stData)
+void cSocketManager::RecvClientData(ST_ALL_DATA stData)
 {
 	// << : 플레이어 정보 초기화
 	ManPosition = D3DXVECTOR3(stData.manX, stData.manY, stData.manZ);
@@ -423,7 +453,11 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	// >> : 맨처음 데이터를 받아올때 네트워크 아이디도 받아와야함
 	while (true)
 	{
-		if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock()) continue;
+		if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock())
+		{
+			Sleep(5);
+			continue;
+		}
 		prevTime = clock();
 
 		SendFlag(&hSocket,&stFlag);
@@ -448,6 +482,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			SendPosition(&hSocket);
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
+			SendObjectData(&hSocket);
 			break;
 		}
 	}
@@ -547,12 +582,12 @@ void ReceiveGender(SOCKET* pSocket)
 	int Gender;
 	recv(*pSocket, (char*)&Gender, sizeof(int), 0);
 	
-	if (Gender == OUT_MAN)
+	if (Gender == FLAG_MAN)
 	{
 		g_pData->m_nPlayerNum2P = 1;
 		cout << "2P는 남자입니다 " << endl;
 	}
-	else if (Gender == OUT_WOMAN)
+	else if (Gender == FLAG_WOMAN)
 	{
 		g_pData->m_nPlayerNum2P = 2;
 		cout << "2P는 여자입니다 " << endl;
@@ -583,8 +618,9 @@ void ReceiveAllData(SOCKET* pSocket)
 {
 	ST_ALL_DATA Recv;
 	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
-	g_pSocketmanager->InitClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
+	g_pSocketmanager->RecvClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
 	g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
+	cout << "ReceiveAllData" << endl;
 }
 
 /* 자신의 성별을 서버에게 전송합니다 */
@@ -594,9 +630,9 @@ void SendGender(SOCKET* pSocket)
 	stSend.eFlag = FLAG::FLAG_GENDER;
 	stSend.nNetworkID = g_pSocketmanager->GetNetworkID();
 	if (g_pData->m_nPlayerNum1P == 1)
-		stSend.nPlayerIndex = OUT_MAN;
+		stSend.nPlayerIndex = FLAG_MAN;
 	else if (g_pData->m_nPlayerNum1P == 2)
-		stSend.nPlayerIndex = OUT_WOMAN;
+		stSend.nPlayerIndex = FLAG_WOMAN;
 	sprintf_s(stSend.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
 	send(*pSocket, (char*)&stSend, sizeof(ST_FLAG), 0);	// << : 자신이 선택한 성별을 전송합니다.
 	g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);
@@ -630,9 +666,9 @@ void SendPosition(SOCKET* pSocket)
 	SOCKET hSocket = *pSocket;
 	ST_PLAYER_POSITION stSend;
 	if (g_pData->m_nPlayerNum1P == 1)
-		stSend.nPlayerIndex = OUT_MAN;
+		stSend.nPlayerIndex = FLAG_MAN;
 	else if (g_pData->m_nPlayerNum1P == 2)
-		stSend.nPlayerIndex = OUT_WOMAN;
+		stSend.nPlayerIndex = FLAG_WOMAN;
 	// << : 현재 방이름 복사
 	sprintf_s(stSend.szRoomName, "%s", g_pSocketmanager->GetRoomName(), sizeof(stSend.szRoomName));
 	stSend.fX = g_pData->m_vPosition1P.x;
@@ -656,5 +692,16 @@ void ReceiveObjectData(SOCKET* pSocket)
 void SendObjectData(SOCKET* pSocket)
 {
 	ST_OBJECT_DATA stData;
-	
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		D3DXVECTOR3 Position = g_pData->m_vStuffPosition[i];
+		D3DXVECTOR3 Rotation = g_pData->m_vStuffRotation[i];
+		stData.mapX[i] = Position.x;
+		stData.mapY[i] = Position.y;
+		stData.mapZ[i] = Position.z;
+		stData.mapRotX[i] = Rotation.x;
+		stData.mapRotY[i] = Rotation.y;
+		stData.mapRotZ[i] = Rotation.z;
+		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
+	}
 }

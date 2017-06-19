@@ -347,6 +347,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
+			g_pSocketmanager->InitClientData();
 			g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
 			break;
 		default:
