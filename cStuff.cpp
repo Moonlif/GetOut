@@ -79,20 +79,32 @@ void cStuff::Setup(StuffCode code, D3DXVECTOR3 position, D3DXVECTOR3 rotation, D
 
 void cStuff::Reposition(D3DXVECTOR3 position, D3DXVECTOR3 rotation, float switchIntensity)
 {
+	if (m_vPosition == position && m_vRotation == rotation) return;
+
 	m_bSwitch = true;
 	m_fSwitchValue = 0.0f;
 	m_vRePosition = position;
 	m_vReRotation = rotation;
 
 	m_fSwitchValueIntensity = switchIntensity;
-}
 
-void cStuff::Reposition(D3DXVECTOR3 deltaPosition)
-{
-	m_bSwitch = true;
-	m_fSwitchValue = 0.0f;
-	m_vRePosition = m_vPosition + deltaPosition;
-	m_vReRotation = m_vRotation;
+	if (m_eStuffCode == STUFF_DOOR_PRISON) g_pSoundManager->Play("door_prison", 0.5f);
+	else if (m_eStuffCode == STUFF_DOOR_1STROOM) g_pSoundManager->Play("door_1stRoom", 0.5f);
+	else if (m_eStuffCode == STUFF_DOOR_1STTOILET) g_pSoundManager->Play("door_1stToilet", 0.5f);
+	else if (m_eStuffCode == STUFF_DOOR_2NDROOM1) g_pSoundManager->Play("door_2ndRoom1", 0.5f);
+	else if (m_eStuffCode == STUFF_DOOR_2NDROOM2) g_pSoundManager->Play("door_2ndRoom2", 0.5f);
+	else if (m_eStuffCode == STUFF_DOOR_FINAL) g_pSoundManager->Play("door_final", 0.5f);
+
+	else if (m_eStuffCode == STUFF_BOX1) g_pSoundManager->Play("base_box", 0.5f);
+	else if (m_eStuffCode == STUFF_CHEST3) g_pSoundManager->Play("base_chest", 0.5f);
+	else if (m_eStuffCode == STUFF_WOOD1) g_pSoundManager->Play("1st_wood1", 0.5f);
+	else if (m_eStuffCode == STUFF_WOOD2) g_pSoundManager->Play("1st_wood2", 0.5f);
+	else if (m_eStuffCode == STUFF_BOARDBLOCK) g_pSoundManager->Play("1st_wood1", 0.5f);
+
+	else if (m_eStuffCode == STUFF_BUTTON1) g_pSoundManager->Play("2nd_button", 0.5f);
+	else if (m_eStuffCode == STUFF_BUTTON3) g_pSoundManager->Play("2nd_button", 0.5f);
+	else if (m_eStuffCode == STUFF_VALVE1) g_pSoundManager->Play("2nd_valve", 0.5f);
+	else if (m_eStuffCode == STUFF_VALVE2) g_pSoundManager->Play("2nd_valve", 0.5f);
 }
 
 void cStuff::Update()

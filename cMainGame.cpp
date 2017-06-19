@@ -44,14 +44,11 @@ void cMainGame::Setup()
 {
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
-
-	g_pSoundManager->AddSound("00_laugh", "Sound/EffectSound/00_laugh.ogg", true, false);
-	g_pSoundManager->Play("00_laugh", 1.0f);
 	
 	//코드 추가
 	{
 		g_pData->Setup();
-		
+
 		//character
 		m_pCharacter = new CharacterManager;
 		m_pCharacter->Setup();
@@ -65,8 +62,11 @@ void cMainGame::Setup()
 		m_pMap->Setup();
 
 		//interact
-		m_pInteract = new cInteract;
-		m_pInteract->Setup();
+		if (g_pData->m_isSetup)
+		{
+			m_pInteract = new cInteract;
+			m_pInteract->Setup();
+		}
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;

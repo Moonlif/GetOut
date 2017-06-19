@@ -34,18 +34,18 @@ void cInteract::Setup()
 	}
 
 	//item
-	m_vecStuff[STUFF_CROWBAR]->Setup(STUFF_CROWBAR, D3DXVECTOR3(-40, 12, 12), D3DXVECTOR3(0, D3DX_PI / 2.2f, 0), D3DXVECTOR3(0, 0, 0), 1.5f, 0.2f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_CROWBAR]);
-	m_vecStuff[STUFF_PAPER1]->Setup(STUFF_PAPER1, D3DXVECTOR3(10, 0.7f, 18), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_PAPER1]);
-	m_vecStuff[STUFF_PAPER2]->Setup(STUFF_PAPER2, D3DXVECTOR3(-38, 12.7f, -6), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_PAPER2]);
-	m_vecStuff[STUFF_PAPER3]->Setup(STUFF_PAPER3, D3DXVECTOR3(-17.5f, 27.7f, -10.5f), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_PAPER3]);
-	m_vecStuff[STUFF_KEY1]->Setup(STUFF_KEY1, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_KEY1]);
-	m_vecStuff[STUFF_KEY2]->Setup(STUFF_KEY2, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_KEY2]);
-	m_vecStuff[STUFF_KEY3]->Setup(STUFF_KEY3, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_KEY3]);
-	m_vecStuff[STUFF_BRICK1]->Setup(STUFF_BRICK1, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK1]);
-	m_vecStuff[STUFF_BRICK2]->Setup(STUFF_BRICK2, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK2]);
-	m_vecStuff[STUFF_BRICK3]->Setup(STUFF_BRICK3, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK3]);
-	m_vecStuff[STUFF_BRICK4]->Setup(STUFF_BRICK4, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK4]);
-	m_vecStuff[STUFF_BRICK5]->Setup(STUFF_BRICK5, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK5]);
+	m_vecStuff[STUFF_CROWBAR]->Setup(STUFF_CROWBAR, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.5f, 0.2f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_CROWBAR]);
+	m_vecStuff[STUFF_PAPER1]->Setup(STUFF_PAPER1, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_PAPER1]);
+	m_vecStuff[STUFF_PAPER2]->Setup(STUFF_PAPER2, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_PAPER2]);
+	m_vecStuff[STUFF_PAPER3]->Setup(STUFF_PAPER3, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_PAPER3]);
+	m_vecStuff[STUFF_KEY1]->Setup(STUFF_KEY1, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_KEY1]);
+	m_vecStuff[STUFF_KEY2]->Setup(STUFF_KEY2, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_KEY2]);
+	m_vecStuff[STUFF_KEY3]->Setup(STUFF_KEY3, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.15f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_KEY3]);
+	m_vecStuff[STUFF_BRICK1]->Setup(STUFF_BRICK1, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK1]);
+	m_vecStuff[STUFF_BRICK2]->Setup(STUFF_BRICK2, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK2]);
+	m_vecStuff[STUFF_BRICK3]->Setup(STUFF_BRICK3, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK3]);
+	m_vecStuff[STUFF_BRICK4]->Setup(STUFF_BRICK4, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK4]);
+	m_vecStuff[STUFF_BRICK5]->Setup(STUFF_BRICK5, D3DXVECTOR3(100, 0, 0), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 1.0f, 0.17f, g_pData->m_bStuffSwitch[SWITCH_ONMAP_BRICK5]);
 
 	//object : StuffCode만으로 만드려다보니 STUFF_NONE자리에 STUFF_WOOD3하나 더 사용함 
 	m_vecStuff[STUFF_BOARDBLOCK]->Setup(STUFF_BOARDBLOCK, D3DXVECTOR3(-28, 17.0f, -2.8f), D3DXVECTOR3(0, 0, D3DX_PI / 2.0f), D3DXVECTOR3(0, 0, 0), 3.5f, 0.4f, true);
@@ -74,15 +74,15 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_DOOR_1STTOILET]->Setup(STUFF_DOOR_1STTOILET, D3DXVECTOR3(-24, 16, -18), D3DXVECTOR3(0, D3DX_PI/2.0f, 0), D3DXVECTOR3(0, 4.2f, 3), 2.5f, 0.2f, true);
 	m_vecStuff[STUFF_DOOR_2NDROOM1]->Setup(STUFF_DOOR_2NDROOM1, D3DXVECTOR3(-13.3f, 28.1f, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.4f, true);
 	m_vecStuff[STUFF_DOOR_2NDROOM2]->Setup(STUFF_DOOR_2NDROOM2, D3DXVECTOR3(-5.5f, 28, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.25f, true);
-	m_vecStuff[STUFF_DOOR_FINAL]->Setup(STUFF_DOOR_FINAL, D3DXVECTOR3(18, 16, -18), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 4), 5.0f, 0.25f, true);
+	m_vecStuff[STUFF_DOOR_FINAL]->Setup(STUFF_DOOR_FINAL, D3DXVECTOR3(18, 16, -18), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4.2f, 4), 5.0f, 0.25f, true);
 
 	D3DXCOLOR stColor;
-	stColor.r = 0;
-	stColor.g = 100;
-	stColor.b = 0;
+	stColor.r = 20;
+	stColor.g = 50;
+	stColor.b = 20;
 	m_vPositionFog = D3DXVECTOR3(-33, 14, -15);
 	m_pParticleFog = new cParticleSystem;
-	m_pParticleFog->Setup(cParticleSystem::eParticleType::E_PARTICLE_TYPE_SPREAD, &m_vPositionFog, 2, 0, 50, 10, stColor, 1000.0f, 3000.0f, "Texture/alpha_fog_tex.tga");
+	m_pParticleFog->Setup(cParticleSystem::eParticleType::E_PARTICLE_TYPE_SPREAD, &m_vPositionFog, 1, 100, 10, 10, stColor, 0.0f, 1000.0f, "Texture/alpha_fog_tex.tga");
 }
 
 void cInteract::Update()
@@ -204,7 +204,7 @@ void cInteract::Update()
 		it->Update();
 	}
 
-	m_pParticleFog->Update();
+	if (m_pParticleFog) m_pParticleFog->Update();
 }
 
 void cInteract::Render()
@@ -214,7 +214,7 @@ void cInteract::Render()
 		it->Render();
 	}
 
-	m_pParticleFog->Render();
+	if (m_pParticleFog) m_pParticleFog->Render();
 }
 
 void cInteract::CheckStuff(D3DXVECTOR3 playerPos)
@@ -267,6 +267,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 	case STUFF_DOOR_1STROOM:
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
 		m_vecStuff[STUFF_DOOR_1STROOM]->SetRadius(0.01f);
+		g_pSoundManager->Play("door_prison", 0.5f);
 		return true;
 	case STUFF_DOOR_1STTOILET:
 		if (g_pData->GetUseItem() == STUFF_KEY2)
@@ -336,8 +337,13 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		{
 			m_n2FValve1Count = 4;
 			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
+			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		else if (m_n2FValve1Count < -4) m_n2FValve1Count = -4;
+		else if (m_n2FValve1Count < -4)
+		{
+			m_n2FValve1Count = -4;
+			g_pSoundManager->Play("2nd_valvelock", 0.5f);
+		}
 		return true;
 	case STUFF_VALVE2:
 		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return true;;
@@ -348,12 +354,17 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		{
 			m_n2FValve2Count = -4;
 			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
+			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		else if (m_n2FValve2Count > 4) m_n2FValve2Count = 4;
+		else if (m_n2FValve2Count > 4)
+		{
+			m_n2FValve2Count = 4;
+			g_pSoundManager->Play("2nd_valvelock", 0.5f);
+		}
 		return true;
 	case STUFF_CROWBAR:
 		g_pData->GetItem(STUFF_CROWBAR);
-		g_pData->TextOutWarningWord(string("'크로우바'를 얻었습니다."));
+		g_pData->TextOutWarningWord(string("'빠루'를 얻었습니다."));
 		return true;
 	case STUFF_PAPER1:
 		if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST])
