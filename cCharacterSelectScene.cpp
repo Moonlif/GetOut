@@ -140,7 +140,13 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			}
 			isSelect = true;
 		}
+<<<<<<< HEAD
 		
+=======
+
+		cout << m_WhatIsYourNumber << endl;
+
+>>>>>>> origin/Socket
 		///-------------------------------------------------------------
 		//                  1번 플레이어 선택시
 		///-------------------------------------------------------------
