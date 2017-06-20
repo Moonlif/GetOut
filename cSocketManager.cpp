@@ -55,6 +55,14 @@ struct ST_ALL_DATA
 	float mapRotY[SWITCH_LASTNUM];
 	float mapRotZ[SWITCH_LASTNUM];
 	bool mapIsRunning[SWITCH_LASTNUM];
+
+	// << : 벨브 데이터
+	bool bValve1;
+	bool bValve2;
+	int nFValve1Count;
+	int nFValve2Count;
+	int nBrickCount;
+
 }; 
 
 cSocketManager::cSocketManager()
@@ -148,6 +156,7 @@ void cSocketManager::InitClientData()
 			g_pData->m_arrLoadInvenItem[i] = ManInventory[i];
 		g_pData->SetIsLoadItem(true);
 	}
+
 	/* 여자 정보 로딩 상황 */
 	else if (g_pData->m_nPlayerNum1P == 2 && m_pPlWoman)
 	{
@@ -157,13 +166,21 @@ void cSocketManager::InitClientData()
 			g_pData->m_arrLoadInvenItem[i] = WomanInventory[i];
 		g_pData->SetIsLoadItem(true);
 	}
-	/* 맵정보 로딩 */
+
+	/* 맵 정보 로딩 */
 	for (int i = 0; i < SWITCH_LASTNUM; ++i)
 	{
 		g_pData->m_bStuffSwitch[i] = m_bStuffSwitch[i];
 		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
 		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
 	}
+
+	/* 맵 상태 로딩*/
+	g_pData->m_bValve1 = bValve1;
+	g_pData->m_bValve2 = bValve2;
+	g_pData->m_n2FValve1Count = nFValve1Count;
+	g_pData->m_n2FValve2Count = nFValve2Count;
+	g_pData->m_nBrickCount = nBrickCount;
 }
 
 /* 서버로부터 수신한 초기 데이터를 클라이언트에 적용합니다 */
@@ -188,6 +205,13 @@ void cSocketManager::RecvClientData(ST_ALL_DATA stData)
 		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
 		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
 	}
+
+	// << : 맵상태 초기화
+	bValve1 = stData.bValve1;
+	bValve2 = stData.bValve2;
+	nFValve1Count = stData.nFValve1Count;
+	nFValve2Count = stData.nFValve2Count;
+	nBrickCount = stData.nBrickCount;
 }
 
 void cSocketManager::RecvObjectData(ST_OBJECT_DATA stData)
