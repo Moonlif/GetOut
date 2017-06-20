@@ -210,6 +210,10 @@ void cDataManager::AddSound()
 	g_pSoundManager->AddSound("LoadingScene", "Sound/Background/LoadingScene.ogg", true, true);
 	g_pSoundManager->AddSound("CharacterSelectScene", "Sound/Background/CharacterSelectScene.ogg", true, true);
 
+	//진호
+	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
+	g_pSoundManager->AddSound("BackGround", "Sound/BackGround/BackGround.ogg", true, true);
+	
 	//정훈 사운드 정보
 	{
 		g_pSoundManager->AddSound("pick_generic", "Sound/EffectSound/Interaction/pick_generic.ogg", false, false);

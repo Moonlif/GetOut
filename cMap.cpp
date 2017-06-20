@@ -25,9 +25,7 @@ cMap::~cMap()
 
 void cMap::Setup()
 {
-	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
-	g_pSoundManager->AddSound("BackGround", "Sound/BackGround/BackGround.ogg", true, true);
-	g_pSoundManager->Play("BackGround",1.0f);
+	/*
 	g_pLightManager->SetPointLight(5,
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
@@ -35,7 +33,7 @@ void cMap::Setup()
 		D3DXVECTOR3(0,1,5), 100.0f);
 
 	g_pD3DDevice->LightEnable(5, true);
-
+	*/
 	/*
 	g_pLightManager->SetPointLight(eLIGHT::P_B1F_PRISON,
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
