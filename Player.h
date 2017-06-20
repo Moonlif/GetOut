@@ -17,6 +17,7 @@ private:
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3,	headPosition, headPosition)
 	D3DXVECTOR3		direction;
 	float			rotY;
+	bool			isDraw;
 
 	SkinnedMesh* player;
 	SkinnedMesh* player_Weapon;
@@ -34,12 +35,15 @@ public:
 	void Render();
 
 	inline D3DXVECTOR3& GetPosition() { return position; }
+	void SetPosition(D3DXVECTOR3 pos) { position = pos; }
+	
+	inline void SetDraw(bool is) { isDraw = is; }
 	inline D3DXVECTOR3& GetDirection() { return direction; }
-	void SetPosition(D3DXVECTOR3 stPosition) { position = stPosition; }
 	void SetRotation(float fRotation) { rotY = fRotation; }
 
 	void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
 
 	void MoveCharacter(cMap* pMap);
+	void CheckPosition(cMap* pMap);
 };
 

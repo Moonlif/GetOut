@@ -30,7 +30,10 @@ private:
 
 	//영현 - 플레이어 정하기
 	SYNTHESIZE(int,			m_nPlayer, PlayerNum)
-	
+
+	//균영
+	SYNTHESIZE(bool, m_IsCollisionWall, IsCollisionWall)
+
 public:
 	//정훈 - 오브젝트용
 	bool m_isHandOn;

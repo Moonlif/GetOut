@@ -54,6 +54,7 @@ void Monster::Update()
 	//몬스터 방향, 위치
 	monster->SetRotation(rotY);
 	monster->SetPosition(position);
+	monster->SetDirection(direction);
 }
 void Monster::Render()
 {

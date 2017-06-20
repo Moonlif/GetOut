@@ -5,7 +5,7 @@
 #include "cObjLoader.h"
 
 cDataManager::cDataManager()
-	:m_IsInvenOpen(false)
+	: m_IsInvenOpen(false)
 	, m_IsStartedGame(false)
 	, m_IsOnChat(false)
 	, m_PickUpItemCode(StuffCode::STUFF_NONE)
@@ -17,6 +17,7 @@ cDataManager::cDataManager()
 	, m_n2FValve2Count(0)
 	, m_nBrickCount(0)
 	, m_nPlayer(0)
+	, m_IsCollisionWall(false)
 {
 
 	for (int i = 0; i < TOTALINVENSIZE; ++i)

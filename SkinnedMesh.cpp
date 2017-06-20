@@ -116,7 +116,7 @@ void SkinnedMesh::UpdateAndRender()
 		world *= translatrionMat;
 
 		Update(rootFrame, &world);
-		Render(rootFrame);
+		if(isRender) Render(rootFrame);
 	}
 }
 
