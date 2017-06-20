@@ -24,7 +24,6 @@ void ReceivePosition(SOCKET* pSocket);
 void ReceiveAllData(SOCKET* pSocket);
 void ReceiveObjectData(SOCKET* pSocket);
 
-void SendFlag(SOCKET* pSocket, FLAG eFlag);
 void SendNetworkID(SOCKET* pSocket, int ID, bool* bConnected);
 void SendGender(SOCKET* pSocket);
 void SendPosition(SOCKET* pSocket);
@@ -466,7 +465,6 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	}
 
 	g_pSocketmanager->SetServerRun(true);
-	ST_FLAG stFlag;
 	FLAG eFlag = FLAG::FLAG_NONE;
 	while (true)
 	{
@@ -480,7 +478,8 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		if (eFlag & FLAG::FLAG_NETWORK_ID)
 		{
 			// << : SendFlag 어떻게 보낼건지 설정해야함
-			SendFlag(&hSocket, FLAG::FLAG_NETWORK_ID);
+			FLAG stFlag = FLAG::FLAG_NETWORK_ID;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			ReceiveNetworkID(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_NETWORK_ID);
 			g_pSocketmanager->AddFlag(FLAG::FLAG_ROOM_NAME);
@@ -488,8 +487,9 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		}
 		if (eFlag & FLAG::FLAG_ROOM_NAME)
 		{
+			FLAG stFlag = FLAG::FLAG_ROOM_NAME;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			int Result;
-			SendFlag(&hSocket, FLAG::FLAG_ROOM_NAME);
 			Result = ReceiveRoomName(&hSocket);
 			if (Result)
 			{
@@ -505,14 +505,16 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		}
 		if (eFlag & FLAG::FLAG_ALL_DATA)
 		{
-			SendFlag(&hSocket, FLAG::FLAG_ALL_DATA);
+			FLAG stFlag = FLAG::FLAG_ALL_DATA;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			ReceiveAllData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_ALL_DATA);
 			cout << "Recv All Data" << endl;
 		}
 		if (eFlag & FLAG::FLAG_GENDER)
 		{
-			SendFlag(&hSocket, FLAG::FLAG_GENDER);
+			FLAG stFlag = FLAG::FLAG_GENDER;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendGender(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_GENDER);
 			cout << "Send Gender " << endl;
@@ -520,13 +522,15 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		if (eFlag & FLAG::FLAG_POSITION && prevTime + ONE_SECOND < clock())
 		{
 			prevTime = clock();
-			SendFlag(&hSocket, FLAG::FLAG_POSITION);
+			FLAG stFlag = FLAG::FLAG_POSITION;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendPosition(&hSocket);
 			cout << "Send Position" << endl;
 		}
 		if (eFlag & FLAG::FLAG_OBJECT_DATA)
 		{
-			SendFlag(&hSocket, FLAG::FLAG_OBJECT_DATA);
+			FLAG stFlag = FLAG::FLAG_OBJECT_DATA;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
 		}
@@ -568,7 +572,6 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 	{
 		strLen = recv(hSocket, (char*)&eFlag, sizeof(FLAG), 0);
 		if (strLen == -1) break;
-		//cout << eFlag << endl;
 
 		switch (eFlag)
 		{
@@ -605,7 +608,12 @@ void ReceiveNetworkID(SOCKET* pSocket)
 /* 방이 연결 가능한지 확인 */
 int ReceiveRoomName(SOCKET* pSocket)
 {
-	// << : 연결이 가능하다면 모든데이터를 수신하는 단계로 , 연결이 안된다면 방이름을 바꾸도록
+	// << : 여기서 방이름을 보내고 확인을 받는식으로
+	char szRoomName[ROOM_NAME_SIZE];
+	sprintf_s(szRoomName, "%s", g_pSocketmanager->szRoomName, sizeof(g_pSocketmanager->szRoomName));
+	cout << "방이름 : " << szRoomName << endl;
+
+	send(*pSocket, szRoomName, sizeof(szRoomName), 0);
 	int IsOK = 0;
 	recv(*pSocket, (char*)&IsOK, sizeof(int), 0);
 	if (IsOK)
@@ -664,28 +672,15 @@ void ReceiveAllData(SOCKET* pSocket)
 /* 자신의 성별을 서버에게 전송합니다 */
 void SendGender(SOCKET* pSocket)
 {
-	ST_FLAG stSend;
-	stSend.eFlag = FLAG::FLAG_GENDER;
-	stSend.nNetworkID = g_pSocketmanager->GetNetworkID();
+	int Gender;
 	if (g_pData->m_nPlayerNum1P == 1)
-		stSend.nPlayerIndex = FLAG_MAN;
+		Gender = FLAG_MAN;
 	else if (g_pData->m_nPlayerNum1P == 2)
-		stSend.nPlayerIndex = FLAG_WOMAN;
-	sprintf_s(stSend.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
-	send(*pSocket, (char*)&stSend, sizeof(ST_FLAG), 0);	// << : 자신이 선택한 성별을 전송합니다.
-}
+		Gender = FLAG_WOMAN;
+	else
+		Gender = 0;
 
-/* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
-void SendFlag(SOCKET* pSocket, FLAG eFlag)
-{
-
-	ST_FLAG stFlag;
-	stFlag.eFlag = eFlag; // << : 플래그 파라미터로 받음
-	stFlag.nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
-	stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
-	sprintf_s(stFlag.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
-
-	send(*pSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
+	send(*pSocket, (char*)&Gender, sizeof(int), 0);	// << : 자신이 선택한 성별을 전송합니다.
 }
 
 /* 서버에게 자신의 NetworkID를 알려줍니다 */
@@ -701,12 +696,6 @@ void SendPosition(SOCKET* pSocket)
 {
 	SOCKET hSocket = *pSocket;
 	ST_PLAYER_POSITION stSend;
-	if (g_pData->m_nPlayerNum1P == 1)
-		stSend.nPlayerIndex = FLAG_MAN;
-	else if (g_pData->m_nPlayerNum1P == 2)
-		stSend.nPlayerIndex = FLAG_WOMAN;
-	// << : 현재 방이름 복사
-	sprintf_s(stSend.szRoomName, "%s", g_pSocketmanager->GetRoomName(), sizeof(stSend.szRoomName));
 	stSend.fX = g_pData->m_vPosition1P.x;
 	stSend.fY = g_pData->m_vPosition1P.y;
 	stSend.fZ = g_pData->m_vPosition1P.z;
