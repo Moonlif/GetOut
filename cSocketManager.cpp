@@ -71,6 +71,7 @@ cSocketManager::cSocketManager()
 	, m_pTextBox(NULL)
 	, m_pPlMan(NULL)
 	, m_pPlWoman(NULL)
+	, IsRun(false)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -476,6 +477,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		if (nCnt > 5) return 0;	// << : 5번 이상 시도하면 함수 꺼버림
 	}
 
+	g_pSocketmanager->SetServerRun(true);
 	ST_FLAG stFlag;
 	FLAG eFlag = FLAG::FLAG_NONE;
 	while (true)
@@ -547,6 +549,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 		if (nCnt > 5) return 0;	// << : 5번 이상 시도시 스레드 꺼버림
 	}
 
+	g_pSocketmanager->SetServerRun(true);
 	FLAG eFlag;
 	bool isConnected = true;
 	while (isConnected)

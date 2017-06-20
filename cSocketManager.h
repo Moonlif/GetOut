@@ -87,6 +87,9 @@ private:
 	cUIObject* m_pUIRoot;
 	cChat*	m_pTextBox;
 
+	// << : 서버가 동작중인지 확인하기 위한 변수
+	SYNTHESIZE(bool, IsRun, ServerRun);
+
 public:
 	void Calc_Position();
 	void Destroy();
