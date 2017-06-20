@@ -44,6 +44,6 @@ public:
 	void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
 
 	void MoveCharacter(cMap* pMap);
-	void CheckPosition(cMap* pMap);
+	//void CheckPosition(cMap* pMap);
 };
 

@@ -63,8 +63,8 @@ void cCamera::Update()
 						 //ClipCursor(&rc); //마우스 가두기
 	}
 
-	//벽충돌시 카메라 이동
-	if (g_pData->GetIsCollisionWall() && g_pData->GetIsStartedGame())
+	//벽충돌시 카메라 이동(현재 필요x)
+	/*if (g_pData->GetIsCollisionWall() && g_pData->GetIsStartedGame())
 	{
 		m_fCameraDistance += (10.0f * g_pTimeManager->GetElapsedTime());
 		if (m_fCameraDistance > 2.0f)
@@ -79,7 +79,7 @@ void cCamera::Update()
 		{
 			m_fCameraDistance = 0.0001f;
 		}
-	}
+	}*/
 
 	D3DXMATRIXA16 matR, matRX, matRY;
 	D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
