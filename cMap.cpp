@@ -447,12 +447,14 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM2)
 					return true;
-				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1)
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1 && g_pData->m_nPlayerNum1P == 2)
 					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1 && g_pData->m_nPlayerNum1P == 1){
+					g_pData->TextOutWarningWord(string("남자가 가기에는 판자가 약합니다."));
+					return false;
+				}
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == false && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {	// 트랩
 					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;
-				}
-				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// 트랩
 					if (isTrapOpen != true) {
 						if (y > 0) {
 							isTrapIng = true;
@@ -461,6 +463,9 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 					}
 					else return false;
 				}
+			//	else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// 트랩
+				
+		//		}
 				else
 					return false;
 			}
@@ -475,7 +480,6 @@ bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 		return true;
 	}
 	else if (y < 0 && isTrapIng == true) {
-		
 		g_pSoundManager->Play("break_wood", 1.0f);
 		isTrapIng = false;
 		isTrapOpen = true;
