@@ -196,6 +196,11 @@ void cSocketManager::RecvObjectData(ST_OBJECT_DATA stData)
 		m_vStuffPosition[i] = Position;
 		m_vStuffRotation[i] = Rotation;
 	}
+	bValve1 = stData.bValve1;
+	bValve2 = stData.bValve2;
+	nFValve1Count = stData.nFValve1Count;
+	nFValve2Count = stData.nFValve2Count;
+	nBrickCount = stData.nBrickCount;
 }
 
 /* 버튼 등 초기설정 수행 */

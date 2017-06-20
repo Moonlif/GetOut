@@ -72,6 +72,12 @@ private:
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
+	bool bValve1;
+	bool bValve2;
+	int nFValve1Count;
+	int nFValve2Count;
+	int nBrickCount;
+
 	// << : 초기 데이터 적용을 위한 포인터
 	SYNTHESIZE(Player*, m_pPlMan, ManPlayer);
 	SYNTHESIZE(Player*, m_pPlWoman, WomanPlayer);
@@ -147,6 +153,12 @@ struct ST_OBJECT_DATA
 	float mapRotY[SWITCH_LASTNUM];
 	float mapRotZ[SWITCH_LASTNUM];
 	bool mapIsRunning[SWITCH_LASTNUM];
+
+	bool bValve1;
+	bool bValve2;
+	int nFValve1Count;
+	int nFValve2Count;
+	int nBrickCount;
 };
 
 struct ST_CHAT
