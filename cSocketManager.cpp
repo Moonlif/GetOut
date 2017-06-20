@@ -469,6 +469,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
 			SendObjectData(&hSocket);
+			eFlag = FLAG::FLAG_POSITION;
 			break;
 		}
 	}
@@ -698,4 +699,6 @@ void SendObjectData(SOCKET* pSocket)
 		stData.mapRotZ[i] = Rotation.z;
 		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
 	}
+	send(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
+
 }
