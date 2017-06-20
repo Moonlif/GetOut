@@ -11,7 +11,7 @@ cRectMake::cRectMake()
 
 cRectMake::~cRectMake()
 {
-	if(m_pTexture) SAFE_RELEASE(m_pTexture);
+	//if(m_pTexture) SAFE_RELEASE(m_pTexture);
 }
 
 void cRectMake::Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, char * szFile)
