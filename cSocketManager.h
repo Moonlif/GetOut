@@ -140,6 +140,12 @@ struct ST_OBJECT_DATA
 	float mapRotY[SWITCH_LASTNUM];
 	float mapRotZ[SWITCH_LASTNUM];
 	bool mapIsRunning[SWITCH_LASTNUM];
+
+	bool bValve1;
+	bool bValve2;
+	int nFValve1Count;
+	int nFValve2Count;
+	int nBrickCount;
 };
 
 struct ST_CHAT
