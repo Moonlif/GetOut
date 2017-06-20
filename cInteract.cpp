@@ -264,7 +264,11 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_DOOR_PRISON]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("'감옥 열쇠'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'감옥 열쇠'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_DOOR_1STROOM:
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
@@ -279,7 +283,11 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_DOOR_1STTOILET]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("'1층 열쇠'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'1층 열쇠'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_DOOR_FINAL:
 		if (g_pData->GetUseItem() == STUFF_KEY3)
@@ -288,7 +296,11 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_DOOR_FINAL]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("'현관 열쇠'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'현관 열쇠'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_BOARDBLOCK:
 		if (g_pData->GetUseItem() == STUFF_CROWBAR)
@@ -298,9 +310,17 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 				g_pSoundManager->Play("1st_woodblock", 0.5f);
 				m_n1FBlockCount++;
 			}
-			else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+			else
+			{
+				g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+				g_pSoundManager->Play("cancle", 0.5f);
+			}
 		}
-		else g_pData->TextOutWarningWord(string("'빠루'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'빠루'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		if (m_n1FBlockCount > 3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
@@ -315,7 +335,11 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_BOX1]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_CHEST3:
 		g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;

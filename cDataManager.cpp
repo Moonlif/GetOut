@@ -231,6 +231,7 @@ void cDataManager::AddSound()
 		g_pSoundManager->AddSound("2nd_button", "Sound/EffectSound/Interaction/roll_rock.ogg", false, false);
 		g_pSoundManager->AddSound("2nd_valve", "Sound/EffectSound/Interaction/13_attach_wheel.ogg", false, false);
 		g_pSoundManager->AddSound("2nd_valvelock", "Sound/EffectSound/Interaction/12_valve_stuck.ogg", false, false);
+		g_pSoundManager->AddSound("cancle", "Sound/EffectSound/Interaction/cancle.mp3", false, false);
 
 	}
 }
