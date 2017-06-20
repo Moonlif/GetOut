@@ -13,6 +13,7 @@ cCeiling::~cCeiling()
 	{
 		SAFE_DELETE(it);
 	}
+	m_vecRect.clear();
 	SAFE_DELETE(m_pB1FStartRoom);
 
 	SAFE_DELETE(m_pB1FCollision);
