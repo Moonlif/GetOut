@@ -38,23 +38,23 @@ struct ST_ALL_DATA
 	float manZ;
 	float manAngle;
 	int manAnim;
-	int manItem[25];
+	int manItem[INVENTORY_SIZE];
 
 	float womanX;
 	float womanY;
 	float womanZ;
 	float womanAngle;
 	int womanAnim;
-	int womanItem[25];
+	int womanItem[INVENTORY_SIZE];
 
 	// << : 맵 데이터
-	float mapX[30];
-	float mapY[30];
-	float mapZ[30];
-	float mapRotX[30];
-	float mapRotY[30];
-	float mapRotZ[30];
-	bool mapIsRunning[30];
+	float mapX[SWITCH_LASTNUM];
+	float mapY[SWITCH_LASTNUM];
+	float mapZ[SWITCH_LASTNUM];
+	float mapRotX[SWITCH_LASTNUM];
+	float mapRotY[SWITCH_LASTNUM];
+	float mapRotZ[SWITCH_LASTNUM];
+	bool mapIsRunning[SWITCH_LASTNUM];
 }; 
 
 cSocketManager::cSocketManager()
@@ -67,10 +67,10 @@ cSocketManager::cSocketManager()
 	, nextRotation(0.0f)
 	, InitServer(false)
 	, nNetworkID(-1)
-	, m_pUIRoot(NULL)
 	, m_pTextBox(NULL)
 	, m_pPlMan(NULL)
 	, m_pPlWoman(NULL)
+	, IsRun(false)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -106,7 +106,6 @@ void cSocketManager::Calc_Position()
 /* 모든 스레드를 종료하고 소켓을 닫습니다 */
 void cSocketManager::Destroy()
 {
-	SAFE_DELETE(m_pUIRoot);
 	SAFE_DELETE(m_pTextBox);
 	SAFE_RELEASE(m_pSprite);
 
@@ -208,37 +207,8 @@ void cSocketManager::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-	// Submit 버튼 초기화
-	{
-		cUIButton* pButtonSubmit = new cUIButton;
-		pButtonSubmit->SetTexture(
-			"UI/button/Submit_Up.png",
-			"UI/button/Submit_Over.png",
-			"UI/button/Submit_Down.png");
-		pButtonSubmit->SetPosition(135, 330);
-		pButtonSubmit->SetDelegate(this);
-		pButtonSubmit->SetTag(E_IP_OK);
-		m_pUIRoot = pButtonSubmit;
-	}
-
-	// Reset 버튼 초기화
-	{
-		cUIButton* pButtonReset = new cUIButton;
-		pButtonReset->SetTexture(
-		"UI/button/Reset_Up.png",
-		"UI/button/Reset_Over.png",
-		"UI/button/Reset_Down.png");
-		pButtonReset->SetPosition(135, 0);
-		pButtonReset->SetDelegate(this);
-		pButtonReset->SetTag(E_IP_RESET);
-		m_pUIRoot->AddChild(pButtonReset);
-	}
-
-	// << : Button과 TextBox를 연동시켜야 한다.
-	{
-		m_pTextBox = new cChat;
-		m_pTextBox->Setup(1, 200, 200, 50, 50);
-	}
+	m_pTextBox = new cChat;
+	m_pTextBox->Setup(1, 200, 200, 50, 50);
 }
 
 /* IP를 설정하는 부분 */
@@ -355,8 +325,6 @@ void cSocketManager::Setup_CHAT()
 /* 싱글톤 업데이트 */
 void cSocketManager::Update()
 {
-	if (m_pUIRoot)
-		m_pUIRoot->Update();
 	if (m_pTextBox)
 		m_pTextBox->Update_ForSocket();
 	Calc_Position(); // < : 좌표를 보정해서 계산합니다.
@@ -388,22 +356,8 @@ void cSocketManager::UpdateObjectData()
 
 void cSocketManager::UIRender()
 {
-	if (m_pUIRoot)
-		m_pUIRoot->Render(m_pSprite);
 	if (m_pTextBox)
 		m_pTextBox->Render(200, 200, 50, 50);
-}
-
-void cSocketManager::OnClick(cUIButton * pSender)
-{
-	if (pSender->GetTag() == E_IP_OK)
-	{
-		int a = 3;
-	}
-	else if (pSender->GetTag() == E_IP_RESET)
-	{
-		int b = 4;
-	}
 }
 
 /* 채팅을 전송하는 스레드 */
@@ -476,6 +430,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 		if (nCnt > 5) return 0;	// << : 5번 이상 시도하면 함수 꺼버림
 	}
 
+	g_pSocketmanager->SetServerRun(true);
 	ST_FLAG stFlag;
 	FLAG eFlag = FLAG::FLAG_NONE;
 	while (true)
@@ -547,6 +502,7 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 		if (nCnt > 5) return 0;	// << : 5번 이상 시도시 스레드 꺼버림
 	}
 
+	g_pSocketmanager->SetServerRun(true);
 	FLAG eFlag;
 	bool isConnected = true;
 	while (isConnected)

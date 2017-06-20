@@ -30,9 +30,8 @@ struct ST_OBJECT_DATA;
 class cUIObject;
 class cChat;
 class Player;
-#include "cUIButton.h"
 
-class cSocketManager : public iButtonDelegate
+class cSocketManager
 {
 private:
 	SINGLETONE(cSocketManager);
@@ -84,8 +83,10 @@ private:
 
 	// << : 입력창을 렌더하기 위한 변수들
 	LPD3DXSPRITE m_pSprite;
-	cUIObject* m_pUIRoot;
 	cChat*	m_pTextBox;
+
+	// << : 서버가 동작중인지 확인하기 위한 변수
+	SYNTHESIZE(bool, IsRun, ServerRun);
 
 public:
 	void Calc_Position();
@@ -108,8 +109,6 @@ public:
 	void UpdateObjectData();
 
 	void UIRender();
-
-	virtual void OnClick(cUIButton* pSender) override;
 };
 
 enum FLAG
