@@ -15,7 +15,7 @@ cMap::~cMap()
 	SAFE_DELETE(m_pSurface);
 	SAFE_DELETE(m_pCeiling);
 	SAFE_DELETE(m_pObjSurface);
-	SAFE_DELETE(m_pParticle);
+	//SAFE_DELETE(m_pParticle);
 	
 	for each (auto it in vecMapObj)
 	{
@@ -25,7 +25,7 @@ cMap::~cMap()
 
 void cMap::Setup()
 {
-
+	/*
 	D3DXCOLOR stColor;
 	stColor.r = 255;
 	stColor.g = 127;
@@ -33,7 +33,7 @@ void cMap::Setup()
 	m_pPos = D3DXVECTOR3(-10.5, 8.4, 5);
 	m_pParticle = new cParticleSystem;
 	m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
-	
+	*/
 	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
 	
 	/*
@@ -256,7 +256,7 @@ void cMap::SetupObject()
 
 void cMap::Update()
 {
-	m_pParticle->Update();
+	//m_pParticle->Update();
 }
 
 
