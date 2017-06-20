@@ -89,7 +89,7 @@ cSocketManager::~cSocketManager()
 
 void cSocketManager::AddFlag(FLAG eFlag)
 {
-	nFlagNum = nFlagNum & eFlag;
+	nFlagNum = nFlagNum | eFlag;
 }
 
 /* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
@@ -474,6 +474,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			else
 			{
 				g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);	// << : 클라이언트에서 방이름을 재설정 해줘야 합니다.
+				cout << "플래그 완전 설정" << endl;
 				// << : F6으로 방이름을 변경하면 플래그를 변경시킨다 ?
 			}
 		}
@@ -488,9 +489,11 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			SendFlag(&hSocket, FLAG::FLAG_GENDER);
 			SendGender(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_GENDER);
+			cout << "SendGender " << endl;
 		}
-		if (eFlag & FLAG::FLAG_POSITION)
+		if (eFlag & FLAG::FLAG_POSITION && prevTime + ONE_SECOND < clock())
 		{
+			prevTime = clock();
 			SendFlag(&hSocket, FLAG::FLAG_POSITION);
 			SendPosition(&hSocket);
 			// << : 이때 좌표는 시간 (1초)를 두고 전송하고 다른 명령어가 있다면 지나가게 한다 ?
@@ -501,8 +504,6 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
 		}
-
-		prevTime = clock();
 	}
 	closesocket(hSocket);
 	cout << "SEND 스레드가 종료되었습니다 " << endl;
@@ -633,7 +634,7 @@ void ReceiveAllData(SOCKET* pSocket)
 	ST_ALL_DATA Recv;
 	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
 	g_pSocketmanager->RecvClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
-	g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
+	g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
 	cout << "ReceiveAllData" << endl;
 }
 
@@ -649,10 +650,6 @@ void SendGender(SOCKET* pSocket)
 		stSend.nPlayerIndex = FLAG_WOMAN;
 	sprintf_s(stSend.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
 	send(*pSocket, (char*)&stSend, sizeof(ST_FLAG), 0);	// << : 자신이 선택한 성별을 전송합니다.
-	g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);
-
-	cout << "Send Gender " << stSend.nPlayerIndex << endl;
-	// << : 게임 시작하면 받은 데이터 설정하고 Position 전송 , 수신 하도록
 }
 
 /* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
