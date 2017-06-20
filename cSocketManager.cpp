@@ -186,6 +186,18 @@ void cSocketManager::RecvClientData(ST_ALL_DATA stData)
 	}
 }
 
+void cSocketManager::RecvObjectData(ST_OBJECT_DATA stData)
+{
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		D3DXVECTOR3 Position = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
+		D3DXVECTOR3 Rotation = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
+		m_bStuffSwitch[i] = stData.mapIsRunning[i];
+		m_vStuffPosition[i] = Position;
+		m_vStuffRotation[i] = Rotation;
+	}
+}
+
 /* 버튼 등 초기설정 수행 */
 void cSocketManager::Setup()
 {
@@ -360,6 +372,15 @@ void cSocketManager::UpdateRotation(float Rotate)
 	nextRotation = Rotate;
 }
 
+void cSocketManager::UpdateObjectData()
+{
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		g_pData->m_bStuffSwitch[i] = m_bStuffSwitch[i];
+		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
+	}
+}
+
 void cSocketManager::UIRender()
 {
 	if (m_pUIRoot)
@@ -451,11 +472,15 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	}
 
 	ST_FLAG stFlag;
-	// >> : 맨처음 데이터를 받아올때 네트워크 아이디도 받아와야함
+	FLAG eFlag = FLAG::FLAG_NONE;
 	while (true)
 	{
-		if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock())
-		{
+		eFlag = (FLAG)g_pSocketmanager->GetFlagNum();
+		// << : 일정 간격마다 좌표를 전송한다. 단 특정 상황에서는 바로하도록 변경해야함
+		if (eFlag == FLAG::FLAG_OBJECT_DATA) {
+			// << : OBJECT 변경시에는 바로 전송하도록 함
+		}
+		else if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock()){
 			Sleep(5);
 			continue;
 		}
@@ -463,7 +488,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 
 		SendFlag(&hSocket,&stFlag);
 
-		switch (stFlag.eFlag)
+		switch (eFlag)
 		{
 		case FLAG::FLAG_NONE:
 			break;
@@ -607,6 +632,7 @@ void ReceivePosition(SOCKET* pSocket)
 	recv(*pSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
 	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
+	g_pData->m_eAnimState2P = stRecv.eAnimState;
 
 	cout << "X좌표 : " << stRecv.fX << " ";
 	cout << "Y좌표 : " << stRecv.fY << " ";
@@ -645,12 +671,18 @@ void SendGender(SOCKET* pSocket)
 /* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
 void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
 {
+
 	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
 	pFlag->nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
 	pFlag->nPlayerIndex = g_pData->m_nPlayerNum1P;
 	sprintf_s(pFlag->szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
-	if(pFlag->eFlag != FLAG::FLAG_NONE)	// << : 요청할 내용이 없다면 전송하지 않습니다.
+
+	// << : 요청할 내용이 없다면 전송하지 않습니다.
+	if(pFlag->eFlag != FLAG::FLAG_NONE)	
 		send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
+	// << : 오브젝트 데이터를 전송했다면 좌표만 전송하도록 변경합니다.
+	if (pFlag->eFlag == FLAG::FLAG_OBJECT_DATA)
+		g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
 }
 
 /* 서버에게 자신의 NetworkID를 알려줍니다 */
@@ -676,6 +708,7 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fY = g_pData->m_vPosition1P.y;
 	stSend.fZ = g_pData->m_vPosition1P.z;
 	stSend.fAngle = g_pData->m_vRotation1P;
+	stSend.eAnimState = g_pData->m_eAnimState1P;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 	cout << "Send Position Function" << endl;
 }
@@ -685,7 +718,6 @@ void ReceiveObjectData(SOCKET* pSocket)
 {
 	ST_OBJECT_DATA stData;
 	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
-	
 	// << : 수신한 데이터를 버퍼에 적용후 클래스에 적용시킨다.
 	// << : 맵정보만 담을 구조체가 하나 필요함
 }

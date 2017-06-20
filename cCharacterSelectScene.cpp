@@ -131,6 +131,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			isSelect = true;
 		}
 
+		cout << m_WhatIsYourNumber << endl;
+
 		///-------------------------------------------------------------
 		//						1번 플레이어 선택시
 		///-------------------------------------------------------------
