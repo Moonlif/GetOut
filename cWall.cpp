@@ -208,8 +208,8 @@ void cWall::SetupFF()
 
 		//현관쪽 벽1
 		m_pFFDoorR1 = new cRectMake;
-		m_pFFDoorR1->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3.5)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.5)
+		m_pFFDoorR1->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 3.65)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.65)
 			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 4)
 			, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 4)
 			, "Texture/maps/images.jpg");
@@ -219,17 +219,17 @@ void cWall::SetupFF()
 		m_pFFDoorR2 = new cRectMake;
 		m_pFFDoorR2->Setup(D3DXVECTOR3(CENTERX + 13, FF, CENTERZ + 4)
 			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ + 4)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.5)
-			, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 2.5)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.6)
+			, D3DXVECTOR3(CENTERX + 13, FF, CENTERZ - 2.6)
 			, "Texture/maps/images.jpg");
 		m_vecFF.push_back(m_pFFDoorR2);
 	
 		//현관쪽 벽3
 		m_pFFDoorR3 = new cRectMake;
-		m_pFFDoorR3->Setup(D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 2.5)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.5)
-			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.5)
-			, D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 3.5)
+		m_pFFDoorR3->Setup(D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 2.6)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 2.6)
+			, D3DXVECTOR3(CENTERX + 13, SF, CENTERZ - 3.65)
+			, D3DXVECTOR3(CENTERX + 13, SF - 0.3, CENTERZ - 3.65)
 			, "Texture/maps/images.jpg");
 		m_vecFF.push_back(m_pFFDoorR3);
 			
@@ -268,8 +268,8 @@ void cWall::SetupFF()
 		//오른쪽 1
 		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 4);
 		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 4);
-		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 3);
-		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 3.5);
+		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 3.5);
 
 		m_pFFBathRoomR1 = new cRectMake;
 		m_pFFBathRoomR1->Setup(v3, v2, v1, v, "Texture/maps/bathRoom.jpg"); 
@@ -283,8 +283,8 @@ void cWall::SetupFF()
 		//오른쪽 2
 		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5);
 		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5);
-		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.5);
-		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 2.5);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.63);
+		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 2.63);
 		
 		m_pFFBathRoomR2 = new cRectMake;
 		m_pFFBathRoomR2->Setup(v, v1, v2, v3, "Texture/maps/bathRoom.jpg");
@@ -296,10 +296,10 @@ void cWall::SetupFF()
 
 
 		//오른쪽 3
-		v = D3DXVECTOR3(CENTERX + 6, SF - 0.5, CENTERZ - 3);
-		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 3);
+		v = D3DXVECTOR3(CENTERX + 6, SF - 0.62, CENTERZ - 3.5);
+		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 3.5);
 		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 2.5);
-		v3 = D3DXVECTOR3(CENTERX + 6, SF - 0.5, CENTERZ - 2.5);
+		v3 = D3DXVECTOR3(CENTERX + 6, SF - 0.62, CENTERZ - 2.5);
 		
 		m_pFFBathRoomR3 = new cRectMake;
 		m_pFFBathRoomR3->Setup(v3, v2, v1, v, "Texture/maps/bathRoom.jpg"); 
@@ -378,8 +378,8 @@ void cWall::SetupFF()
 		//방 오른쪽1
 		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 4);
 		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 4);
-		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3.5);
-		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3.5);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3.65);
+		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3.65);
 		m_pFFRoomR1 = new cRectMake;
 		m_pFFRoomR1->Setup(v, v1, v2, v3, "Texture/maps/images.jpg");
 		m_vecFF.push_back(m_pFFRoomR1);
@@ -389,8 +389,8 @@ void cWall::SetupFF()
 		m_vecFF.push_back(m_pFFRoomR1_1);
 
 		//방 오른쪽2
-		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 3);
-		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3);
+		v = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ + 2.8);
+		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 2.8);
 		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ - 0.5);
 		v3 = D3DXVECTOR3(CENTERX + 6, FF, CENTERZ - 0.5);
 		m_pFFRoomR2 = new cRectMake;
@@ -402,10 +402,10 @@ void cWall::SetupFF()
 		m_vecFF.push_back(m_pFFRoomR2_1);
 	
 		//방 오른쪽3
-		v = D3DXVECTOR3(CENTERX + 6, SF - 0.5, CENTERZ + 3.5);
-		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3.5);
-		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3);
-		v3 = D3DXVECTOR3(CENTERX + 6, SF - 0.5, CENTERZ + 3);
+		v = D3DXVECTOR3(CENTERX + 6, SF - 0.67, CENTERZ + 3.65);
+		v1 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 3.65);
+		v2 = D3DXVECTOR3(CENTERX + 6, SF, CENTERZ + 2.8);
+		v3 = D3DXVECTOR3(CENTERX + 6, SF - 0.67, CENTERZ + 2.8);
 		m_pFFRoomR3 = new cRectMake;
 		m_pFFRoomR3->Setup(v, v1, v2, v3, "Texture/maps/images.jpg");
 		m_vecFF.push_back(m_pFFRoomR3);
@@ -552,8 +552,8 @@ void cWall::SetupSF()
 	//왼쪽방 첫번째 벽
 	v = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ - 2.2);
 	v1 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ - 2.2);
-	v2 = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1);
-	v3 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1);
+	v2 = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 0.7);
+	v3 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 0.7);
 	m_pSFLRoom1 = new cRectMake;
 	m_pSFLRoom1->Setup(v, v1, v2, v3, "Texture/maps/images.jpg");
 	m_vecSF.push_back(m_pSFLRoom1);
@@ -571,8 +571,8 @@ void cWall::SetupSF()
 	m_vecSF.push_back(m_pSFRightPrint);
 
 	//왼쪽방 두번째 벽
-	v = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1.5);
-	v1 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1.5);
+	v = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 1.65);
+	v1 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1.65);
 	v2 = D3DXVECTOR3(CENTERX + 7.8, SF, CENTERZ + 3);
 	v3 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 3);
 	m_pSFLRoom2 = new cRectMake;
@@ -584,10 +584,11 @@ void cWall::SetupSF()
 	m_vecSF.push_back(m_pSFLRoom2_1);
 
 	//왼쪽방 문위 벽
-	v = D3DXVECTOR3(CENTERX + 7.8, TOP - 0.5, CENTERZ + 1);
-	v1 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1);
-	v2 = D3DXVECTOR3(CENTERX + 7.8, TOP - 0.5, CENTERZ + 1.5);
-	v3 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1.5);
+	v = D3DXVECTOR3(CENTERX + 7.8, TOP - 0.5, CENTERZ + 0.7);
+	v1 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 0.7);
+	v2 = D3DXVECTOR3(CENTERX + 7.8, TOP - 0.5, CENTERZ + 1.65);
+	v3 = D3DXVECTOR3(CENTERX + 7.8, TOP, CENTERZ + 1.65);
+	
 	m_pSFLRoom3 = new cRectMake;
 	m_pSFLRoom3->Setup(v, v1, v2, v3, "Texture/maps/images.jpg");
 	m_vecSF.push_back(m_pSFLRoom3);
@@ -603,8 +604,8 @@ void cWall::SetupSF()
 
 	v = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ - 2.2);
 	v1 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ - 2.2);
-	v2 = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1);
-	v3 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 1);
+	v2 = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 0.7);
+	v3 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 0.7);
 
 	//왼쪽방 첫번째 벽
 	m_pSFRRoom1 = new cRectMake;
@@ -614,8 +615,8 @@ void cWall::SetupSF()
 	m_pSFRRoom1_1->Setup(v3, v2, v1, v, "Texture/maps/images.jpg");
 	m_vecSF.push_back(m_pSFRRoom1_1);
 
-	v = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1.5);
-	v1 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 1.5);
+	v = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1.65);
+	v1 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 1.65);
 	v2 = D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 3);
 	v3 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 3);
 
@@ -628,10 +629,10 @@ void cWall::SetupSF()
 	m_pSFRRoom2_1->Setup(v3, v2, v1, v, "Texture/maps/images.jpg");
 	m_vecSF.push_back(m_pSFRRoom2_1);
 
-	v = D3DXVECTOR3(CENTERX + 9, TOP - 0.5, CENTERZ + 1);
-	v1 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 1);
-	v2 = D3DXVECTOR3(CENTERX + 9, TOP - 0.5, CENTERZ + 1.5);
-	v3 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 1.5);
+	v = D3DXVECTOR3(CENTERX + 9, TOP - 0.5, CENTERZ + 0.7);
+	v1 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 0.7);
+	v2 = D3DXVECTOR3(CENTERX + 9, TOP - 0.5, CENTERZ + 1.65);
+	v3 = D3DXVECTOR3(CENTERX + 9, TOP, CENTERZ + 1.65);
 
 	//왼쪽방 문위 벽
 	m_pSFRRoom3 = new cRectMake;
@@ -639,8 +640,31 @@ void cWall::SetupSF()
 	m_vecSF.push_back(m_pSFRRoom3);
 
 	m_pSFRRoom3_1 = new cRectMake;
-	m_pSFRRoom3_1->Setup(v2, v3, v1, v, "Texture/maps/images.jpg");
+	m_pSFRRoom3_1->Setup(v3, v2, v1, v, "Texture/maps/images.jpg");
 	m_vecSF.push_back(m_pSFRRoom3_1);
+
+	//>>>17.06.15 수정
+	//왼쪽방 왼쪽 화살표
+	m_pSFLeftArrowPrint = new cRectMake;
+	m_pSFLeftArrowPrint->Setup(
+		D3DXVECTOR3(CENTERX + 9.01, TOP - 0.7, CENTERZ - 0.5),
+		D3DXVECTOR3(CENTERX + 9.01, TOP, CENTERZ - 0.5),
+		D3DXVECTOR3(CENTERX + 9.01, TOP - 0.7, CENTERZ + 0.5),
+		D3DXVECTOR3(CENTERX + 9.01, TOP, CENTERZ + 0.5),
+		"Texture/maps/left_arrow.png");
+	m_vecSF.push_back(m_pSFLeftArrowPrint);
+
+	//왼쪽방 오른쪽 화살표
+
+	m_pSFRightArrowPrint = new cRectMake;
+	m_pSFRightArrowPrint->Setup(
+		D3DXVECTOR3(CENTERX + 9.01, TOP - 0.7, CENTERZ - 1.7),
+		D3DXVECTOR3(CENTERX + 9.01, TOP, CENTERZ - 1.7),
+		D3DXVECTOR3(CENTERX + 9.01, TOP - 0.7, CENTERZ - 0.7),
+		D3DXVECTOR3(CENTERX + 9.01, TOP, CENTERZ - 0.7),
+		"Texture/maps/right_arrow.png");
+	m_vecSF.push_back(m_pSFRightArrowPrint);
+	//////////<<<<<<<<<<<<<<<<<<<<<<<<
 }
 
 void cWall::RenderB1F()

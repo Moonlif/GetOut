@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cStuff.h"
+#include "cParticleSystem.h"
 
 class cInteract
 {
@@ -20,10 +21,13 @@ private:
 	int m_n2FButton2Count;					//2층 Button2이 눌려있는지
 	int m_nBrickCount;						//1층 벽돌무더기에서 벽돌을 몇개 가져갔는지
 
+	cParticleSystem* m_pParticleFog;
+	D3DXVECTOR3 m_vPositionFog;
+
 public:
 	void Setup();
 	void Update();
 	void Render();
 	void CheckStuff(D3DXVECTOR3 playerPos);
-	void PickStuff(StuffCode stuffCode, bool lButton);
+	bool PickStuff(StuffCode stuffCode, bool lButton);
 };

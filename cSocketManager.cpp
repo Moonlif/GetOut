@@ -1,5 +1,9 @@
 #include "cSocketManager.h"
 #include "stdafx.h"
+#include "cUIObject.h"
+#include "cUIButton.h"
+#include "cChat.h"
+#include "Player.h"
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -8,21 +12,65 @@ CRITICAL_SECTION cs;
 CRITICAL_SECTION cs2;
 unsigned int _stdcall SEND_CHAT(LPVOID lpParam);
 unsigned int _stdcall RECV_CHAT(LPVOID lpParam);
-unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam);
 unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam);
+unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam);
+unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 
 // << : 분리된 함수들
-void ReceivePosition(LPVOID lpParam);
+void ReceiveNetworkID(SOCKET* pSocket);
+void ReceiveRoomName(SOCKET* pSocket);
+void ReceiveGender(SOCKET* pSocket);
+void ReceivePosition(SOCKET* pSocket);
+void ReceiveAllData(SOCKET* pSocket);
+void ReceiveObjectData(SOCKET* pSocket);
+
+void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
+void SendNetworkID(SOCKET* pSocket, int ID, bool* bConnected);
+void SendGender(SOCKET* pSocket);
+void SendPosition(SOCKET* pSocket);
+void SendObjectData(SOCKET* pSocket);
+
+struct ST_ALL_DATA
+{
+	// << : 플레이어 데이터
+	float manX;
+	float manY;
+	float manZ;
+	float manAngle;
+	int manAnim;
+	int manItem[25];
+
+	float womanX;
+	float womanY;
+	float womanZ;
+	float womanAngle;
+	int womanAnim;
+	int womanItem[25];
+
+	// << : 맵 데이터
+	float mapX[30];
+	float mapY[30];
+	float mapZ[30];
+	float mapRotX[30];
+	float mapRotY[30];
+	float mapRotZ[30];
+	bool mapIsRunning[30];
+}; 
 
 cSocketManager::cSocketManager()
 	: stUpdateTime(clock())
 	, stStart(clock())
 	, stCurrent(clock())
 	, m_fT(0.0f)
-	, nFlagNum(FLAG_POSITION)
+	, nFlagNum(FLAG_NETWORK_ID)
 	, prevRotation(0.0f)
 	, nextRotation(0.0f)
 	, InitServer(false)
+	, nNetworkID(-1)
+	, m_pUIRoot(NULL)
+	, m_pTextBox(NULL)
+	, m_pPlMan(NULL)
+	, m_pPlWoman(NULL)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -32,44 +80,198 @@ cSocketManager::cSocketManager()
 	nextPosition.x = 0;
 	nextPosition.y = 0;
 	nextPosition.z = 0;
+	sprintf_s(HostIP, "%s", "127.0.0.1", 16);
 }
 
 cSocketManager::~cSocketManager()
 {
 }
 
-/* 호스트가 없다면 자신이 호스트가 됩니다.*/
-void cSocketManager::Setup_Host()
+/* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
+void cSocketManager::Calc_Position()
 {
-	// << :
-	hSocket_Serv = socket(PF_INET, SOCK_STREAM, 0);
+	stCurrent = clock();
+	float Devide = stCurrent - stStart;
+	if (Devide == 0) Devide = ONE_SECOND;
+	m_fT = (float)(Devide) / (float)(ONE_SECOND);
+	if (m_fT > 1) m_fT = 1;
 
-	memset(&hostAdr, 0, sizeof(hostAdr));
-	hostAdr.sin_family = AF_INET;
-	hostAdr.sin_addr.s_addr = htonl(INADDR_ANY);
-	hostAdr.sin_port = PORT_DATA_CLIENT;
-	bool bValid = 1;
-	setsockopt(hSocket_Serv, SOL_SOCKET, SO_REUSEADDR, (const char *)&bValid, sizeof(bValid));
-	if (bind(hSocket_Serv, (SOCKADDR*)&hostAdr, sizeof(hostAdr)) == SOCKET_ERROR)
-		cout << "Server_HOST bind() Error" << endl;
-	if (listen(hSocket_Serv, CLIENT_NUM) == SOCKET_ERROR)
-		cout << "Server_HOST listen() Error" << endl;
+	D3DXVECTOR3 posInterval = nextPosition - prevPosition;
+	float rotInterval = nextRotation - prevRotation;
 
-	// << : 이부분은 크리티컬 섹션으로 처리합니다.
-	while (true)
+	g_pData->m_vPosition2P = prevPosition + (posInterval * m_fT);
+	g_pData->m_vRotation2P = prevRotation + (rotInterval * m_fT);
+}
+
+/* 모든 스레드를 종료하고 소켓을 닫습니다 */
+void cSocketManager::Destroy()
+{
+	SAFE_DELETE(m_pUIRoot);
+	SAFE_DELETE(m_pTextBox);
+	SAFE_RELEASE(m_pSprite);
+
+	hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
+	CloseHandle(hChatSend);
+	CloseHandle(hChatRecv);
+	CloseHandle(hDataRecv_Serv);
+	CloseHandle(hDataSend_Serv);
+
+	closesocket(hSocket_CHAT);
+	closesocket(hSocket_DATA);
+	WSACleanup();
+}
+
+/* IP를 얻어오는 부분 */
+char * cSocketManager::GetIP()
+{
+	return HostIP;
+}
+
+char * cSocketManager::GetRoomName()
+{
+	return szRoomName;
+}
+
+/* 게임 시작시 다른 클래스들 초기화 */
+void cSocketManager::InitClientData()
+{
+	/* 남자 정보 로딩 상황 */
+	if (g_pData->m_nPlayerNum1P == 1 && m_pPlMan)
 	{
-		clntAdrSz = sizeof(clntAdr);
-		hSocket_Clnt = accept(hSocket_Serv, (SOCKADDR*)&clntAdr, &clntAdrSz);
-		if (hSocket_Clnt > 0)
-		{
-			// << : 다른 클라이언트가 연결하면 스레드로 좌표를 계속 받게 처리한다.
-		}
+		m_pPlMan->SetPosition(ManPosition);
+		m_pPlMan->SetRotation(ManRot);
+		for (int i = 0; i < INVENTORY_SIZE; ++i)
+			g_pData->m_arrLoadInvenItem[i] = ManInventory[i];
+		g_pData->SetIsLoadItem(true);
+	}
+	/* 여자 정보 로딩 상황 */
+	else if (g_pData->m_nPlayerNum1P == 2 && m_pPlWoman)
+	{
+		m_pPlWoman->SetPosition(WomanPosition);
+		m_pPlWoman->SetRotation(WomanRot);
+		for (int i = 0; i < INVENTORY_SIZE; ++i)
+			g_pData->m_arrLoadInvenItem[i] = WomanInventory[i];
+		g_pData->SetIsLoadItem(true);
+	}
+	/* 맵정보 로딩 */
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		g_pData->m_bStuffSwitch[i] = m_bStuffSwitch[i];
+		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
+		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
 	}
 }
 
-/* 이미 호스트가 있다면 해당 호스트와 연결하는 함수입니다. */
-void cSocketManager::Connect_Client()
+/* 서버로부터 수신한 초기 데이터를 클라이언트에 적용합니다 */
+void cSocketManager::RecvClientData(ST_ALL_DATA stData)
 {
+	// << : 플레이어 정보 초기화
+	ManPosition = D3DXVECTOR3(stData.manX, stData.manY, stData.manZ);
+	WomanPosition = D3DXVECTOR3(stData.womanX, stData.womanY, stData.womanZ);
+	ManRot = stData.manAngle;
+	WomanRot = stData.womanAngle;
+
+	for (int i = 0; i < INVENTORY_SIZE; ++i)
+	{
+		ManInventory[i] = (StuffCode)stData.manItem[i];		// << : 남자 인벤토리
+		WomanInventory[i] = (StuffCode)stData.womanItem[i];	// << : 여자 인벤토리
+	}
+
+	// << : 맵 정보 초기화
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		m_bStuffSwitch[i] = stData.mapIsRunning[i];
+		m_vStuffPosition[i] = D3DXVECTOR3(stData.mapX[i], stData.mapY[i], stData.mapZ[i]);
+		m_vStuffRotation[i] = D3DXVECTOR3(stData.mapRotX[i], stData.mapRotY[i], stData.mapRotZ[i]);
+	}
+}
+
+/* 버튼 등 초기설정 수행 */
+void cSocketManager::Setup()
+{
+	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
+
+	// Submit 버튼 초기화
+	{
+		cUIButton* pButtonSubmit = new cUIButton;
+		pButtonSubmit->SetTexture(
+			"UI/button/Submit_Up.png",
+			"UI/button/Submit_Over.png",
+			"UI/button/Submit_Down.png");
+		pButtonSubmit->SetPosition(135, 330);
+		pButtonSubmit->SetDelegate(this);
+		pButtonSubmit->SetTag(E_IP_OK);
+		m_pUIRoot = pButtonSubmit;
+	}
+
+	// Reset 버튼 초기화
+	{
+		cUIButton* pButtonReset = new cUIButton;
+		pButtonReset->SetTexture(
+		"UI/button/Reset_Up.png",
+		"UI/button/Reset_Over.png",
+		"UI/button/Reset_Down.png");
+		pButtonReset->SetPosition(135, 0);
+		pButtonReset->SetDelegate(this);
+		pButtonReset->SetTag(E_IP_RESET);
+		m_pUIRoot->AddChild(pButtonReset);
+	}
+
+	// << : Button과 TextBox를 연동시켜야 한다.
+	{
+		m_pTextBox = new cChat;
+		m_pTextBox->Setup(1, 200, 200, 50, 50);
+	}
+}
+
+/* IP를 설정하는 부분 */
+void cSocketManager::SetIP(int First, int Second, int Third, int Fourth)
+{
+	if (First > 255 || Second > 255 || Third > 255 || Fourth > 255 ||
+		First < 0 || Second < 0 || Third < 0 || Fourth < 0)
+	{
+		cout << "잘못된 IP 주소 입력" << endl;
+		return;
+	}
+	char addrFirst[10] = { 0, };
+	char addrSecond[10] = { 0, };
+	char addrThird[10] = { 0, };
+	char addrFourth[10] = { 0, };
+
+	_itoa_s(First, addrFirst, 10);
+	_itoa_s(Second, addrSecond, 10);
+	_itoa_s(Third, addrThird, 10);
+	_itoa_s(Fourth, addrFourth, 10);
+
+	string szFullIP = string(addrFirst) + "." + string(addrSecond) + "." + string(addrThird) + "." + string(addrFourth);
+	cout << szFullIP << endl;
+
+	sprintf_s(HostIP, "%s", szFullIP.c_str(),sizeof(HostIP));
+
+	Setup_CHAT();
+	Setup_DATA();
+}
+
+void cSocketManager::SetIP(string szIP)
+{
+	string szFullIP = szIP;
+	
+	sprintf_s(HostIP, "%s", szFullIP.c_str(), sizeof(HostIP));
+
+	Setup_CHAT();
+	Setup_DATA();
+}
+
+void cSocketManager::SetMyName(string szName)
+{
+	string Name = szName;
+	sprintf_s(name, "%s", Name.c_str(), sizeof(name));
+}
+
+void cSocketManager::SetRoomName(string szName)
+{
+	string Name = szName;
+	sprintf_s(szRoomName, "%s", Name.c_str(), sizeof(szRoomName));
 }
 
 /* 서버와 통신을 위한 스레드 동작 */
@@ -85,8 +287,8 @@ void cSocketManager::Setup_DATA()
 		cout << "DATA WSAStartup() error!" << endl;
 		nRet = WSAStartup(MAKEWORD(2, 2), &wsaData_DATA); /// Init Socket
 	}
-
-	hDataThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*)) INTERECT_SERVER, (void*)&hSocket_DATA, 0, NULL);
+	hDataSend_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*))SEND_REQUEST_SERVER, NULL, 0, NULL);
+	hDataRecv_Serv = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*))RECV_REQUEST_SERVER, NULL, 0, NULL);
 }
 
 /* 채팅 동작을 위한 소켓 초기화및 스레드 동작 */
@@ -108,8 +310,11 @@ void cSocketManager::Setup_CHAT()
 
 	memset(&ServAdr_CHAT, 0, sizeof(ServAdr_CHAT));
 	ServAdr_CHAT.sin_family = AF_INET;
-	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HOSTIP);
+	ServAdr_CHAT.sin_addr.s_addr = inet_addr(HostIP);
 	ServAdr_CHAT.sin_port = PORT_CHAT_SERVER;
+
+	bool bValid = true;
+	setsockopt(hSocket_CHAT, SOL_SOCKET, SO_REUSEADDR, (const char *)&bValid, sizeof(bValid));
 
 	int result = connect(hSocket_CHAT, (SOCKADDR*)&ServAdr_CHAT, sizeof(ServAdr_CHAT));
 
@@ -130,44 +335,14 @@ void cSocketManager::Setup_CHAT()
 	}
 }
 
+/* 싱글톤 업데이트 */
 void cSocketManager::Update()
 {
+	if (m_pUIRoot)
+		m_pUIRoot->Update();
+	if (m_pTextBox)
+		m_pTextBox->Update_ForSocket();
 	Calc_Position(); // < : 좌표를 보정해서 계산합니다.
-	if (InitServer)
-	{
-		SetInitServer(false);
-		// << : 서버로부터 호스트를 해라 라는 신호가 들어오면 스레드를 동작시킨다 ?
-	}
-}
-
-/* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
-void cSocketManager::Calc_Position()
-{
-	stCurrent = clock();
-	float Devide = stCurrent - stStart;
-	if (Devide == 0) Devide = ONE_SECOND;
-	m_fT = (float)(Devide) / (float)(ONE_SECOND);
-	if (m_fT > 1) m_fT = 1;
-
-	D3DXVECTOR3 posInterval = nextPosition - prevPosition;
-	float rotInterval = nextRotation - prevRotation;
-	
-	g_pData->m_vPosition2P = prevPosition + (posInterval * m_fT);
-	g_pData->m_vRotation2P = prevRotation + (rotInterval * m_fT);
-}
-
-/* 모든 스레드를 종료하고 소켓을 닫습니다 */
-void cSocketManager::Destroy()
-{
-	WaitForSingleObject(hChatSend, INFINITE);	/// 스레드 종료 대기
-	WaitForSingleObject(hChatRecv, INFINITE);	/// 스레드 종료 대기
-
-	CloseHandle(hChatSend);
-	CloseHandle(hChatRecv);
-
-	closesocket(hSocket_CHAT);
-	closesocket(hSocket_DATA);
-	WSACleanup();
 }
 
 /* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
@@ -183,6 +358,26 @@ void cSocketManager::UpdateRotation(float Rotate)
 {
 	prevRotation = g_pData->m_vRotation2P;
 	nextRotation = Rotate;
+}
+
+void cSocketManager::UIRender()
+{
+	if (m_pUIRoot)
+		m_pUIRoot->Render(m_pSprite);
+	if (m_pTextBox)
+		m_pTextBox->Render(200, 200, 50, 50);
+}
+
+void cSocketManager::OnClick(cUIButton * pSender)
+{
+	if (pSender->GetTag() == E_IP_OK)
+	{
+		int a = 3;
+	}
+	else if (pSender->GetTag() == E_IP_RESET)
+	{
+		int b = 4;
+	}
 }
 
 /* 채팅을 전송하는 스레드 */
@@ -225,117 +420,193 @@ unsigned int _stdcall RECV_CHAT(LPVOID lpParam)
 	return 0;
 }
 
-/* 서버와 상호작용하는 스레드 */
-unsigned int _stdcall INTERECT_SERVER(LPVOID lpParam)
+/* 클라이언트 (2P)와 상호작용하는 스레드 (미구현)*/
+unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
+{
+	return 0;
+}
+
+/* 요청을 전송하는 스레드 */
+unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 {
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN addr;
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
 	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(HOSTIP);
-	addr.sin_port = PORT_DATA_SERVER;
+	addr.sin_addr.s_addr = inet_addr(g_pSocketmanager->GetIP());
+	addr.sin_port = PORT_DATA_SERVER_OUT;
 
 	clock_t prevTime = clock();
 	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	int nCnt = 0;
 	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
 	while (result == SOCKET_ERROR)
 	{
 		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
 		prevTime = clock();
-		cout << "스레드 연결 재시도중" << endl;
+		cout << "SEND 스레드 연결 재시도중" << endl;
 		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+		nCnt++;
+		if (nCnt > 5) return 0;	// << : 5번 이상 시도하면 함수 꺼버림
 	}
 
-	/* 어떤 데이터를 보낼지 먼저 알려줍니다. 그뒤 해당하는 데이터를 전송합니다. */
 	ST_FLAG stFlag;
+	// >> : 맨처음 데이터를 받아올때 네트워크 아이디도 받아와야함
 	while (true)
 	{
-		if (prevTime + (ONE_SECOND - OVERHEAD) > clock()) continue;
+		if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock())
+		{
+			Sleep(5);
+			continue;
+		}
 		prevTime = clock();
-		stFlag.eFlag = g_pSocketmanager->GetFlagNum();	// << : 싱글톤에서 플래그를 받아옵니다.
 
-		stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
-		sprintf_s(stFlag.szRoomName, "DEFAULT", 7);
-		send(hSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
-
-		ST_PLAYER_POSITION stSend;
-		if (g_pData->m_nPlayerNum1P == 1)
-			stSend.nPlayerIndex = OUT_PLAYER1;
-		else if (g_pData->m_nPlayerNum1P == 2)
-			stSend.nPlayerIndex = OUT_PLAYER2;
-		sprintf_s(stSend.szRoomName, "DEFAULT", 7);
-		stSend.fX = g_pData->m_vPosition1P.x;
-		stSend.fY = g_pData->m_vPosition1P.y;
-		stSend.fZ = g_pData->m_vPosition1P.z;
-		stSend.fAngle = g_pData->m_vRotation1P;
-		send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+		SendFlag(&hSocket,&stFlag);
 
 		switch (stFlag.eFlag)
 		{
-		case FLAG_POSITION:
-			ReceivePosition(&hSocket);
+		case FLAG::FLAG_NONE:
+			break;
+		case FLAG::FLAG_NETWORK_ID:
+			ReceiveNetworkID(&hSocket);
+			break;
+		case FLAG::FLAG_ROOM_NAME:
+			ReceiveRoomName(&hSocket);
+			break;
+		case FLAG::FLAG_ALL_DATA:
+			ReceiveAllData(&hSocket);
+			break;
+		case FLAG::FLAG_GENDER:
+			SendGender(&hSocket);
+			break;
+		case FLAG::FLAG_POSITION:
+			SendPosition(&hSocket);
+			break;
+		case FLAG::FLAG_OBJECT_DATA:
+			SendObjectData(&hSocket);
 			break;
 		}
 	}
+	closesocket(hSocket);
+	cout << "SEND 스레드가 종료되었습니다 " << endl;
 	return 0;
 }
 
-/* 클라이언트 (2P)와 상호작용하는 스레드 */
-unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
+/* 요청을 수신하는 스레드 */
+unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 {
-	//ST_SOCKET_ADDR RecvSocket = *(ST_SOCKET_ADDR*)arg;
-	//SOCKET ClntSock = RecvSocket.stSocket;
-	//char szBuffer[BUF_SIZE * 10] = { 0, };
-	//int strLen1, strLen2, i;
+	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	int strLen;
+	memset(&addr, 0, sizeof(SOCKADDR_IN));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(g_pSocketmanager->GetIP());
+	addr.sin_port = PORT_DATA_SERVER_IN;
 
-	//while ((strLen1 = recv(ClntSock, szBuffer, sizeof(ST_FLAG), 0)) != 0)
-	//{
-	//	if (strLen1 == -1) break;
+	clock_t prevTime = clock();
+	int result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+	int nCnt = 0;
+	/* 연결에 실패했다면 2초마다 다시 재연결을 시도합니다. */
+	while (result == SOCKET_ERROR)
+	{
+		if (prevTime + (ONE_SECOND * 2) > clock()) continue;
+		prevTime = clock();
+		cout << "RECV 스레드 연결 재시도중" << endl;
+		result = connect(hSocket, (SOCKADDR*)&addr, sizeof(addr));
+		nCnt++;
+		if (nCnt > 5) return 0;	// << : 5번 이상 시도시 스레드 꺼버림
+	}
 
-	//	ST_FLAG stFlag = *(ST_FLAG*)szBuffer;
-	//	switch (stFlag.eFlag)
-	//	{
-	//	case FLAG_NONE:
-	//		break;
-	//	case FLAG_IP:
-	//		break;
-	//	case FLAG_POSITION:
-	//		break;
-	//	case FLAG_OBJECT_DATA:
-	//		break;
-	//	case FLAG_ALL:
-	//		break;
-	//	}
-	//	continue;
-	//}
+	FLAG eFlag;
+	bool isConnected = true;
+	while (isConnected)
+	{
+		strLen = recv(hSocket, (char*)&eFlag, sizeof(FLAG), 0);
+		if (strLen == -1) break;
+		//cout << eFlag << endl;
 
-	//closesocket(ClntSock);
+		switch (eFlag)
+		{
+		case FLAG::FLAG_NONE:
+			break;
+		case FLAG::FLAG_NETWORK_ID:
+			SendNetworkID(&hSocket, g_pSocketmanager->GetNetworkID(), &isConnected);
+			break;
+		case FLAG::FLAG_GENDER:
+			ReceiveGender(&hSocket);
+			break;
+		case FLAG::FLAG_POSITION:
+			ReceivePosition(&hSocket);
+			break;
+		case FLAG::FLAG_OBJECT_DATA:
+			ReceiveObjectData(&hSocket);
+			break;
+		}
+	}
+	closesocket(hSocket);
+	cout << "RECV스레드가 종료되었습니다 " << endl;
 	return 0;
 }
 
-/* 스레드에서 좌표를 수신했을때 처리하는 함수입니다 */
-void ReceivePosition(LPVOID lpParam)
+/* 네트워크 아이디 수신 */
+void ReceiveNetworkID(SOCKET* pSocket)
 {
-	SOCKET hSocket = *(SOCKET*)lpParam;
-	ST_PLAYER_POSITION stRecv;
-	recv(hSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
-	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
-	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
-	cout << "접속중인 플레이어 ";
-	if (stRecv.nPlayerIndex & IN_PLAYER1)
+	int nID;
+	recv(*pSocket, (char*)&nID, sizeof(int), 0);
+	g_pSocketmanager->SetNetworkID(nID);
+	cout << "네트워크 아이디 " << nID << endl;
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
+}
+
+/* 방이 연결 가능한지 확인 */
+void ReceiveRoomName(SOCKET* pSocket)
+{
+	// << : 연결이 가능하다면 모든데이터를 수신하는 단계로 , 연결이 안된다면 방이름을 바꾸도록
+	int IsOK = 0;
+	recv(*pSocket, (char*)&IsOK, sizeof(int), 0);
+	if (IsOK)
+	{
+		cout << "해당 방에 연결되었습니다." << endl;
+		g_pSocketmanager->SetFlagNum(FLAG::FLAG_ALL_DATA);
+
+	}
+	else if (!IsOK)
+	{
+		cout << "해당 방 인원 초과" << endl;
+		g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);	// << : 클라이언트에서 방이름을 재설정 해줘야 합니다.
+	}
+};
+
+/* 2P의 성별을 받아옵니다 */
+void ReceiveGender(SOCKET* pSocket)
+{
+	int Gender;
+	recv(*pSocket, (char*)&Gender, sizeof(int), 0);
+	
+	if (Gender == FLAG_MAN)
 	{
 		g_pData->m_nPlayerNum2P = 1;
-		cout << "1P" << " ";
+		cout << "2P는 남자입니다 " << endl;
 	}
-	else if (stRecv.nPlayerIndex & IN_PLAYER2)
+	else if (Gender == FLAG_WOMAN)
 	{
 		g_pData->m_nPlayerNum2P = 2;
-		cout << "2P" << " ";
+		cout << "2P는 여자입니다 " << endl;
 	}
 	else
 	{
-		cout << "없음" << " ";
+		g_pData->m_nPlayerNum2P = 0;
+		cout << "2P는 없거나 고르지 않았습니다." << endl;
 	}
+}
+
+/* 좌표 수신 */
+void ReceivePosition(SOCKET* pSocket)
+{
+	ST_PLAYER_POSITION stRecv;
+	recv(*pSocket, (char*)&stRecv, sizeof(ST_PLAYER_POSITION), 0);
+	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
+	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
 
 	cout << "X좌표 : " << stRecv.fX << " ";
 	cout << "Y좌표 : " << stRecv.fY << " ";
@@ -343,5 +614,95 @@ void ReceivePosition(LPVOID lpParam)
 	cout << "Angle : " << stRecv.fAngle << endl;
 }
 
+/* 모든 데이터 수신 */
+void ReceiveAllData(SOCKET* pSocket)
+{
+	ST_ALL_DATA Recv;
+	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
+	g_pSocketmanager->RecvClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
+	cout << "ReceiveAllData" << endl;
+}
 
+/* 자신의 성별을 서버에게 전송합니다 */
+void SendGender(SOCKET* pSocket)
+{
+	ST_FLAG stSend;
+	stSend.eFlag = FLAG::FLAG_GENDER;
+	stSend.nNetworkID = g_pSocketmanager->GetNetworkID();
+	if (g_pData->m_nPlayerNum1P == 1)
+		stSend.nPlayerIndex = FLAG_MAN;
+	else if (g_pData->m_nPlayerNum1P == 2)
+		stSend.nPlayerIndex = FLAG_WOMAN;
+	sprintf_s(stSend.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
+	send(*pSocket, (char*)&stSend, sizeof(ST_FLAG), 0);	// << : 자신이 선택한 성별을 전송합니다.
+	g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);
 
+	cout << "Send Gender " << stSend.nPlayerIndex << endl;
+	// << : 게임 시작하면 받은 데이터 설정하고 Position 전송 , 수신 하도록
+}
+
+/* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
+void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
+{
+	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
+	pFlag->nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
+	pFlag->nPlayerIndex = g_pData->m_nPlayerNum1P;
+	sprintf_s(pFlag->szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
+	if(pFlag->eFlag != FLAG::FLAG_NONE)	// << : 요청할 내용이 없다면 전송하지 않습니다.
+		send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
+}
+
+/* 서버에게 자신의 NetworkID를 알려줍니다 */
+void SendNetworkID(SOCKET* pSocket, int ID,bool* bConnected)
+{
+	int NetworkID = ID;
+	int result = send(*pSocket, (char*)&NetworkID, sizeof(int), 0);
+	if (result == -1) *bConnected = false;
+}
+
+/* 자신의 좌표를 서버에게 전송합니다 */
+void SendPosition(SOCKET* pSocket)
+{
+	SOCKET hSocket = *pSocket;
+	ST_PLAYER_POSITION stSend;
+	if (g_pData->m_nPlayerNum1P == 1)
+		stSend.nPlayerIndex = FLAG_MAN;
+	else if (g_pData->m_nPlayerNum1P == 2)
+		stSend.nPlayerIndex = FLAG_WOMAN;
+	// << : 현재 방이름 복사
+	sprintf_s(stSend.szRoomName, "%s", g_pSocketmanager->GetRoomName(), sizeof(stSend.szRoomName));
+	stSend.fX = g_pData->m_vPosition1P.x;
+	stSend.fY = g_pData->m_vPosition1P.y;
+	stSend.fZ = g_pData->m_vPosition1P.z;
+	stSend.fAngle = g_pData->m_vRotation1P;
+	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
+	cout << "Send Position Function" << endl;
+}
+
+/* 물체와 맵의 정보를 수신 (구현 예정)*/
+void ReceiveObjectData(SOCKET* pSocket)
+{
+	ST_OBJECT_DATA stData;
+	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
+	
+	// << : 수신한 데이터를 버퍼에 적용후 클래스에 적용시킨다.
+	// << : 맵정보만 담을 구조체가 하나 필요함
+}
+
+void SendObjectData(SOCKET* pSocket)
+{
+	ST_OBJECT_DATA stData;
+	for (int i = 0; i < SWITCH_LASTNUM; ++i)
+	{
+		D3DXVECTOR3 Position = g_pData->m_vStuffPosition[i];
+		D3DXVECTOR3 Rotation = g_pData->m_vStuffRotation[i];
+		stData.mapX[i] = Position.x;
+		stData.mapY[i] = Position.y;
+		stData.mapZ[i] = Position.z;
+		stData.mapRotX[i] = Rotation.x;
+		stData.mapRotY[i] = Rotation.y;
+		stData.mapRotZ[i] = Rotation.z;
+		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
+	}
+}

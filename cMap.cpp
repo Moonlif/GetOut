@@ -3,31 +3,6 @@
 
 
 cMap::cMap()
-	: m_pFloor(NULL)
-	, m_pWall(NULL)
-	, m_pSurface(NULL)
-	, m_pCeiling(NULL)
-	, m_pObjSurface(NULL)
-	, m_pObjShackles(NULL)
-	, m_pObjPiano(NULL)
-	, m_pObjShelf(NULL)
-	, m_pObjBed(NULL)
-	, m_pObjWinebarrel(NULL)
-	, m_pObjPrisonbar(NULL)
-	, m_pObjPrisonbarRow(NULL)
-	, m_pObjBox(NULL)
-	, m_pObjShelfHigh(NULL)
-	//, m_pObjTable(NULL)
-	, m_pObjDesk(NULL)
-	//   , m_pObjSofa(NULL)
-	//   , m_pObjChair(NULL)
-	//   , m_pObjBarrel(NULL)
-	, m_pDrawers(NULL)
-	, m_pIronmaiden(NULL)
-	, m_pTorture(NULL)
-	, m_pStonetable(NULL)
-	, m_pBookPile1(NULL)
-	, m_pBookRow(NULL)
 {
 
 }
@@ -40,33 +15,41 @@ cMap::~cMap()
 	SAFE_DELETE(m_pSurface);
 	SAFE_DELETE(m_pCeiling);
 	SAFE_DELETE(m_pObjSurface);
-
-
-
-	SAFE_DELETE(m_pObjShackles);
-	SAFE_DELETE(m_pObjShelf);
-	SAFE_DELETE(m_pObjPiano);
-	SAFE_DELETE(m_pObjBed);
-	SAFE_DELETE(m_pObjWinebarrel);
-	SAFE_DELETE(m_pObjBox);
-	SAFE_DELETE(m_pObjPrisonbar);
-	SAFE_DELETE(m_pObjPrisonbarRow);
-	SAFE_DELETE(m_pObjShelfHigh);
-	//SAFE_DELETE(m_pObjTable);
-	SAFE_DELETE(m_pObjDesk);
-	//SAFE_DELETE(m_pObjSofa);
-	//SAFE_DELETE(m_pObjChair);
-	//SAFE_DELETE(m_pObjBarrel);
-	SAFE_DELETE(m_pDrawers);
-	SAFE_DELETE(m_pIronmaiden);
-	SAFE_DELETE(m_pTorture);
-	SAFE_DELETE(m_pStonetable);
-	SAFE_DELETE(m_pBookPile1);
-	SAFE_DELETE(m_pBookRow);
+	SAFE_DELETE(m_pParticle);
+	
+	for each (auto it in vecMapObj)
+	{
+		SAFE_DELETE(it);
+	}
 }
 
 void cMap::Setup()
 {
+
+	D3DXCOLOR stColor;
+	stColor.r = 255;
+	stColor.g = 127;
+	stColor.b = 39;
+	m_pPos = D3DXVECTOR3(-10.5, 8.4, 5);
+	m_pParticle = new cParticleSystem;
+	//m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
+	
+	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
+	
+	/*
+	g_pLightManager->SetPointLight(eLIGHT::P_B1F_ROOM,
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXVECTOR3(0,1,5), 100.0f);
+		*/
+	/*
+	g_pLightManager->SetPointLight(eLIGHT::P_B1F_PRISON,
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
+		D3DXVECTOR3(5, 1, 5), 10.0f);
+	*/
 	m_pFloor = new cFloor;
 	m_pFloor->Setup();
 	m_pWall = new cWall;
@@ -81,145 +64,164 @@ void cMap::Setup()
 
 void cMap::SetupObject()
 {
-	//족쇄
-	m_pObjShackles = new cMapObject;
-	m_pObjShackles->Setup("Objects/map", "shackles.obj");
+	/*****************************
+	지하
+	******************************/
+	{
+		//족쇄
+		m_pObjShackles = new cMapObject;
+		m_pObjShackles->Setup("Objects/map", "shackles.obj");
+		vecMapObj.push_back(m_pObjShackles);
 
-	//쇠창살
-	m_pObjPrisonbar = new cMapObject;
-	m_pObjPrisonbar->Setup("Objects/map", "wriggle_prison_bar2.obj");
-	m_pObjPrisonbarRow = new cMapObject;
-	m_pObjPrisonbarRow->Setup("Objects/map", "wriggle_prison_bar2.obj");
+		//쇠창살
+		m_pObjPrisonbar = new cMapObject;
+		m_pObjPrisonbar->Setup("Objects/map", "wriggle_prison_bar2.obj");
+		vecMapObj.push_back(m_pObjPrisonbar);
 
-	//지하
+		//지하실 선반
+		m_pObjShelf = new cMapObject;
+		m_pObjShelf->Setup("Objects/map", "shelf_no_back.obj");
+		vecMapObj.push_back(m_pObjShelf);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 7.3, B1F, CENTERZ - 0.2)
+			, D3DXVECTOR3(CENTERX + 7.3, B1F, CENTERZ + 1.7)
+			, D3DXVECTOR3(CENTERX + 8.2, B1F, CENTERZ + 1.7)
+			, D3DXVECTOR3(CENTERX + 8.2, B1F, CENTERZ - 0.2), 0);
 
-	//지하실 선반
-	m_pObjShelf = new cMapObject;
-	m_pObjShelf->Setup("Objects/map", "shelf_no_back.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 7.3, B1F, CENTERZ - 0.2)
-		, D3DXVECTOR3(CENTERX + 7.3, B1F, CENTERZ + 1.7)
-		, D3DXVECTOR3(CENTERX + 8.2, B1F, CENTERZ + 1.7)
-		, D3DXVECTOR3(CENTERX + 8.2, B1F, CENTERZ - 0.2), 0);
+		//지하실 와인 베럴
+		m_pObjWinebarrel = new cMapObject;
+		m_pObjWinebarrel->Setup("Objects/map", "big_wine_barrel.obj");
+		vecMapObj.push_back(m_pObjWinebarrel);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 10.5, B1F, CENTERZ + 0)
+			, D3DXVECTOR3(CENTERX + 10.5, B1F, CENTERZ + 1.7)
+			, D3DXVECTOR3(CENTERX + 12.2, B1F, CENTERZ + 1.7)
+			, D3DXVECTOR3(CENTERX + 12.2, B1F, CENTERZ + 0), 0);
 
-	//지하실 와인 베럴
-	m_pObjWinebarrel = new cMapObject;
-	m_pObjWinebarrel->Setup("Objects/map", "big_wine_barrel.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 10.5, B1F, CENTERZ + 0)
-		, D3DXVECTOR3(CENTERX + 10.5, B1F, CENTERZ + 1.7)
-		, D3DXVECTOR3(CENTERX + 12.2, B1F, CENTERZ + 1.7)
-		, D3DXVECTOR3(CENTERX + 12.2, B1F, CENTERZ + 0), 0);
+		//박스
+		m_pObjBox = new cMapObject;
+		m_pObjBox->Setup("Objects", "box.obj");
+		vecMapObj.push_back(m_pObjBox);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.2, B1F, CENTERZ + 3.3)
+			, D3DXVECTOR3(CENTERX + 9.2, B1F, CENTERZ + 4.2)
+			, D3DXVECTOR3(CENTERX + 11.2, B1F, CENTERZ + 4.2)
+			, D3DXVECTOR3(CENTERX + 11.2, B1F, CENTERZ + 3.3), 0);
 
-	//박스
-	m_pObjBox = new cMapObject;
-	m_pObjBox->Setup("Objects", "box.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.2, B1F, CENTERZ + 3.3)
-		, D3DXVECTOR3(CENTERX + 9.2, B1F, CENTERZ + 4.2)
-		, D3DXVECTOR3(CENTERX + 11.2, B1F, CENTERZ + 4.2)
-		, D3DXVECTOR3(CENTERX + 11.2, B1F, CENTERZ + 3.3), 0);
+		m_pLamp = new cMapObject;
+		m_pLamp->Setup("Objects/map", "hanging_lantern_wall.obj");
+		vecMapObj.push_back(m_pLamp);
 
+	}
 
-	//1층
-	//피아노
-	m_pObjPiano = new cMapObject;
-	m_pObjPiano->Setup("Objects/map", "piano.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 5.8, FF, CENTERZ - 0.7)
-		, D3DXVECTOR3(CENTERX + 5.8, FF, CENTERZ + 0.5)
-		, D3DXVECTOR3(CENTERX + 8.2, FF, CENTERZ + 0.5)
-		, D3DXVECTOR3(CENTERX + 8.2, FF, CENTERZ - 0.7), 1);
+	/*****************************
+	1 층
+	******************************/
+	{
+		//피아노
+		m_pObjPiano = new cMapObject;
+		m_pObjPiano->Setup("Objects/map", "piano.obj");
+		vecMapObj.push_back(m_pObjPiano);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 5.8, FF, CENTERZ - 0.7)
+			, D3DXVECTOR3(CENTERX + 5.8, FF, CENTERZ + 0.5)
+			, D3DXVECTOR3(CENTERX + 8.2, FF, CENTERZ + 0.5)
+			, D3DXVECTOR3(CENTERX + 8.2, FF, CENTERZ - 0.7), 1);
 
-	//서랍
-	m_pDrawers = new cMapObject;
-	m_pDrawers->Setup("Objects/map", "chest_of_drawers_nice.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 0.7)
-		, D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ + 0.5)
-		, D3DXVECTOR3(CENTERX + 9, FF, CENTERZ + 0.5)
-		, D3DXVECTOR3(CENTERX + 9, FF, CENTERZ - 0.7), 1);
+		//서랍
+		m_pDrawers = new cMapObject;
+		m_pDrawers->Setup("Objects/map", "chest_of_drawers_nice.obj");
+		vecMapObj.push_back(m_pDrawers);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ - 0.7)
+			, D3DXVECTOR3(CENTERX + 7.8, FF, CENTERZ + 0.5)
+			, D3DXVECTOR3(CENTERX + 9, FF, CENTERZ + 0.5)
+			, D3DXVECTOR3(CENTERX + 9, FF, CENTERZ - 0.7), 1);
 
-	//침대
-	m_pObjBed = new cMapObject;
-	m_pObjBed->Setup("Objects/map", "bed_nice.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 2.8, FF, CENTERZ - 0.7)
-		, D3DXVECTOR3(CENTERX + 2.8, FF, CENTERZ + 1.9)
-		, D3DXVECTOR3(CENTERX + 4.8, FF, CENTERZ + 1.9)
-		, D3DXVECTOR3(CENTERX + 4.8, FF, CENTERZ - 0.7), 1);
+		//침대
+		m_pObjBed = new cMapObject;
+		m_pObjBed->Setup("Objects/map", "bed_nice.obj");
+		vecMapObj.push_back(m_pObjBed);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 2.8, FF, CENTERZ - 0.7)
+			, D3DXVECTOR3(CENTERX + 2.8, FF, CENTERZ + 1.9)
+			, D3DXVECTOR3(CENTERX + 4.8, FF, CENTERZ + 1.9)
+			, D3DXVECTOR3(CENTERX + 4.8, FF, CENTERZ - 0.7), 1);
 
-	//고문 기구
-	m_pTorture = new cMapObject;
-	m_pTorture->Setup("Objects/map", "torture_saw_setup.obj");
+		//고문 기구
+		m_pTorture = new cMapObject;
+		m_pTorture->Setup("Objects/map", "torture_saw_setup.obj");
+		vecMapObj.push_back(m_pTorture);
 
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11, FF, CENTERZ - 0.5)
-		, D3DXVECTOR3(CENTERX + 11, FF, CENTERZ + 0.9)
-		, D3DXVECTOR3(CENTERX + 12.2, FF, CENTERZ + 0.9)
-		, D3DXVECTOR3(CENTERX + 12.2, FF, CENTERZ - 0.5), 1);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11, FF, CENTERZ - 0.5)
+			, D3DXVECTOR3(CENTERX + 11, FF, CENTERZ + 0.9)
+			, D3DXVECTOR3(CENTERX + 12.2, FF, CENTERZ + 0.9)
+			, D3DXVECTOR3(CENTERX + 12.2, FF, CENTERZ - 0.5), 1);
 
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 8.8, FF, CENTERZ - 0.5)
-		, D3DXVECTOR3(CENTERX + 8.8, FF, CENTERZ + 0.9)
-		, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ + 0.9)
-		, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 0.5), 1);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 8.8, FF, CENTERZ - 0.5)
+			, D3DXVECTOR3(CENTERX + 8.8, FF, CENTERZ + 0.9)
+			, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ + 0.9)
+			, D3DXVECTOR3(CENTERX + 10, FF, CENTERZ - 0.5), 1);
 
-	//돌 테이블
-	m_pStonetable = new cMapObject;
-	m_pStonetable->Setup("Objects/map", "stone_table.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.9, FF, CENTERZ - 3)
-		, D3DXVECTOR3(CENTERX + 9.9, FF, CENTERZ - 1)
-		, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 1)
-		, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 3), 1);
-
-	//2층
-	//선반
-	m_pObjShelfHigh = new cMapObject;
-	m_pObjShelfHigh->Setup("Objects/map", "shelf_high01.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 5.7, SF, CENTERZ - 0.7)
-		, D3DXVECTOR3(CENTERX + 5.7, SF, CENTERZ + 3.3)
-		, D3DXVECTOR3(CENTERX + 6.8, SF, CENTERZ + 3.3)
-		, D3DXVECTOR3(CENTERX + 6.8, SF, CENTERZ - 0.7), 2);
-
-	/*
-	m_pObjTable = new cMapObject;
-	m_pObjTable->Setup("Objects/map", "table_wood01.obj");
-	*/
-	//책상
-	m_pObjDesk = new cMapObject;
-	m_pObjDesk->Setup("Objects/map", "work_desk.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 6.1, SF, CENTERZ - 2.5)
-		, D3DXVECTOR3(CENTERX + 6.1, SF, CENTERZ - 1.3)
-		, D3DXVECTOR3(CENTERX + 8, SF, CENTERZ - 1.3)
-		, D3DXVECTOR3(CENTERX + 8, SF, CENTERZ - 2.5), 2);
-
-	//아이언메이든
-	m_pIronmaiden = new cMapObject;
-	m_pIronmaiden->Setup("Objects/map", "iron_maiden.obj");
-	m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1.7)
-		, D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 3.3)
-		, D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 3.3)
-		, D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 1.7), 2);
+		//돌 테이블
+		m_pStonetable = new cMapObject;
+		m_pStonetable->Setup("Objects/map", "stone_table.obj");
+		vecMapObj.push_back(m_pStonetable);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9.9, FF, CENTERZ - 3)
+			, D3DXVECTOR3(CENTERX + 9.9, FF, CENTERZ - 1)
+			, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 1)
+			, D3DXVECTOR3(CENTERX + 11.2, FF, CENTERZ - 3), 1);
 
 
-	m_pBookPile1 = new cMapObject;
-	m_pBookPile1->Setup("Objects/map", "book_pile01.obj");
+		//방 박스
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 3.3, FF, CENTERZ + 0)
+			, D3DXVECTOR3(CENTERX + 3.3, FF, CENTERZ + 2.5)
+			, D3DXVECTOR3(CENTERX + 5.1, FF, CENTERZ + 2.5)
+			, D3DXVECTOR3(CENTERX + 5.1, FF, CENTERZ + 0), 1);
+	}
+	/*****************************
+	2 층
+	******************************/
+	{
+		//선반
+		m_pObjShelfHigh = new cMapObject;
+		m_pObjShelfHigh->Setup("Objects/map", "shelf_high01.obj");
+		vecMapObj.push_back(m_pObjShelfHigh);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 5.7, SF, CENTERZ - 0.7)
+			, D3DXVECTOR3(CENTERX + 5.7, SF, CENTERZ + 3.3)
+			, D3DXVECTOR3(CENTERX + 6.8, SF, CENTERZ + 3.3)
+			, D3DXVECTOR3(CENTERX + 6.8, SF, CENTERZ - 0.7), 2);
 
-	m_pBookRow = new cMapObject;
-	m_pBookRow->Setup("Objects/map", "book_row01.obj");
 
-	/*
-	m_pOjbSurface->AddSurface(D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ - 2.2)
-	, D3DXVECTOR3(CENTERX + 6.3, SF, CENTERZ - 1.5)
-	, D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ - 1.5)
-	, D3DXVECTOR3(CENTERX + 7.7, SF, CENTERZ - 2.2));
-	*/
+		//책상
+		m_pObjDesk = new cMapObject;
+		m_pObjDesk->Setup("Objects/map", "work_desk.obj");
+		vecMapObj.push_back(m_pObjDesk);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 6.1, SF, CENTERZ - 2.5)
+			, D3DXVECTOR3(CENTERX + 6.1, SF, CENTERZ - 1.3)
+			, D3DXVECTOR3(CENTERX + 8, SF, CENTERZ - 1.3)
+			, D3DXVECTOR3(CENTERX + 8, SF, CENTERZ - 2.5), 2);
 
-	/*m_pObjSofa = new cMapObject;
-	m_pObjSofa->Setup("Objects/map", "sofa.obj");
+		//아이언메이든
+		m_pIronmaiden = new cMapObject;
+		m_pIronmaiden->Setup("Objects/map", "iron_maiden.obj");
+		vecMapObj.push_back(m_pIronmaiden);
+		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 1.7)
+			, D3DXVECTOR3(CENTERX + 9, SF, CENTERZ + 3.3)
+			, D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 3.3)
+			, D3DXVECTOR3(CENTERX + 10.7, SF, CENTERZ + 1.7), 2);
 
-	m_pObjChair = new cMapObject;
-	m_pObjChair->Setup("Objects/map", "armchair.obj");
 
-	m_pObjBarrel = new cMapObject;
-	m_pObjBarrel->Setup("Objects/map", "barrel01.obj");*/
+		m_pBookPile1 = new cMapObject;
+		m_pBookPile1->Setup("Objects/map", "book_pile01.obj");
+		vecMapObj.push_back(m_pBookPile1);
 
+		m_pBookRow = new cMapObject;
+		m_pBookRow->Setup("Objects/map", "book_row01.obj");
+		vecMapObj.push_back(m_pBookRow);
+	}
+
+	/*****************************
+	오브젝트 서페이스
+	******************************/
 	{
 		//지하 
-		//1지하 상자
+
+		//상자
 		m_pObjSurface->AddSurface(D3DXVECTOR3(CENTERX + 11.4, B1F, CENTERZ + 2.5)
 			, D3DXVECTOR3(CENTERX + 11.4, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 3.5)
@@ -230,7 +232,6 @@ void cMap::SetupObject()
 			, D3DXVECTOR3(CENTERX + 8.8, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 10.2, B1F, CENTERZ + 3.5)
 			, D3DXVECTOR3(CENTERX + 10.2, B1F, CENTERZ + 2.7), 0);
-
 
 		//1층
 		//돌무더기
@@ -251,24 +252,29 @@ void cMap::SetupObject()
 			, D3DXVECTOR3(CENTERX + 4, FF, CENTERZ - 0.7)
 			, D3DXVECTOR3(CENTERX + 4, FF, CENTERZ - 1.2), 1);
 	}
+}
 
-
+void cMap::Update()
+{
+	m_pParticle->Update();
 }
 
 
 void cMap::Render()
 {
 	//m_pSurface->Render();
+	//m_pObjSurface->RenderSurface();
+	
 	m_pFloor->Render();
 	m_pWall->Render();
 	m_pCeiling->Render();
-	//m_pObjSurface->RenderSurface();
+	
 	RenderObject();
+	//m_pParticle->Render();
 }
 
 void cMap::RenderObject()
 {
-
 	m_pObjShackles->Render(0.08, 33, 7, -24, 1);
 
 	for (int i = 0; i < 12; i++)
@@ -278,41 +284,39 @@ void cMap::RenderObject()
 
 	for (int i = 0; i < 12; i++)
 	{
-		m_pObjPrisonbarRow->Render(0.33, -22, 0, 12.8 + i, 0);
+		m_pObjPrisonbar->Render(0.33, -22, 0, 12.8 + i, 0);
 	}
 
-	m_pObjShelf->Render(0.08, 5, 0, 13.5, 1.5);
-
-
+	m_pObjShelf->Render(0.08, 5, 0, 13.8, 1.5);
 	m_pObjBox->Render(1, 0, 1, 23, 0);
 	m_pObjBox->Render(1, 2.2, 1, 23, 0);
 	m_pObjBox->Render(1, 4.5, 1, 23, 0);
 	m_pObjBox->Render(1, -2, 1, 23, 0);
 	m_pObjBox->Render(1, -1, 3, 23, 0);
 	m_pObjBox->Render(1, 3, 3, 23, 0);
-
 	m_pObjPiano->Render(0.13, -18, 12.1, 0, 0);
 	m_pObjBed->Render(0.095, -4, 12, -37, 0.5);
 	m_pObjWinebarrel->Render(0.05, 5, 0, -7.5, -0.5);
-
 	m_pObjShelfHigh->Render(0.07, -15, 24.1, -22.5, 0.5);
 	m_pObjShelfHigh->Render(0.07, -10, 24.1, -22.5, 0.5);
 	m_pObjShelfHigh->Render(0.07, -5, 24.1, -22.5, 0.5);
 	m_pObjShelfHigh->Render(0.07, 0, 24.1, -22.5, 0.5);
-
-	//m_pObjTable->Render(0.1, 0, 0, 0, 0);
-	//m_pObjSofa->Render(0.1, 0, 12, -22, -1);
-	//m_pObjChair->Render(0.1, 9, 14, -22, -1);
-	//m_pObjBarrel->Render(15, 2.2, 24, 14, 0);
-	//m_pObjBarrel->Render(15, -2.7, 24, 14, 0);
 	m_pDrawers->Render(0.09, -10, 14.5, 0, 0);
 	m_pObjDesk->Render(8.5, 18, 24.1, 11, 1);
 	m_pIronmaiden->Render(0.1, 0, 24.1, -15, -1);
 	m_pTorture->Render(0.1, 3, 12, 1, 0);
 	m_pStonetable->Render(0.1, 3, 12, -12, 0);
 	m_pBookPile1->Render(0.1, -17, 27.5, -11.5, 0);
-	//m_pBookRow->Render(0.1, -12, 26, -22, 0.5);
-	//m_pOjbSurface->RenderSurface();
+
+	m_pObjBox->Render(1, -31.5, 13, 9, 0);
+	m_pObjBox->Render(1, -31.5, 15, 5, 0);
+	m_pObjBox->Render(1, -31.5, 13, 6, 0);
+	m_pObjBox->Render(1, -31.5, 15, 12, 0);
+	m_pObjBox->Render(1, -31.5, 13, 12, 0);
+	m_pObjBox->Render(1, -31.5, 15, 10, 0);
+	m_pObjBox->Render(1, -31.5, 13, 10, 0);
+
+	m_pLamp->Render(0.1, -11, 6, 5, 0);
 }
 
 
@@ -320,9 +324,9 @@ bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
 {
 
 	int floor;
-	if (y >= 22.8)floor = 2;
-	if (y >= 11.8 && y < 22.8) floor = 1;
-	if (y < 11.8) floor = 0;
+	if (y >= 22)floor = 2;
+	if (y >= 11 && y < 22) floor = 1;
+	if (y < 11) floor = 0;
 
 	{
 		D3DXVECTOR3 vec[200];
@@ -367,15 +371,17 @@ bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
 		return false;
 	}
 }
+
+
 static bool isTrapIng;
 static bool isTrapOpen;
 bool cMap::GetObjectSurface(IN float x, OUT float & y, IN float z)
 {
 	if (isTrapIng) return false;
 	int floor;
-	if (y >= 22.8)floor = 2;
-	if (y >= 11.8 && y < 22.8) floor = 1;
-	if (y < 11.8) floor = 0;
+	if (y >= 22)floor = 2;
+	if (y >= 11 && y < 22) floor = 1;
+	if (y < 11) floor = 0;
 	{
 		D3DXVECTOR3 vec[200];
 		D3DXMATRIXA16 matS, matWorld;
@@ -431,7 +437,7 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 			D3DXVec3TransformCoord(&vec[i].p, &m_pSurface->GetPassVertex()[i].p, &matWorld);
 			vec[i].nindex = m_pSurface->GetPassVertex()[i].nindex;
 		}
-		
+
 		D3DXVECTOR3 vRayPos(x, 6 + y, z);
 		D3DXVECTOR3 vRayDir(0, -1, 0);
 		for (size_t i = 0; i < m_pSurface->GetPassVertex().size(); i += 3) {
@@ -454,17 +460,17 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == false && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {	// 트랩
-					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;		
+					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;
 				}
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// 트랩
-					if(isTrapOpen != true){
+					if (isTrapOpen != true) {
 						if (y > 0) {
 							isTrapIng = true;
 							return true;
 						}
 					}
 					else return false;
-				}	
+				}
 				else
 					return false;
 			}
@@ -479,6 +485,8 @@ bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 		return true;
 	}
 	else if (y < 0 && isTrapIng == true) {
+		
+		g_pSoundManager->Play("break_wood", 1.0f);
 		isTrapIng = false;
 		isTrapOpen = true;
 	}
@@ -488,7 +496,6 @@ bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 	else if (!GetObjectSurface(x, y, z)) {
 		return false;
 	}
-	
 	else if (!GetSurfaceHeight(x, y, z) && GetPassSurface(x, y, z)) {
 		return true;
 	}

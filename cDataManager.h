@@ -27,9 +27,13 @@ private:
 	//영현 - 경고문구 띄우기
 	SYNTHESIZE(bool,		m_isWarning, isWarning)
 	SYNTHESIZE(string,		m_strWarningWord, WarningWord)
+
+	//영현 - 플레이어 정하기
+	SYNTHESIZE(int, m_nPlayer, PlayerNum)
 	
 public:
 	//정훈 - 오브젝트용
+	bool m_isHandOn;
 	std::map<StuffCode, LPD3DXMESH> m_mapStuffMesh;
 	std::map<StuffCode, std::vector<cMtlTex*>> m_mapStuffVecMtlTex;
 

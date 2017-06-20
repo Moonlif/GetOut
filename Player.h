@@ -35,6 +35,8 @@ public:
 
 	inline D3DXVECTOR3& GetPosition() { return position; }
 	inline D3DXVECTOR3& GetDirection() { return direction; }
+	void SetPosition(D3DXVECTOR3 stPosition) { position = stPosition; }
+	void SetRotation(float fRotation) { rotY = fRotation; }
 
 	void SetDirection(D3DXVECTOR3 dir) { direction = dir; }
 

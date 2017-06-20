@@ -19,6 +19,13 @@ cUIObject::~cUIObject()
 	//Destroy();
 }
 
+void cUIObject::SetPosition(float x, float y, float z)
+{
+	m_vPosition.x = x;
+	m_vPosition.y = y;
+	m_vPosition.z = z;
+}
+
 void cUIObject::AddChild(cUIObject * pChild)
 {
 	pChild->SetParent(this);

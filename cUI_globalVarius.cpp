@@ -14,12 +14,6 @@ cUI_globalVarius::~cUI_globalVarius()
 }
 
 
-
-void cUI_globalVarius::SetSound()
-{
-	
-}
-
 void cUI_globalVarius::SetItemInfo()
 {
 	SetItem(eITEMTYPE::ITEMTYPE_KEY, StuffCode::STUFF_KEY1, "UI/Item/key_study.tga");

@@ -28,7 +28,7 @@ void cGamePlay_UI::Setup()
 
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-	m_pImage = new cUIImageView("UI/GamePlay/hand.png", D3DXVECTOR3(WINSIZEX / 2 - 50, WINSIZEY / 2 + 50, 0)
+	m_pImage = new cUIImageView("UI/GamePlay/hand.png", D3DXVECTOR3(WINSIZEX / 2, WINSIZEY / 2, 0)
 		, 200);
 	m_pImage->SetScaling(D3DXVECTOR3(0.9f, 0.9f, 0.9f));
 }

@@ -282,7 +282,7 @@ void cInventory::MoveItem()
 					g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_ATTACK)
 				{
 					g_pData->SetUseItem(FirstCode);
-					cout << g_pData->GetUseItem() << endl;
+					//cout << g_pData->GetUseItem() << endl;
 				}
 				//사용불가능한 아이템일 때
 				else

@@ -1,8 +1,10 @@
 #pragma once
 #include "cCamera.h"
 
+#include "cChat.h"
 #include "cMap.h"
 #include "cTotalUIRender.h"
+#include "cUIButton.h"
 #include "cInteract.h"
 #include "CharacterManager.h"
 #include "MonsterManager.h"

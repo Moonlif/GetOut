@@ -33,6 +33,20 @@ cUIButton::~cUIButton()
 {
 }
 
+void cUIButton::SetTexture(char* szNormal, char* szOver, char* szSelect)
+{
+	D3DXIMAGE_INFO stImageInfo;
+	m_aTexture[E_NORMAL] = g_pTextureManager->GetTexture(szNormal, &stImageInfo);
+	m_stSize.nWidth = stImageInfo.Width;
+	m_stSize.nHeight = stImageInfo.Height;
+	m_aTexture[E_MOUSEOVER] = g_pTextureManager->GetTexture(szOver, &stImageInfo);
+	assert(m_stSize.nWidth == stImageInfo.Width &&
+		m_stSize.nHeight == stImageInfo.Height);///이미지 사이즈가 다르다면 경고문을 출력해줌
+	m_aTexture[E_SELECTED] = g_pTextureManager->GetTexture(szSelect, &stImageInfo);
+	assert(m_stSize.nWidth == stImageInfo.Width &&
+		m_stSize.nHeight == stImageInfo.Height);///이미지 사이즈가 다르다면 경고문을 출력해줌
+}
+
 
 void cUIButton::Update()
 {

@@ -34,7 +34,7 @@ private:
 	cCamera*							m_pCamera;
 
 	//어떤 캐릭 선택했나?
-	int									m_WhatIsYourNumber;					//자신이 몇 플레이어인지
+	bool								m_isSelect;
 public:
 	void Setup();
 	void Update(cCamera* camera);

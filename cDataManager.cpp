@@ -10,6 +10,8 @@ cDataManager::cDataManager()
 	, m_IsOnChat(false)
 	, m_PickUpItemCode(StuffCode::STUFF_NONE)
 	, m_IsLoadItem(false)
+	, m_isHandOn(false)
+	, m_nPlayer(0)
 {
 
 	for (int i = 0; i < TOTALINVENSIZE; ++i)
@@ -70,6 +72,7 @@ void cDataManager::Setup()
 		m_mapStuffMesh[STUFF_DOOR_1STTOILET] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_1STTOILET], "Objects/clickable/door", "PrisonDoor2.obj", 1);
 		m_mapStuffMesh[STUFF_DOOR_2NDROOM1] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_2NDROOM1], "Objects/clickable/door", "WoodDoor.obj", 1);
 		m_mapStuffMesh[STUFF_DOOR_2NDROOM2] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_2NDROOM2], "Objects/clickable/door", "PrisonDoor.obj", 1);
+		m_mapStuffMesh[STUFF_DOOR_FINAL] = loader.LoadMesh(m_mapStuffVecMtlTex[STUFF_DOOR_FINAL], "Objects/clickable/door", "PrisonDoor2.obj", 1);
 	}
 
 	//Á¤ÈÆ - ¸Ê Á¤º¸
@@ -80,23 +83,29 @@ void cDataManager::Setup()
 		}
 
 		m_bStuffSwitch[SWITCH_ONMAP_CROWBAR] = true;
-		m_vStuffPosition[SWITCH_ONMAP_CROWBAR] = D3DXVECTOR3(-40, 12, 12);
+		m_vStuffPosition[SWITCH_ONMAP_CROWBAR] = D3DXVECTOR3(-40, 12.2f, 12);
 		m_vStuffRotation[SWITCH_ONMAP_CROWBAR] = D3DXVECTOR3(0, D3DX_PI / 2.2f, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_PAPER1] = true;
 		m_vStuffPosition[SWITCH_ONMAP_PAPER1] = D3DXVECTOR3(10, 0.7f, 18);
 		m_vStuffRotation[SWITCH_ONMAP_PAPER1] = D3DXVECTOR3(0, 0, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_PAPER2] = true;
 		m_vStuffPosition[SWITCH_ONMAP_PAPER2] = D3DXVECTOR3(-38, 12.7f, -6);
 		m_vStuffRotation[SWITCH_ONMAP_PAPER2] = D3DXVECTOR3(0, 0, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_PAPER3] = true;
 		m_vStuffPosition[SWITCH_ONMAP_PAPER3] = D3DXVECTOR3(-17.5f, 27.7f, -10.5f);
 		m_vStuffRotation[SWITCH_ONMAP_PAPER3] = D3DXVECTOR3(0, 0, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_KEY1] = true;
 		m_vStuffPosition[SWITCH_ONMAP_KEY1] = D3DXVECTOR3(-14.0f, 0.3f, 1.5f);
 		m_vStuffRotation[SWITCH_ONMAP_KEY1] = D3DXVECTOR3(0, D3DX_PI / 2.5f, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_KEY2] = true;
 		m_vStuffPosition[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(-30, 12.3f, -13);
 		m_vStuffRotation[SWITCH_ONMAP_KEY2] = D3DXVECTOR3(0, 0.3f, 0);
+
 		m_bStuffSwitch[SWITCH_ONMAP_KEY3] = false;
 		m_vStuffPosition[SWITCH_ONMAP_KEY3] = D3DXVECTOR3(0, 0, 0);
 		m_vStuffRotation[SWITCH_ONMAP_KEY3] = D3DXVECTOR3(0, 0, 0);
@@ -109,6 +118,34 @@ void cDataManager::Setup()
 		}
 
 		m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1] = D3DXVECTOR3(-7, 12, 19.5f);
+	}
+
+	//Á¤ÈÆ »ç¿îµå Á¤º¸
+	{
+		g_pSoundManager->AddSound("pick_generic", "Sound/EffectSound/Interaction/pick_generic.ogg", false, false);
+		g_pSoundManager->AddSound("pick_key", "Sound/EffectSound/Interaction/pick_key.ogg", false, false);
+		g_pSoundManager->AddSound("pick_knife", "Sound/EffectSound/Interaction/pick_knife.ogg", false, false);
+		g_pSoundManager->AddSound("pick_paper", "Sound/EffectSound/Interaction/pick_paper.ogg", false, false);
+
+		g_pSoundManager->AddSound("drop_key", "Sound/EffectSound/25_drop_key.ogg", false, false);
+		g_pSoundManager->AddSound("drop_generic", "Sound/EffectSound/pickaxe_charge.ogg", false, false);
+
+		//g_pSoundManager->AddSound("door_prison", "Sound/EffectSound/door_safety_open.ogg", false, false);
+		//g_pSoundManager->AddSound("door_1stRoom", "Sound/EffectSound/door_mansion_open.ogg", false, false);
+		//g_pSoundManager->AddSound("door_1stToilet", "Sound/EffectSound/door_large_castle_open.ogg", false, false);
+		//g_pSoundManager->AddSound("door_2ndRoom1", "Sound/EffectSound/move_gate.ogg", false, false);
+		//g_pSoundManager->AddSound("door_2ndRoom2", "Sound/EffectSound/01_door.ogg", false, false);
+		//g_pSoundManager->AddSound("door_final", "Sound/EffectSound/29_exit_door.ogg", false, false);
+
+		//g_pSoundManager->AddSound("base_box", "Sound/EffectSound/door_level_wood_close.ogg", false, false);
+		//g_pSoundManager->AddSound("base_chest", "Sound/EffectSound/gameplay_open_chest.ogg", false, false);
+		//g_pSoundManager->AddSound("1st_wood1", "Sound/EffectSound/16_ladder_down.ogg", false, false);
+		//g_pSoundManager->AddSound("1st_wood2", "Sound/EffectSound/04_place_wood.ogg", false, false);
+		//g_pSoundManager->AddSound("1st_woodblock", "Sound/EffectSound/18_touch_bridge1.ogg", false, false);
+		//g_pSoundManager->AddSound("2nd_button", "Sound/EffectSound/roll_rock.ogg", false, false);
+		//g_pSoundManager->AddSound("2nd_valve", "Sound/EffectSound/13_attach_wheel.ogg", false, false);
+		//g_pSoundManager->AddSound("2nd_valvelock", "Sound/EffectSound/12_valve_stuck.ogg", false, false);
+
 	}
 }
 
@@ -156,6 +193,8 @@ void cDataManager::DropItem(StuffCode itemCode)
 	m_vStuffPosition[itemCode] = m_vPosition1P;
 	m_vStuffRotation[itemCode] = D3DXVECTOR3(0, m_vRotation1P, 0);
 
+	if (itemCode == STUFF_KEY1 || itemCode == STUFF_KEY2 || itemCode == STUFF_KEY3) g_pSoundManager->Play("drop_key", 0.5f);
+	else g_pSoundManager->Play("drop_generic", 0.5f);
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
@@ -165,6 +204,10 @@ void cDataManager::GetItem(StuffCode itemCode)
 	m_bStuffSwitch[itemCode] = false;
 	m_PickUpItemCode = itemCode;
 
+	if (itemCode == STUFF_CROWBAR) g_pSoundManager->Play("pick_knife", 0.5f);
+	else if (itemCode == STUFF_KEY1 || itemCode == STUFF_KEY2 || itemCode == STUFF_KEY3) g_pSoundManager->Play("pick_key", 0.5f);
+	else if (itemCode == STUFF_PAPER1 || itemCode == STUFF_PAPER2 || itemCode == STUFF_PAPER3) g_pSoundManager->Play("pick_paper", 0.5f);
+	else g_pSoundManager->Play("pick_generic", 0.5f);
 }
 
 //°æ°í¹®±¸ ¶ç¿ì±â
@@ -182,4 +225,3 @@ void cDataManager::AddSound()
 	g_pSoundManager->AddSound("LoadingScene", "Sound/Background/LoadingScene.ogg", true, true);
 	g_pSoundManager->AddSound("CharacterSelectScene", "Sound/Background/CharacterSelectScene.ogg", true, true);
 }
-

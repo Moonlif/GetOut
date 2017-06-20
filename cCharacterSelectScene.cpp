@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cCharacterSelectScene.h"
 
+
 #include "cUIImageView.h"
 #include "cUIObject.h"
 #include "cUIMesh.h"
@@ -14,9 +15,7 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_pPlayer1(NULL)
 	, m_pPlayer2(NULL)
 	, m_isDeleteBackground(false)
-	, m_vRetargetPos(0,0,0)
-	, m_WhatIsYourNumber(0)
-
+	, m_vRetargetPos(0, 0, 0)
 {
 }
 
@@ -45,7 +44,7 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update(cCamera* camera)
 {
-	cout << g_pSoundManager->GetIsPlaying("CharacterSelectScene") << endl;
+	//cout << g_pSoundManager->GetIsPlaying("CharacterSelectScene") << endl;
 
 	m_pCamera = camera;
 	//첫 배경 알파값 업데이트
@@ -59,7 +58,7 @@ void cCharacterSelectScene::Update(cCamera* camera)
 	if (!m_isDeleteBackground) UpdateCharacterSelect();
 
 	//케릭선택 완료시 배경 지우기
-	if(m_isDeleteBackground) DeleteBackground();
+	if (m_isDeleteBackground) DeleteBackground();
 
 }
 
@@ -94,24 +93,24 @@ void cCharacterSelectScene::UpdateSetFirstBackground()
 void cCharacterSelectScene::UpdateCharacterSelect()
 {
 	///-------------------------------------------------------------
-	//						게임스타트 텍스트 변화
+	//                  게임스타트 텍스트 변화
 	///-------------------------------------------------------------
 	cUIImageView* p1Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
 	cUIImageView* p2Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
 
 
 	cUITextView* text = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
-	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));	
-	else									 text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
-	
+	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));
+	else                            text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
-	{		
+	{
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 
 		///-------------------------------------------------------------
-		//							1p, 2p정하기
+		//                     1p, 2p정하기
 		///-------------------------------------------------------------
 		static bool isSelect = false;
 
@@ -120,18 +119,18 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//상대방이 아직 클릭하지 않았다면 1P
 			if (g_pData->m_nPlayerNum2P == 0)
 			{
-				m_WhatIsYourNumber = 1;
+				g_pData->SetPlayerNum(1);
 			}
 			//클릭했으면 2P
 			else
 			{
-				m_WhatIsYourNumber = 2;
+				g_pData->SetPlayerNum(2);
 			}
 			isSelect = true;
 		}
 
 		///-------------------------------------------------------------
-		//						1번 플레이어 선택시
+		//                  1번 플레이어 선택시
 		///-------------------------------------------------------------
 		if (PtInRect(&Player1->Getrc(), g_ptMouse))
 		{
@@ -148,23 +147,28 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
-			
+			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
+			{
+				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+			}
 
 			//1p일 때
-			if (m_WhatIsYourNumber == 1)
+			if (g_pData->GetPlayerNum() == 1)
 			{
 				p1Text->SetIsHidden(false);
 				p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
 			}
 			//2p일 때
-			else if(m_WhatIsYourNumber == 2)
+			else if (g_pData->GetPlayerNum() == 2)
 			{
 				p2Text->SetIsHidden(false);
 				p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
 			}
 		}
 		///-------------------------------------------------------------
-		//						2번 플레이어 선택시
+		//                  2번 플레이어 선택시
 		///-------------------------------------------------------------
 		else if ((PtInRect(&Player2->Getrc(), g_ptMouse)))
 		{
@@ -180,26 +184,31 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
-		
+			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
+				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
+			{
+				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
+			}
 
 			//1p일 때
-			if (m_WhatIsYourNumber == 1)
+			if (g_pData->GetPlayerNum() == 1)
 			{
 				p1Text->SetIsHidden(false);
 				p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));
 			}
 			//2p일 때
-			else if (m_WhatIsYourNumber == 2)
+			else if (g_pData->GetPlayerNum() == 2)
 			{
 				p2Text->SetIsHidden(false);
 				p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
 			}
 
-			
+
 		}
 
 		///-------------------------------------------------------------
-		//						게임 시작하려고 할 시
+		//                  게임 시작하려고 할 시
 		///-------------------------------------------------------------
 		else if ((PtInRect(&text->Getrc(), g_ptMouse)))
 		{
@@ -211,12 +220,12 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			}
 			//같은 플레이어 선택중이라면 게임시작 안됨
 			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
-			{	
-				if (m_WhatIsYourNumber == 1)
+			{
+				if (g_pData->GetPlayerNum() == 1)
 				{
 					g_pData->TextOutWarningWord("플레이어2와 다른 캐릭을 선택해 주세요.");
 				}
-				else if (m_WhatIsYourNumber == 2)
+				else if (g_pData->GetPlayerNum() == 2)
 				{
 					g_pData->TextOutWarningWord("플레이어1과 다른 캐릭을 선택해 주세요.");
 				}
@@ -224,46 +233,47 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			}
 
 			g_pSoundManager->Stop("CharacterSelectScene");
-			g_pSoundManager->Play("LoadingScene",1.0f);
+			g_pSoundManager->Play("LoadingScene", 1.0f);
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
+			// << : 여기서 초기화 및 좌표 전송하게 변경해야함
 		}
 
 
 	}
-	
+
 	///-------------------------------------------------------------
-	//						상대방 1P, 2P 띄우기
+	//                  상대방 1P, 2P 띄우기
 	///-------------------------------------------------------------
-		if (g_pData->m_nPlayerNum2P != 0)
+	if (g_pData->m_nPlayerNum2P != 0)
+	{
+		//상대방이 1P일 때
+		if (g_pData->GetPlayerNum() == 2)
 		{
-			//상대방이 1P일 때
-			if (m_WhatIsYourNumber == 2)
-			{
-				p1Text->SetIsHidden(false);
-				p1Text->SetAlpha(100);
-				//남자를 선택하고 있을 때
-				if (g_pData->m_nPlayerNum2P == 1)	p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));			
-				//여자를 선택하고 있을 때
-				else p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));				
-			}
-			//상대방이 2P일 때
-			else if (m_WhatIsYourNumber == 1)
-			{
-				p2Text->SetIsHidden(false);
-				p2Text->SetAlpha(100);
-				//남자를 선택하고 있을 때
-				if (g_pData->m_nPlayerNum2P == 1)	p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
-				//여자를 선택하고 있을 때
-				else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
-			}
+			p1Text->SetIsHidden(false);
+			p1Text->SetAlpha(100);
+			//남자를 선택하고 있을 때
+			if (g_pData->m_nPlayerNum2P == 1)   p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
+			//여자를 선택하고 있을 때
+			else p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));
 		}
+		//상대방이 2P일 때
+		else if (g_pData->GetPlayerNum() == 1)
+		{
+			p2Text->SetIsHidden(false);
+			p2Text->SetAlpha(100);
+			//남자를 선택하고 있을 때
+			if (g_pData->m_nPlayerNum2P == 1)   p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
+			//여자를 선택하고 있을 때
+			else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
+		}
+	}
 }
 
 void cCharacterSelectScene::UpdateBeforGameStart()
 {
 	///-------------------------------------------------------------
-	//						캐릭터 셀렉시
+	//                  캐릭터 셀렉시
 	///-------------------------------------------------------------
 	//카메라 움직이기
 	if (m_vRetargetPos.x > -0.5f) m_vRetargetPos.x -= 0.1f;
@@ -287,13 +297,13 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	img4->SetAlpha(alpha);
 	img5->SetAlpha(alpha);
 	img6->SetAlpha(alpha);
-	
+
 	//카메라 흔들기
 	if (alpha >= 255)
 	{
 		alpha = 255;
 		Time++;
-		
+
 		//카메라 흔들기
 		//if (Time % CAMERASHAKESPEED == 0) m_vRetargetPos = RandomCircle(SavePt, CAMERASHAKERANGE);
 
@@ -303,14 +313,14 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		if (dis <= 0.1f) dis = 0.1f;
 		m_pCamera->SetCameraDistance(dis);
 	}
-	
+
 
 	//배경이미지 바꿔주기
 	if (Time > IMAGECHANGESPEED)
 	{
 		nImage++;
 		Time = 0;
-		
+
 
 		switch (nImage)
 		{
@@ -345,6 +355,8 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
+			g_pSocketmanager->InitClientData();
+			g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
 			break;
 		default:
 			break;
@@ -370,14 +382,14 @@ void cCharacterSelectScene::DeleteBackground()
 	cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	//cUIButton* button = (cUIButton*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
 	cUITextView* text = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
-	
+
 	Background->SetAlpha(alpha);
 	explain->SetAlpha(alpha);
 	Player1->SetAlpha(alpha);
 	Player2->SetAlpha(alpha);
 	text->SetIsHidden(true);
 	//button->SetScaling(D3DXVECTOR3(x, y, 0));
-	
+
 	alpha -= DELETEBACKGROUNDSPEED;
 	//if(x > 0) x -= 0.05f;
 	//if(y > 0) y -= 0.05f;
@@ -402,8 +414,8 @@ void cCharacterSelectScene::OnClick(cUIButton * pSender)
 {
 	/*if (pSender->GetTag() == eUITAG::E_CHARACTERSELECT_BUTTON_START)
 	{
-		m_pCamera->ReTarget(&m_vRetargetPos);
-		m_isDeleteBackground = true;
+	m_pCamera->ReTarget(&m_vRetargetPos);
+	m_isDeleteBackground = true;
 	}*/
 }
 
@@ -413,7 +425,7 @@ void cCharacterSelectScene::SetBackground()
 	pBackgroundImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	m_pRoot = pBackgroundImage;
 
-	
+
 
 	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(870, 140, 0), 0);
 	ExplainImage->SetScaling(D3DXVECTOR3(0.45f, 0.65f, 1.0f));
@@ -438,8 +450,8 @@ void cCharacterSelectScene::SetBackground()
 	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	ExplainImage->AddChild(pPlyer2Image);
 
-	/*cUIButton*	pStartButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
-		"UI/button/BlackButton_Down.png", D3DXVECTOR3(40, 490, 0));
+	/*cUIButton*   pStartButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
+	"UI/button/BlackButton_Down.png", D3DXVECTOR3(40, 490, 0));
 	pStartButton->SetTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
 	pStartButton->SetScaling(D3DXVECTOR3(2.0f, 0.45f, 0));
 	pStartButton->SetDelegate(this);
@@ -451,8 +463,8 @@ void cCharacterSelectScene::SetBackground()
 	text->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
 	ExplainImage->AddChild(text);
 
-	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35,26,0), 
-		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(230, 500), 13,20, 500);
+	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
+		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(230, 500), 13, 20, 500);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 
@@ -481,7 +493,7 @@ void cCharacterSelectScene::SetBackground()
 	cUIImageView* gameStart5 = new cUIImageView("UI/CharacterSelectScene/welcome_bg05.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	gameStart5->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART5);
 	m_pGameStart->AddChild(gameStart5);
-	
+
 }
 
 //플레이어 메쉬, 조명 셋업
@@ -500,7 +512,7 @@ void cCharacterSelectScene::SetMesh()
 	D3DXCOLOR color(0.8f, 0.8f, 0.0f, 1.0f);
 
 	cUILight* pLight1 = new cUILight;
-	pLight1->SetSpotLight(eLIGHT::S_CHARACTERSELECT_PLAYER1, color, D3DXVECTOR3(0, -2.3f, 0), 
+	pLight1->SetSpotLight(eLIGHT::S_CHARACTERSELECT_PLAYER1, color, D3DXVECTOR3(0, -2.3f, 0),
 		10.0f, D3DX_PI / 2, D3DX_PI / 4, D3DXVECTOR3(0, 1, 0));
 	pLight1->SetTag(eUITAG::E_CHARACTERSELECT_LIGHT_PLAYER1);
 	m_pPlayer1->AddChild(pLight1);

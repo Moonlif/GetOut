@@ -21,6 +21,7 @@ protected:
 	SYNTHESIZE(int,							m_nTag, Tag)
 
 public:
+	virtual void SetPosition(float x, float y, float z = 0);
 	virtual void AddChild(cUIObject* pChild);
 	virtual void Update();
 	virtual void Render(LPD3DXSPRITE pSprite);
