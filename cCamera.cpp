@@ -31,7 +31,7 @@ void cCamera::Setup(D3DXVECTOR3 * pvTarget)
 	GetClientRect(g_hWnd, &rc);
 
 	D3DXMATRIXA16 matProj;
-	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 2.35f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 1.0f, 1000.0f);
 	g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 
 	{
@@ -61,6 +61,24 @@ void cCamera::Update()
 	{
 		SetCursor(NULL); // 마우스를 나타나지 않게 한다.
 						 //ClipCursor(&rc); //마우스 가두기
+	}
+
+	//벽충돌시 카메라 이동
+	if (g_pData->GetIsCollisionWall() && g_pData->GetIsStartedGame())
+	{
+		m_fCameraDistance += (10.0f * g_pTimeManager->GetElapsedTime());
+		if (m_fCameraDistance > 2.0f)
+		{
+			m_fCameraDistance = 2.0f;
+		}
+	}
+	else if(!g_pData->GetIsCollisionWall() && g_pData->GetIsStartedGame())
+	{
+		m_fCameraDistance -= (10.0f * g_pTimeManager->GetElapsedTime());
+		if (m_fCameraDistance < 0.0001f)
+		{
+			m_fCameraDistance = 0.0001f;
+		}
 	}
 
 	D3DXMATRIXA16 matR, matRX, matRY;
@@ -141,11 +159,11 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			float fDeltaX = (float)g_ptMouse.x - m_ptPrevMouse.x;
 			float fDeltaY = (float)g_ptMouse.y - m_ptPrevMouse.y;
 
-			m_vCamRotAngle.y -= (fDeltaX / 100.f);
-			m_vCamRotAngle.x += (fDeltaY / 100.f);
+			m_vCamRotAngle.y -= (fDeltaX / 140.f);
+			m_vCamRotAngle.x += (fDeltaY / 140.f);
 
-			if (m_vCamRotAngle.x > D3DX_PI / 3.0f)  m_vCamRotAngle.x = D3DX_PI / 3.0f;
-			if (m_vCamRotAngle.x < -D3DX_PI / 3.4f)  m_vCamRotAngle.x = -D3DX_PI / 3.4f;
+			if (m_vCamRotAngle.x > D3DX_PI / 2.6f)  m_vCamRotAngle.x = D3DX_PI / 2.6f;
+			if (m_vCamRotAngle.x < -D3DX_PI / 3.0f)  m_vCamRotAngle.x = -D3DX_PI / 3.0f;
 
 			m_ptPrevMouse = g_ptMouse;
 
