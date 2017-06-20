@@ -6,9 +6,9 @@ class Monster
 private:
 	SYNTHESIZE(D3DXVECTOR3, position, position);
 	SYNTHESIZE(float, rotY, rotY);
-	D3DXVECTOR3		direction;
+	SYNTHESIZE(D3DXVECTOR3, direction, direction);
+	SYNTHESIZE(animationState, monAni, monAni);
 
-	animationState monAni;
 	SkinnedMesh* monster;
 
 	BoundingShere attackSphere;

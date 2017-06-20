@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 Player::Player()
-	: position(D3DXVECTOR3(0, 0, 4))
+	: position(D3DXVECTOR3(0, 0, 0))
 	, checkPosition(D3DXVECTOR3(0,0,0))
 	, headPosition(D3DXVECTOR3(0, 0, 0))
 	, direction(D3DXVECTOR3(0, 0, 1))
@@ -188,7 +188,7 @@ void Player::Render()
 void Player::MoveCharacter(cMap* pMap)
 {
 	float checkPoint = 2.0f;
-	float moveSpeed = 2.0f;
+	float moveSpeed = 1.5f;
 
 	//채팅꺼진 상태에서만 작동
 	if (!g_pData->GetIsOnChat())
