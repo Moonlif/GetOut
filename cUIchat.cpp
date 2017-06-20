@@ -33,6 +33,7 @@ cUIchat::cUIchat(D3DXVECTOR3 pos)
 cUIchat::~cUIchat()
 {
 	SAFE_RELEASE(m_pFont);
+
 }
 
 void cUIchat::Update()
@@ -88,19 +89,18 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 		string str;
 		if (g_pData->GetPlayerNum() == 1)
 		{
-			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, m_vChat[i].alpha);
 			str = "Player1: " + m_vChat[i].strChat;
-
 		}
 		else if (g_pData->GetPlayerNum() == 2)
 		{
 			str = "Player2: " + m_vChat[i].strChat;
-			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, m_vChat[i].alpha);
 		}
 		else
 		{
 			str = m_vChat[i].strChat;
-			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, m_vChat[i].alpha);
 		}
 
 		g_pFontManager->TextOut2D(m_pFont, str, rc, color);
