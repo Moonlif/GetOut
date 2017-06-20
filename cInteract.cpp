@@ -100,11 +100,13 @@ void cInteract::Update()
 	{
 		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve1Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
 		g_pData->m_bValve1 = false;
+		g_pSocketmanager->SetFlagNum(4);
 	}
 	if (g_pData->m_bValve2)
 	{
 		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve2Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
 		g_pData->m_bValve2 = false;
+		g_pSocketmanager->SetFlagNum(4);
 	}
 	if (m_vecStuff[STUFF_WOODBOARD1]->GetSwitch() == false)
 		m_vecStuff[STUFF_WOODBOARD1]->Reposition(g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1], m_vecStuff[STUFF_WOODBOARD1]->GetRotation());

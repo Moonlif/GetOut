@@ -15,16 +15,17 @@ cMap::~cMap()
 	SAFE_DELETE(m_pSurface);
 	SAFE_DELETE(m_pCeiling);
 	SAFE_DELETE(m_pObjSurface);
-	SAFE_DELETE(m_pParticle);
 	
 	for each (auto it in vecMapObj)
 	{
 		SAFE_DELETE(it);
 	}
+	vecMapObj.clear();
 }
 
 void cMap::Setup()
 {
+<<<<<<< HEAD
 
 	D3DXCOLOR stColor;
 	stColor.r = 255;
@@ -34,15 +35,19 @@ void cMap::Setup()
 	//m_pParticle = new cParticleSystem;
 	//m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
 	
+=======
+>>>>>>> 57f7e2a0326e59ab300b3390efdf75fa7446ea4b
 	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
 	
-	/*
-	g_pLightManager->SetPointLight(eLIGHT::P_B1F_ROOM,
+	
+	g_pLightManager->SetPointLight(5,
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXVECTOR3(0,1,5), 100.0f);
-		*/
+
+	g_pD3DDevice->LightEnable(5, true);
+
 	/*
 	g_pLightManager->SetPointLight(eLIGHT::P_B1F_PRISON,
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
@@ -256,7 +261,7 @@ void cMap::SetupObject()
 
 void cMap::Update()
 {
-	m_pParticle->Update();
+	
 }
 
 
@@ -267,10 +272,8 @@ void cMap::Render()
 	
 	m_pFloor->Render();
 	m_pWall->Render();
-	m_pCeiling->Render();
-	
+	m_pCeiling->Render();	
 	RenderObject();
-	//m_pParticle->Render();
 }
 
 void cMap::RenderObject()
@@ -308,13 +311,13 @@ void cMap::RenderObject()
 	m_pStonetable->Render(0.1, 3, 12, -12, 0);
 	m_pBookPile1->Render(0.1, -17, 27.5, -11.5, 0);
 
-	m_pObjBox->Render(1, -31.5, 13, 9, 0);
-	m_pObjBox->Render(1, -31.5, 15, 5, 0);
-	m_pObjBox->Render(1, -31.5, 13, 6, 0);
-	m_pObjBox->Render(1, -31.5, 15, 12, 0);
-	m_pObjBox->Render(1, -31.5, 13, 12, 0);
-	m_pObjBox->Render(1, -31.5, 15, 10, 0);
-	m_pObjBox->Render(1, -31.5, 13, 10, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 9, 0);
+	m_pObjBox->Render(1, -31.5, 15.1, 5, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 6, 0);
+	m_pObjBox->Render(1, -31.5, 15.1, 12, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 12, 0);
+	m_pObjBox->Render(1, -31.5, 15.1, 10, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 10, 0);
 
 	m_pLamp->Render(0.1, -11, 6, 5, 0);
 }

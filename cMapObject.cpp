@@ -22,7 +22,6 @@ cMapObject::~cMapObject()
 void cMapObject::Setup(char* folder, char* fileName)
 {
 	cObjLoader loadMesh;
-	
 	loadMesh.Load(m_vecGroup, folder, fileName);
 }
 

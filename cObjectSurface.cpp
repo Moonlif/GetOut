@@ -9,12 +9,11 @@ cObjectSurface::cObjectSurface()
 
 cObjectSurface::~cObjectSurface()
 {
-
+	
 }
 
 void cObjectSurface::AddSurface(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, int floor)
 {
-	
 	ObjectSurface vertex;
 	vertex.floor = floor;
 	vertex.point = v;
@@ -31,31 +30,11 @@ void cObjectSurface::AddSurface(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D
 	vecVertex.push_back(vertex);
 	vertex.point = v3;
 	vecVertex.push_back(vertex);
-	
-	/*
-	ST_PC_VERTEX vertex;
-	//vertex.floor = floor;
-	vertex.p = v;
-	vecVertex.push_back(vertex);
-	vertex.p = v1;
-	vecVertex.push_back(vertex);
-
-	vertex.p = v2;
-	vecVertex.push_back(vertex);
-	vertex.p = v;
-	vecVertex.push_back(vertex);
-
-	vertex.p = v2;
-	vecVertex.push_back(vertex);
-	vertex.p = v3;
-	vecVertex.push_back(vertex);
-	*/
 }
 
 
 void cObjectSurface::RenderSurface()
 {
-
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
 	D3DXMATRIXA16 matS, matWorld;
 	D3DXMatrixIdentity(&matS);
@@ -68,6 +47,4 @@ void cObjectSurface::RenderSurface()
 		vecVertex.size() / 3,
 		&vecVertex[0].point,
 		sizeof(ST_PC_VERTEX));
-
-
 }
