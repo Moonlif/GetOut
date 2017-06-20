@@ -15,34 +15,26 @@ cMap::~cMap()
 	SAFE_DELETE(m_pSurface);
 	SAFE_DELETE(m_pCeiling);
 	SAFE_DELETE(m_pObjSurface);
-	SAFE_DELETE(m_pParticle);
 	
 	for each (auto it in vecMapObj)
 	{
 		SAFE_DELETE(it);
 	}
+	vecMapObj.clear();
 }
 
 void cMap::Setup()
 {
-
-	D3DXCOLOR stColor;
-	stColor.r = 255;
-	stColor.g = 127;
-	stColor.b = 39;
-	m_pPos = D3DXVECTOR3(-10.5, 8.4, 5);
-	m_pParticle = new cParticleSystem;
-	//m_pParticle->Setup(100, 0.5, stColor, 10, 50.0f, "Texture/maps/alpha_tex.tga", &m_pPos);
-	
 	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
-	
-	/*
-	g_pLightManager->SetPointLight(eLIGHT::P_B1F_ROOM,
+
+	g_pLightManager->SetPointLight(5,
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
 		D3DXVECTOR3(0,1,5), 100.0f);
-		*/
+
+	g_pD3DDevice->LightEnable(5, true);
+
 	/*
 	g_pLightManager->SetPointLight(eLIGHT::P_B1F_PRISON,
 		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
@@ -256,7 +248,7 @@ void cMap::SetupObject()
 
 void cMap::Update()
 {
-	m_pParticle->Update();
+	
 }
 
 
@@ -267,10 +259,8 @@ void cMap::Render()
 	
 	m_pFloor->Render();
 	m_pWall->Render();
-	m_pCeiling->Render();
-	
+	m_pCeiling->Render();	
 	RenderObject();
-	//m_pParticle->Render();
 }
 
 void cMap::RenderObject()
@@ -308,13 +298,13 @@ void cMap::RenderObject()
 	m_pStonetable->Render(0.1, 3, 12, -12, 0);
 	m_pBookPile1->Render(0.1, -17, 27.5, -11.5, 0);
 
-	m_pObjBox->Render(1, -31.5, 13, 9, 0);
-	m_pObjBox->Render(1, -31.5, 15, 5, 0);
-	m_pObjBox->Render(1, -31.5, 13, 6, 0);
-	m_pObjBox->Render(1, -31.5, 15, 12, 0);
-	m_pObjBox->Render(1, -31.5, 13, 12, 0);
-	m_pObjBox->Render(1, -31.5, 15, 10, 0);
-	m_pObjBox->Render(1, -31.5, 13, 10, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 9, 0);
+	m_pObjBox->Render(1, -31.5, 15.1, 5, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 6, 0);
+	m_pObjBox->Render(1, -31.5, 15.1, 12, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 12, 0);
+	m_pObjBox->Render(1, -31.5, 15.1, 10, 0);
+	m_pObjBox->Render(1, -31.5, 13.1, 10, 0);
 
 	m_pLamp->Render(0.1, -11, 6, 5, 0);
 }
@@ -457,12 +447,14 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 					return true;
 				else if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == true && vec[i + 0].nindex == SWITCH_DOOR_2NDROOM2)
 					return true;
-				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1)
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1 && g_pData->m_nPlayerNum1P == 2)
 					return true;
+				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_WOODBOARD1 && g_pData->m_nPlayerNum1P == 1){
+					g_pData->TextOutWarningWord(string("남자가 가기에는 판자가 약합니다."));
+					return false;
+				}
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == false && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {	// 트랩
 					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;
-				}
-				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// 트랩
 					if (isTrapOpen != true) {
 						if (y > 0) {
 							isTrapIng = true;
@@ -471,6 +463,9 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 					}
 					else return false;
 				}
+			//	else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// 트랩
+				
+		//		}
 				else
 					return false;
 			}
@@ -485,7 +480,6 @@ bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 		return true;
 	}
 	else if (y < 0 && isTrapIng == true) {
-		
 		g_pSoundManager->Play("break_wood", 1.0f);
 		isTrapIng = false;
 		isTrapOpen = true;

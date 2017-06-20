@@ -31,7 +31,6 @@ private:
 	cMapObject* m_pObjBed;
 
 	cMapObject* m_pObjDesk;
-	//cMapObject* m_pObjTable;
 	cMapObject* m_pObjSofa;
 	cMapObject* m_pObjChair;
 	cMapObject* m_pObjBarrel;
@@ -46,8 +45,6 @@ private:
 	cMapObject* m_pRock;
 
 
-	cParticleSystem* m_pParticle;
-	D3DXVECTOR3 m_pPos;
 public:
 	cMap();
 	~cMap();

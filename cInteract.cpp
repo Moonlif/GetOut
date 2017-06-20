@@ -4,13 +4,13 @@
 
 cInteract::cInteract()
 	: m_n1FBlockCount(0)
-	, m_bValve1(false)
-	, m_bValve2(false)
-	, m_n2FValve1Count(0)
-	, m_n2FValve2Count(0)
+	//, m_bValve1(false)
+	//, m_bValve2(false)
+	//, m_n2FValve1Count(0)
+	//, m_n2FValve2Count(0)
 	, m_n2FButton1Count(0)
 	, m_n2FButton2Count(0)
-	, m_nBrickCount(0)
+	//, m_nBrickCount(0)
 	, m_pParticleFog(NULL)
 {
 }
@@ -54,7 +54,7 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_CHEST2]->Setup(STUFF_CHEST2, D3DXVECTOR3(10, 0, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.1f, true);
 	m_vecStuff[STUFF_CHEST3]->Setup(STUFF_CHEST3, D3DXVECTOR3(11, 2, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, 0), D3DXVECTOR3(1, 2, 0), 2.0f, 0.1f, true);
 	m_vecStuff[STUFF_EMPTYBOX]->Setup(STUFF_EMPTYBOX, D3DXVECTOR3(-38, 13.0f, -6), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0), 0.01f, 0.15f, true);
-	m_vecStuff[STUFF_TRAP]->Setup(STUFF_TRAP, D3DXVECTOR3(-38, 12.1f, 18.5f), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 5.0f, 5.0f, true);
+	m_vecStuff[STUFF_TRAP]->Setup(STUFF_TRAP, D3DXVECTOR3(-38, 12.1f, 18.5f), D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 5.0f, true);
 	m_vecStuff[STUFF_VALVE1]->Setup(STUFF_VALVE1, D3DXVECTOR3(-4.67f, 30, 0), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 1.5f, 0.2f, true);
 	m_vecStuff[STUFF_VALVE2]->Setup(STUFF_VALVE2, D3DXVECTOR3(-4.67f, 30, -8), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 1.5f, 0.2f, true);
 	m_vecStuff[STUFF_WOOD1]->Setup(STUFF_WOOD1, D3DXVECTOR3(-6, 15.8f, 22.5f), D3DXVECTOR3(D3DX_PI / 1.6f, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 0, 0), 0.1f, 0.08f, true);
@@ -91,20 +91,22 @@ void cInteract::Update()
 	if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] && m_vecStuff[STUFF_BOARDBLOCK]->GetSwitch() == false)
 		m_vecStuff[STUFF_BOARDBLOCK]->Reposition(D3DXVECTOR3(-28, 12.15f, 3.8f), D3DXVECTOR3(0, D3DX_PI / 2.0f, D3DX_PI / 2.0f), 0.1f);
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] && m_vecStuff[STUFF_BOX1]->GetSwitch() == false)
-		m_vecStuff[STUFF_BOX1]->Reposition(D3DXVECTOR3(-5.0f, 0, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0));
+		m_vecStuff[STUFF_BOX1]->Reposition(D3DXVECTOR3(-5.0f, 0, 21.0f), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), 0.04f);
 	if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] && m_vecStuff[STUFF_CHEST3]->GetSwitch() == false)
 		m_vecStuff[STUFF_CHEST3]->Reposition(D3DXVECTOR3(10, 6, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, -D3DX_PI / 2.0f));
 	if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] && m_vecStuff[STUFF_TRAP]->GetSwitch() == false)
 		m_vecStuff[STUFF_TRAP]->Reposition(D3DXVECTOR3(-38, 12, 18.5f), D3DXVECTOR3(0, 0, -D3DX_PI / 2.0f));
-	if (m_bValve1)
+	if (g_pData->m_bValve1)
 	{
-		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)m_n2FValve1Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
-		m_bValve1 = false;
+		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve1Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
+		g_pData->m_bValve1 = false;
+		g_pSocketmanager->SetFlagNum(4);
 	}
-	if (m_bValve2)
+	if (g_pData->m_bValve2)
 	{
-		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)m_n2FValve2Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
-		m_bValve2 = false;
+		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve2Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
+		g_pData->m_bValve2 = false;
+		g_pSocketmanager->SetFlagNum(4);
 	}
 	if (m_vecStuff[STUFF_WOODBOARD1]->GetSwitch() == false)
 		m_vecStuff[STUFF_WOODBOARD1]->Reposition(g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1], m_vecStuff[STUFF_WOODBOARD1]->GetRotation());
@@ -134,11 +136,11 @@ void cInteract::Update()
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] = true;
 	else g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] = false;
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] && m_vecStuff[STUFF_DOOR_2NDROOM2]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 18), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.03f);
+		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 18), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.01f);
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_2NDROOM2] == false && m_vecStuff[STUFF_DOOR_2NDROOM2]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.03f);
+		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.01f);
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] && m_vecStuff[STUFF_DOOR_FINAL]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_FINAL]->Reposition(m_vecStuff[STUFF_DOOR_FINAL]->GetPosition(), D3DXVECTOR3(0, D3DX_PI, 0));
+		m_vecStuff[STUFF_DOOR_FINAL]->Reposition(m_vecStuff[STUFF_DOOR_FINAL]->GetPosition(), D3DXVECTOR3(0, D3DX_PI, 0), 0.01f);
 	
 	//act button1 & button2 (on 2nd floor)
 	m_n2FButton1Count = 0;
@@ -261,12 +263,18 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->GetUseItem() == STUFF_KEY1)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
+			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_DOOR_PRISON]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("'감옥 열쇠'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'감옥 열쇠'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_DOOR_1STROOM:
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
+		g_pSocketmanager->SetFlagNum(4);
 		m_vecStuff[STUFF_DOOR_1STROOM]->SetRadius(0.01f);
 		g_pSoundManager->Play("door_prison", 0.5f);
 		return true;
@@ -274,28 +282,51 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->GetUseItem() == STUFF_KEY2)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
+			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_DOOR_1STTOILET]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("'1층 열쇠'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'1층 열쇠'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_DOOR_FINAL:
 		if (g_pData->GetUseItem() == STUFF_KEY3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] = true;
+			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_DOOR_FINAL]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("'현관 열쇠'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'현관 열쇠'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_BOARDBLOCK:
 		if (g_pData->GetUseItem() == STUFF_CROWBAR)
 		{
-			if (g_pData->m_nPlayerNum1P == 1) m_n1FBlockCount++;
-			else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+			if (g_pData->m_nPlayerNum1P == 1)
+			{
+				g_pSoundManager->Play("1st_woodblock", 0.5f);
+				m_n1FBlockCount++;
+			}
+			else
+			{
+				g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+				g_pSoundManager->Play("cancle", 0.5f);
+			}
 		}
-		else g_pData->TextOutWarningWord(string("'빠루'가 필요합니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("'빠루'가 필요합니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		if (m_n1FBlockCount > 3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
+			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_BOARDBLOCK]->SetRadius(0.01f);
 		}
 		return true;
@@ -303,12 +334,18 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->m_nPlayerNum1P == 1)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
+			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_BOX1]->SetRadius(0.01f);
 		}
-		else g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+		else
+		{
+			g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+			g_pSoundManager->Play("cancle", 0.5f);
+		}
 		return true;
 	case STUFF_CHEST3:
 		g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;
+		g_pSocketmanager->SetFlagNum(4);
 		m_vecStuff[STUFF_CHEST3]->SetRadius(0.01f);
 		return true;
 	case STUFF_WOODBOARD1:
@@ -320,48 +357,52 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 				g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] = true;
 				m_vecStuff[STUFF_WOODBOARD1]->SetRadius(0.01f);
 			}
+			g_pSocketmanager->SetFlagNum(4);
 		}
 		return true;
 	case STUFF_WOODBOARD2:
 		if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
+			g_pSocketmanager->SetFlagNum(4);
 			m_vecStuff[STUFF_WOODBOARD2]->SetRadius(0.01f);
 		}
 		return true;
 	case STUFF_VALVE1:
 		if (m_vecStuff[STUFF_VALVE1]->GetSwitch()) return true;;
-		m_bValve1 = true;
-		if (lButton) m_n2FValve1Count--;
-		else m_n2FValve1Count++;
-		if (m_n2FValve1Count >= 4)
+		g_pData->m_bValve1 = true;
+		if (lButton) g_pData->m_n2FValve1Count--;
+		else g_pData->m_n2FValve1Count++;
+		if (g_pData->m_n2FValve1Count >= 4)
 		{
-			m_n2FValve1Count = 4;
+			g_pData->m_n2FValve1Count = 4;
 			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		else if (m_n2FValve1Count < -4)
+		else if (g_pData->m_n2FValve1Count < -4)
 		{
-			m_n2FValve1Count = -4;
+			g_pData->m_n2FValve1Count = -4;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
+		g_pSocketmanager->SetFlagNum(4);
 		return true;
 	case STUFF_VALVE2:
 		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return true;;
-		m_bValve2 = true;
-		if (lButton) m_n2FValve2Count--;
-		else m_n2FValve2Count++;
-		if (m_n2FValve2Count <= -4)
+		g_pData->m_bValve2 = true;
+		if (lButton) g_pData->m_n2FValve2Count--;
+		else g_pData->m_n2FValve2Count++;
+		if (g_pData->m_n2FValve2Count <= -4)
 		{
-			m_n2FValve2Count = -4;
+			g_pData->m_n2FValve2Count = -4;
 			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		else if (m_n2FValve2Count > 4)
+		else if (g_pData->m_n2FValve2Count > 4)
 		{
-			m_n2FValve2Count = 4;
+			g_pData->m_n2FValve2Count = 4;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
+		g_pSocketmanager->SetFlagNum(4);
 		return true;
 	case STUFF_CROWBAR:
 		g_pData->GetItem(STUFF_CROWBAR);
@@ -415,14 +456,14 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return true;
 	case STUFF_BRICKPILE:
-		if (m_nBrickCount >= 5)
+		if (g_pData->m_nBrickCount >= 5)
 		{
 			m_vecStuff[STUFF_BRICKPILE]->SetRadius(0.01f);
 			return true;
 		}
-		g_pData->GetItem(StuffCode(STUFF_BRICK1 + m_nBrickCount));
+		g_pData->GetItem(StuffCode(STUFF_BRICK1 + g_pData->m_nBrickCount));
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		m_nBrickCount++;
+		g_pData->m_nBrickCount++;
 		return true;
 	}
 

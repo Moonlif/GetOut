@@ -26,6 +26,7 @@
 #define SEND_PER_SECOND 1
 
 struct ST_ALL_DATA;
+struct ST_OBJECT_DATA;
 class cUIObject;
 class cChat;
 class Player;
@@ -71,6 +72,12 @@ private:
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
+	bool bValve1;
+	bool bValve2;
+	int nFValve1Count;
+	int nFValve2Count;
+	int nBrickCount;
+
 	// << : 초기 데이터 적용을 위한 포인터
 	SYNTHESIZE(Player*, m_pPlMan, ManPlayer);
 	SYNTHESIZE(Player*, m_pPlWoman, WomanPlayer);
@@ -87,6 +94,7 @@ public:
 	char* GetRoomName();
 	void InitClientData();
 	void RecvClientData(ST_ALL_DATA stData);
+	void RecvObjectData(ST_OBJECT_DATA stData);
 	void Setup();
 	void SetIP(int First, int Second, int Third, int Fourth);
 	void SetIP(string szIP);
@@ -97,6 +105,7 @@ public:
 	void Update();
 	void UpdatePosition(float  x, float y, float z);
 	void UpdateRotation(float Rotate);
+	void UpdateObjectData();
 
 	void UIRender();
 
@@ -144,6 +153,12 @@ struct ST_OBJECT_DATA
 	float mapRotY[SWITCH_LASTNUM];
 	float mapRotZ[SWITCH_LASTNUM];
 	bool mapIsRunning[SWITCH_LASTNUM];
+
+	bool bValve1;
+	bool bValve2;
+	int nFValve1Count;
+	int nFValve2Count;
+	int nBrickCount;
 };
 
 struct ST_CHAT

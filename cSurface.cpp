@@ -15,6 +15,7 @@ cSurface::~cSurface()
 	{
 		SAFE_DELETE(it);
 	}
+	vecSurface.clear();
 	//SAFE_RELEASE(m_pTexture);
 }
 
@@ -329,11 +330,9 @@ void cSurface::InsertVector(int floor, D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTO
 	vecVertex.push_back(sf0);
 	vecVertex.push_back(sf1);
 	vecVertex.push_back(sf2);
-
 	vecVertex.push_back(sf0);
 	vecVertex.push_back(sf2);
 	vecVertex.push_back(sf3);
-
 	vecSurface.push_back(rec);
 }
 
@@ -344,14 +343,12 @@ void cSurface::PassInput(PassSurface v0, PassSurface v1, PassSurface v2, PassSur
 	v2.nindex = index;
 	v3.nindex = index;
 
-
 	passVertex.push_back(v0);
 	passVertex.push_back(v1);
 	passVertex.push_back(v2);
 	passVertex.push_back(v0);
 	passVertex.push_back(v2);
 	passVertex.push_back(v3);
-
 	vecSurface.push_back(rec);
 }
 
