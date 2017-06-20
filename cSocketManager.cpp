@@ -460,6 +460,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			ReceiveNetworkID(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_NETWORK_ID);
 			g_pSocketmanager->AddFlag(FLAG::FLAG_ROOM_NAME);
+			cout << "Send Network ID" << endl;
 		}
 		if (eFlag & FLAG::FLAG_ROOM_NAME)
 		{
@@ -474,29 +475,30 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			else
 			{
 				g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);	// << : 클라이언트에서 방이름을 재설정 해줘야 합니다.
-				cout << "플래그 완전 설정" << endl;
 				// << : F6으로 방이름을 변경하면 플래그를 변경시킨다 ?
 			}
+			cout << "Recv RoomName" << endl;
 		}
 		if (eFlag & FLAG::FLAG_ALL_DATA)
 		{
 			SendFlag(&hSocket, FLAG::FLAG_ALL_DATA);
 			ReceiveAllData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_ALL_DATA);
+			cout << "Recv All Data" << endl;
 		}
 		if (eFlag & FLAG::FLAG_GENDER)
 		{
 			SendFlag(&hSocket, FLAG::FLAG_GENDER);
 			SendGender(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_GENDER);
-			cout << "SendGender " << endl;
+			cout << "Send Gender " << endl;
 		}
 		if (eFlag & FLAG::FLAG_POSITION && prevTime + ONE_SECOND < clock())
 		{
 			prevTime = clock();
 			SendFlag(&hSocket, FLAG::FLAG_POSITION);
 			SendPosition(&hSocket);
-			// << : 이때 좌표는 시간 (1초)를 두고 전송하고 다른 명령어가 있다면 지나가게 한다 ?
+			cout << "Send Position" << endl;
 		}
 		if (eFlag & FLAG::FLAG_OBJECT_DATA)
 		{
@@ -622,10 +624,7 @@ void ReceivePosition(SOCKET* pSocket)
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
 	g_pData->m_eAnimState2P = stRecv.eAnimState;
 
-	cout << "X좌표 : " << stRecv.fX << " ";
-	cout << "Y좌표 : " << stRecv.fY << " ";
-	cout << "Z좌표 : " << stRecv.fZ << " ";
-	cout << "Angle : " << stRecv.fAngle << endl;
+	cout << "애니메이션 : " << stRecv.eAnimState << endl;
 }
 
 /* 모든 데이터 수신 */
@@ -690,7 +689,6 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fAngle = g_pData->m_vRotation1P;
 	stSend.eAnimState = g_pData->m_eAnimState1P;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
-	cout << "Send Position Function" << endl;
 }
 
 /* 물체와 맵의 정보를 수신 (구현 예정)*/
