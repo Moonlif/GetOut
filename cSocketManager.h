@@ -30,6 +30,7 @@ struct ST_OBJECT_DATA;
 class cUIObject;
 class cChat;
 class Player;
+enum FLAG;
 
 class cSocketManager
 {
@@ -89,6 +90,7 @@ private:
 	SYNTHESIZE(bool, IsRun, ServerRun);
 
 public:
+	void AddFlag(FLAG eFlag);
 	void Calc_Position();
 	void Destroy();
 	char* GetIP();
@@ -103,6 +105,7 @@ public:
 	void SetRoomName(string szName);
 	void Setup_DATA();
 	void Setup_CHAT();
+	void SubFlag(FLAG eFlag);
 	void Update();
 	void UpdatePosition(float  x, float y, float z);
 	void UpdateRotation(float Rotate);

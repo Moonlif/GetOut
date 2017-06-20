@@ -18,13 +18,13 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam);
 
 // << : 분리된 함수들
 void ReceiveNetworkID(SOCKET* pSocket);
-void ReceiveRoomName(SOCKET* pSocket);
+int ReceiveRoomName(SOCKET* pSocket);
 void ReceiveGender(SOCKET* pSocket);
 void ReceivePosition(SOCKET* pSocket);
 void ReceiveAllData(SOCKET* pSocket);
 void ReceiveObjectData(SOCKET* pSocket);
 
-void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag);
+void SendFlag(SOCKET* pSocket, FLAG eFlag);
 void SendNetworkID(SOCKET* pSocket, int ID, bool* bConnected);
 void SendGender(SOCKET* pSocket);
 void SendPosition(SOCKET* pSocket);
@@ -85,6 +85,11 @@ cSocketManager::cSocketManager()
 
 cSocketManager::~cSocketManager()
 {
+}
+
+void cSocketManager::AddFlag(FLAG eFlag)
+{
+	nFlagNum = nFlagNum & eFlag;
 }
 
 /* T값을 이용하여 현재 좌표 , 회전값을 예측합니다. */
@@ -322,6 +327,12 @@ void cSocketManager::Setup_CHAT()
 	}
 }
 
+void cSocketManager::SubFlag(FLAG eFlag)
+{
+	if (nFlagNum & eFlag)
+		nFlagNum = nFlagNum - eFlag;
+}
+
 /* 싱글톤 업데이트 */
 void cSocketManager::Update()
 {
@@ -437,41 +448,61 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 	{
 		eFlag = (FLAG)g_pSocketmanager->GetFlagNum();
 		// << : 일정 간격마다 좌표를 전송한다. 단 특정 상황에서는 바로하도록 변경해야함
-		if (eFlag == FLAG::FLAG_OBJECT_DATA) {
-			// << : OBJECT 변경시에는 바로 전송하도록 함
-		}
-		else if (prevTime + ((ONE_SECOND / SEND_PER_SECOND) - OVERHEAD) > clock()){
+		if (eFlag == FLAG::FLAG_NONE)
+		{
 			Sleep(5);
 			continue;
 		}
-		prevTime = clock();
-
-		SendFlag(&hSocket,&stFlag);
-
-		switch (eFlag)
+		if (eFlag & FLAG::FLAG_NETWORK_ID)
 		{
-		case FLAG::FLAG_NONE:
-			break;
-		case FLAG::FLAG_NETWORK_ID:
+			// << : SendFlag 어떻게 보낼건지 설정해야함
+			SendFlag(&hSocket, FLAG::FLAG_NETWORK_ID);
 			ReceiveNetworkID(&hSocket);
-			break;
-		case FLAG::FLAG_ROOM_NAME:
-			ReceiveRoomName(&hSocket);
-			break;
-		case FLAG::FLAG_ALL_DATA:
-			ReceiveAllData(&hSocket);
-			break;
-		case FLAG::FLAG_GENDER:
-			SendGender(&hSocket);
-			break;
-		case FLAG::FLAG_POSITION:
-			SendPosition(&hSocket);
-			break;
-		case FLAG::FLAG_OBJECT_DATA:
-			SendObjectData(&hSocket);
-			eFlag = FLAG::FLAG_POSITION;
-			break;
+			g_pSocketmanager->SubFlag(FLAG::FLAG_NETWORK_ID);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_ROOM_NAME);
 		}
+		if (eFlag & FLAG::FLAG_ROOM_NAME)
+		{
+			int Result;
+			SendFlag(&hSocket, FLAG::FLAG_ROOM_NAME);
+			Result = ReceiveRoomName(&hSocket);
+			if (Result)
+			{
+				g_pSocketmanager->SubFlag(FLAG::FLAG_ROOM_NAME);
+				g_pSocketmanager->AddFlag(FLAG::FLAG_ALL_DATA);
+			}
+			else
+			{
+				g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);	// << : 클라이언트에서 방이름을 재설정 해줘야 합니다.
+				// << : F6으로 방이름을 변경하면 플래그를 변경시킨다 ?
+			}
+		}
+		if (eFlag & FLAG::FLAG_ALL_DATA)
+		{
+			SendFlag(&hSocket, FLAG::FLAG_ALL_DATA);
+			ReceiveAllData(&hSocket);
+			g_pSocketmanager->SubFlag(FLAG::FLAG_ALL_DATA);
+		}
+		if (eFlag & FLAG::FLAG_GENDER)
+		{
+			SendFlag(&hSocket, FLAG::FLAG_GENDER);
+			SendGender(&hSocket);
+			g_pSocketmanager->SubFlag(FLAG::FLAG_GENDER);
+		}
+		if (eFlag & FLAG::FLAG_POSITION)
+		{
+			SendFlag(&hSocket, FLAG::FLAG_POSITION);
+			SendPosition(&hSocket);
+			// << : 이때 좌표는 시간 (1초)를 두고 전송하고 다른 명령어가 있다면 지나가게 한다 ?
+		}
+		if (eFlag & FLAG::FLAG_OBJECT_DATA)
+		{
+			SendFlag(&hSocket, FLAG::FLAG_OBJECT_DATA);
+			SendObjectData(&hSocket);
+			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
+		}
+
+		prevTime = clock();
 	}
 	closesocket(hSocket);
 	cout << "SEND 스레드가 종료되었습니다 " << endl;
@@ -542,26 +573,20 @@ void ReceiveNetworkID(SOCKET* pSocket)
 	recv(*pSocket, (char*)&nID, sizeof(int), 0);
 	g_pSocketmanager->SetNetworkID(nID);
 	cout << "네트워크 아이디 " << nID << endl;
-	g_pSocketmanager->SetFlagNum(FLAG::FLAG_ROOM_NAME);	// << : 네트워크 아이디 수신이 완료되면 방을 할당받아야 합니다.
 }
 
 /* 방이 연결 가능한지 확인 */
-void ReceiveRoomName(SOCKET* pSocket)
+int ReceiveRoomName(SOCKET* pSocket)
 {
 	// << : 연결이 가능하다면 모든데이터를 수신하는 단계로 , 연결이 안된다면 방이름을 바꾸도록
 	int IsOK = 0;
 	recv(*pSocket, (char*)&IsOK, sizeof(int), 0);
 	if (IsOK)
-	{
 		cout << "해당 방에 연결되었습니다." << endl;
-		g_pSocketmanager->SetFlagNum(FLAG::FLAG_ALL_DATA);
-
-	}
 	else if (!IsOK)
-	{
 		cout << "해당 방 인원 초과" << endl;
-		g_pSocketmanager->SetFlagNum(FLAG::FLAG_NONE);	// << : 클라이언트에서 방이름을 재설정 해줘야 합니다.
-	}
+
+	return IsOK;
 };
 
 /* 2P의 성별을 받아옵니다 */
@@ -631,20 +656,16 @@ void SendGender(SOCKET* pSocket)
 }
 
 /* 서버에게 어떤 데이터를 원하는지 알려줍니다. */
-void SendFlag(SOCKET* pSocket, ST_FLAG* pFlag)
+void SendFlag(SOCKET* pSocket, FLAG eFlag)
 {
 
-	pFlag->eFlag = g_pSocketmanager->GetFlagNum();			// << : 싱글톤에서 플래그를 받아옵니다.
-	pFlag->nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
-	pFlag->nPlayerIndex = g_pData->m_nPlayerNum1P;
-	sprintf_s(pFlag->szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
+	ST_FLAG stFlag;
+	stFlag.eFlag = eFlag; // << : 플래그 파라미터로 받음
+	stFlag.nNetworkID = g_pSocketmanager->GetNetworkID();	// << : 싱글톤에서 네트워크 아이디를 받아옵니다.
+	stFlag.nPlayerIndex = g_pData->m_nPlayerNum1P;
+	sprintf_s(stFlag.szRoomName, g_pSocketmanager->szRoomName, strlen(g_pSocketmanager->szRoomName));
 
-	// << : 요청할 내용이 없다면 전송하지 않습니다.
-	if(pFlag->eFlag != FLAG::FLAG_NONE)	
-		send(*pSocket, (char*)pFlag, sizeof(ST_FLAG), 0);
-	// << : 오브젝트 데이터를 전송했다면 좌표만 전송하도록 변경합니다.
-	if (pFlag->eFlag == FLAG::FLAG_OBJECT_DATA)
-		g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
+	send(*pSocket, (char*)&stFlag, sizeof(ST_FLAG), 0);
 }
 
 /* 서버에게 자신의 NetworkID를 알려줍니다 */
