@@ -38,6 +38,11 @@ public:
 	bool m_bStuffSwitch[SWITCH_LASTNUM];			//아이템일 경우 맵에 있는게 true
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
+	bool m_bValve1;									//2층 Valve1을 클릭했는지
+	bool m_bValve2;									//2층 Valve2을 클릭했는지
+	int m_n2FValve1Count;							//2층 Valve1의 로테이션 값 (범위: -4 ~ 4)
+	int m_n2FValve2Count;							//2층 Valve2의 로테이션 값 (범위: -4 ~ 4)
+	int m_nBrickCount;								//1층 벽돌무더기에서 벽돌을 몇개 가져갔는지
 
 	//지상 - 채팅
 	list<string> m_listChat_RECV;
