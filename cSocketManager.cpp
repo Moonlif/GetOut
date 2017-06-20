@@ -28,6 +28,7 @@ void SendNetworkID(SOCKET* pSocket, int ID, bool* bConnected);
 void SendGender(SOCKET* pSocket);
 void SendPosition(SOCKET* pSocket);
 void SendObjectData(SOCKET* pSocket);
+void SendInventoryData(SOCKET* pSocket);
 
 struct ST_ALL_DATA
 {
@@ -362,6 +363,9 @@ void cSocketManager::Update()
 	if (m_pTextBox)
 		m_pTextBox->Update_ForSocket();
 	Calc_Position(); // < : 좌표를 보정해서 계산합니다.
+
+	if (GetAsyncKeyState(VK_F8) & 0x0001)
+		g_pSocketmanager->AddFlag(FLAG::FLAG_INVENTORY);
 }
 
 /* 현재 좌표를 출발지로 , 수신한 좌표를 목적지로 설정 */
@@ -533,6 +537,14 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
+		}
+
+		if (eFlag & FLAG::FLAG_INVENTORY)
+		{
+			FLAG stFlag = FLAG::FLAG_INVENTORY;
+			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
+			SendInventoryData(&hSocket);
+			g_pSocketmanager->SubFlag(FLAG::FLAG_INVENTORY);
 		}
 	}
 	closesocket(hSocket);
@@ -729,5 +741,15 @@ void SendObjectData(SOCKET* pSocket)
 		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
 	}
 	send(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
+}
 
+void SendInventoryData(SOCKET* pSocket)
+{
+	ST_INVENTORY_DATA stData;
+	for (int i = 0; i < INVENTORY_SIZE; ++i)
+	{
+		stData.Stuff[i] = g_pData->m_arrSaveInvenItem[i];
+		cout << "소지물건 :" << stData.Stuff[i] << endl;
+	}
+	send(*pSocket, (char*)&stData, sizeof(ST_INVENTORY_DATA), 0);
 }

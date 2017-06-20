@@ -27,6 +27,7 @@
 
 struct ST_ALL_DATA;
 struct ST_OBJECT_DATA;
+struct ST_INVENTORY_DATA;
 class cUIObject;
 class cChat;
 class Player;
@@ -122,7 +123,8 @@ enum FLAG
 	FLAG_ALL_DATA = 1 << 3,
 	FLAG_GENDER = 1 << 4,
 	FLAG_POSITION = 1 << 5,
-	FLAG_OBJECT_DATA = 1 << 6
+	FLAG_OBJECT_DATA = 1 << 6,
+	FLAG_INVENTORY = 1 << 7
 };
 
 struct ST_PLAYER_POSITION
@@ -151,6 +153,11 @@ struct ST_OBJECT_DATA
 	int nFValve1Count;
 	int nFValve2Count;
 	int nBrickCount;
+};
+
+struct ST_INVENTORY_DATA
+{
+	StuffCode Stuff[INVENTORY_SIZE];
 };
 
 struct ST_CHAT
