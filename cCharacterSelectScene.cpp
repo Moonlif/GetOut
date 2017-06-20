@@ -108,10 +108,15 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
+		
+		cUITextView* StartOrReady = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
 
 		///-------------------------------------------------------------
 		//                     1p, 2p정하기
 		///-------------------------------------------------------------
+
+		g_pData->m_nPlayerNum2P = 2;
+
 		static bool isSelect = false;
 
 		if (!isSelect)
@@ -120,15 +125,22 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			if (g_pData->m_nPlayerNum2P == 0)
 			{
 				g_pData->SetPlayerNum(1);
+
+				//1P면 게임스타트 활성화
+				StartOrReady->SetIsHidden(false);
 			}
 			//클릭했으면 2P
 			else
 			{
 				g_pData->SetPlayerNum(2);
+
+				//2P면 게임스타트 레디로 바꾸기
+				StartOrReady->SetText("R E A D Y");
+				StartOrReady->SetIsHidden(false);
 			}
 			isSelect = true;
 		}
-
+		
 		///-------------------------------------------------------------
 		//                  1번 플레이어 선택시
 		///-------------------------------------------------------------
@@ -461,6 +473,7 @@ void cCharacterSelectScene::SetBackground()
 	cUITextView* text = new cUITextView("GAME START", D3DXVECTOR3(60, 500, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
 		ST_SIZEN(250, 40), 20, 40, 900);
 	text->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
+	text->SetIsHidden(true);
 	ExplainImage->AddChild(text);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),

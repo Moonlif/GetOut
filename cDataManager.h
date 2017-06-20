@@ -29,7 +29,7 @@ private:
 	SYNTHESIZE(string,		m_strWarningWord, WarningWord)
 
 	//영현 - 플레이어 정하기
-	SYNTHESIZE(int, m_nPlayer, PlayerNum)
+	SYNTHESIZE(int,			m_nPlayer, PlayerNum)
 	
 public:
 	//정훈 - 오브젝트용

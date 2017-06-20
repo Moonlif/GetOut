@@ -27,6 +27,7 @@ cDataManager::~cDataManager()
 
 void cDataManager::Setup()
 {
+
 	//사운드 추가
 	AddSound();
 
