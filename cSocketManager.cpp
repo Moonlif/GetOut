@@ -38,23 +38,23 @@ struct ST_ALL_DATA
 	float manZ;
 	float manAngle;
 	int manAnim;
-	int manItem[25];
+	int manItem[INVENTORY_SIZE];
 
 	float womanX;
 	float womanY;
 	float womanZ;
 	float womanAngle;
 	int womanAnim;
-	int womanItem[25];
+	int womanItem[INVENTORY_SIZE];
 
 	// << : ¸Ê µ¥ÀÌÅÍ
-	float mapX[30];
-	float mapY[30];
-	float mapZ[30];
-	float mapRotX[30];
-	float mapRotY[30];
-	float mapRotZ[30];
-	bool mapIsRunning[30];
+	float mapX[SWITCH_LASTNUM];
+	float mapY[SWITCH_LASTNUM];
+	float mapZ[SWITCH_LASTNUM];
+	float mapRotX[SWITCH_LASTNUM];
+	float mapRotY[SWITCH_LASTNUM];
+	float mapRotZ[SWITCH_LASTNUM];
+	bool mapIsRunning[SWITCH_LASTNUM];
 }; 
 
 cSocketManager::cSocketManager()
