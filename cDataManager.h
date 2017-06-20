@@ -31,6 +31,9 @@ private:
 	//영현 - 플레이어 정하기
 	SYNTHESIZE(int,			m_nPlayer, PlayerNum)
 
+	//영현 - 엔딩
+	SYNTHESIZE(bool,		m_IsEnding, IsEnding)
+
 	//균영
 	SYNTHESIZE(bool, m_IsCollisionWall, IsCollisionWall)
 

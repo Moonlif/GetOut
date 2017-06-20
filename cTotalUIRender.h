@@ -6,6 +6,7 @@ class cCamera;
 class cInventory;
 class cChat;
 class cGamePlay_UI;
+class cEnding;
 
 class cTotalUIRender
 {
@@ -19,6 +20,7 @@ private:
 	cInventory*							m_pInventory;
 	cChat*								m_pChat;
 	cGamePlay_UI*						m_pGamePlay;
+	cEnding*							m_pEnding;
 
 	SYNTHESIZE_PASS_BY_REF(D3DXVECTOR3, m_pCamraStartPos, CamraStartPos);
 

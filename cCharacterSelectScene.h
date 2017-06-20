@@ -7,8 +7,8 @@ class cCamera;
 #define IMAGECHANGESPEED 12
 #define CAMERASHAKESPEED 5
 #define CAMERASHAKERANGE 0.5f
-#define DELETEBACKGROUNDSPEED 4;
-#define SETBACKGROUNDSPEED 4;
+#define DELETEBACKGROUNDSPEED 4
+#define SETBACKGROUNDSPEED 4
 
 class cCharacterSelectScene : public iButtonDelegate
 {

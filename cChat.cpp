@@ -14,7 +14,7 @@ cChat::~cChat()
 {
 	SAFE_RELEASE(m_fontName);
 	SAFE_RELEASE(m_pSprite);
-	SAFE_DELETE(m_pRoot);
+	m_pRoot->Destroy();
 }
 
 void cChat::Setup()

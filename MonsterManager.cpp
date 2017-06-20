@@ -11,8 +11,8 @@ MonsterManager::~MonsterManager()
 
 void MonsterManager::Setup()
 {
-	CreateMonster(D3DXVECTOR3(-5, 0, -30.0f), "Monster1/", "Monster1.X");
-	CreateMonster(D3DXVECTOR3(5, 0, -30.0f), "Monster1/", "Monster1.X");
+	//CreateMonster(D3DXVECTOR3(-5, 0, -30.0f), "Monster1/", "Monster1.X");
+	//CreateMonster(D3DXVECTOR3(5, 0, -30.0f), "Monster1/", "Monster1.X");
 }
 
 void MonsterManager::Update()

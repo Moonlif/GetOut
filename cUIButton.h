@@ -27,7 +27,7 @@ protected:
 	eButtonState m_eButtonState;
 	LPDIRECT3DTEXTURE9	m_aTexture[E_STATE_CNT];
 
-	SYNTHESIZE(iButtonDelegate*,	m_pDelegate, Delegate);
+	SYNTHESIZE(iButtonDelegate*,	m_pDelegate, Delegate)
 	SYNTHESIZE(int,					m_nAlpha, Alpha)
 public:
 	virtual void SetTexture(char* szNormal, char* szOver, char* szSelect);

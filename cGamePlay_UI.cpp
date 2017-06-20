@@ -8,7 +8,6 @@ cGamePlay_UI::cGamePlay_UI()
 {
 }
 
-
 cGamePlay_UI::~cGamePlay_UI()
 {
 	/*SAFE_RELEASE(m_MeshHand);
