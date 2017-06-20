@@ -187,13 +187,12 @@ void cChat::RenderChat()
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
 	D3DXCOLOR color;
-	if (g_pData->m_nPlayerNum1P == 1)
+	if (g_pData->GetPlayerNum() == 1)
 	{
 		color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
 		m_strChat = "Player1: " + m_strChat;
-
 	}
-	else if (g_pData->m_nPlayerNum1P == 2)
+	else if (g_pData->GetPlayerNum() == 2)
 	{
 		m_strChat = "Player2: " + m_strChat;
 		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
@@ -212,11 +211,11 @@ void cChat::RenderChat(int startX, int startY, int Width, int Height)
 	RECT rc{ startX, startY, startX + Width, startY + Height };
 
 	D3DXCOLOR color;
-	if (g_pData->m_nPlayerNum1P == 1)
+	if (g_pData->GetPlayerNum() == 1)
 	{
 		color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
 	}
-	else if (g_pData->m_nPlayerNum1P == 2)
+	else if (g_pData->GetPlayerNum() == 2)
 	{
 		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
 	}
@@ -225,11 +224,6 @@ void cChat::RenderChat(int startX, int startY, int Width, int Height)
 		color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
 	}
 	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
-}
-
-void cChat::CopyToSock()
-{
-
 }
 
 void cChat::SetBackground()

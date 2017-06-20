@@ -20,6 +20,8 @@ void CharacterManager::Setup()
 	m_p1Player->Setup(MALE);
 	m_p2Player = new Player;
 	m_p2Player->Setup(FEMALE);
+	g_pSocketmanager->SetManPlayer(m_p1Player);
+	g_pSocketmanager->SetWomanPlayer(m_p2Player);
 }
 
 void CharacterManager::Update(cMap* cmap)

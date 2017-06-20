@@ -16,6 +16,7 @@ cDataManager::cDataManager()
 	, m_n2FValve1Count(0)
 	, m_n2FValve2Count(0)
 	, m_nBrickCount(0)
+	, m_nPlayer(0)
 {
 
 	for (int i = 0; i < TOTALINVENSIZE; ++i)
@@ -31,6 +32,7 @@ cDataManager::~cDataManager()
 
 void cDataManager::Setup()
 {
+
 	//사운드 추가
 	AddSound();
 

@@ -12,14 +12,12 @@
 
 #define BUF_SIZE 100
 #define CLIENT_NUM 5
-#define IN_MAN 1 << 0
-#define IN_WOMAN 1 << 1
+#define FLAG_MAN 1 << 4
+#define FLAG_WOMAN 1 << 5
 #define INVENTORY_SIZE 25
 #define NAME_SIZE 20
 #define ONE_SECOND 1000
 #define OVERHEAD 100
-#define OUT_MAN 1 << 4
-#define OUT_WOMAN 1 << 5
 #define PORT_DATA_SERVER_OUT 1234
 #define PORT_DATA_SERVER_IN 1235
 #define PORT_DATA_CLIENT 10111
@@ -30,6 +28,7 @@
 struct ST_ALL_DATA;
 class cUIObject;
 class cChat;
+class Player;
 #include "cUIButton.h"
 
 class cSocketManager : public iButtonDelegate
@@ -72,6 +71,10 @@ private:
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
+	// << : 초기 데이터 적용을 위한 포인터
+	SYNTHESIZE(Player*, m_pPlMan, ManPlayer);
+	SYNTHESIZE(Player*, m_pPlWoman, WomanPlayer);
+
 	// << : 입력창을 렌더하기 위한 변수들
 	LPD3DXSPRITE m_pSprite;
 	cUIObject* m_pUIRoot;
@@ -82,7 +85,8 @@ public:
 	void Destroy();
 	char* GetIP();
 	char* GetRoomName();
-	void InitClientData(ST_ALL_DATA stData);
+	void InitClientData();
+	void RecvClientData(ST_ALL_DATA stData);
 	void Setup();
 	void SetIP(int First, int Second, int Third, int Fourth);
 	void SetIP(string szIP);

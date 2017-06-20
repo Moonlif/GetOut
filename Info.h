@@ -46,7 +46,7 @@ enum StuffCode
 	STUFF_DOOR_2NDROOM2,
 	STUFF_DOOR_FINAL,
 
-	STUFF_LASTNUM
+	STUFF_LASTNUM,
 };
 
 enum SwitchInfo

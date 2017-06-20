@@ -78,8 +78,8 @@ void cTotalUIRender::Update(cCamera* camera)
 		SetItem(StuffCode::STUFF_BRICK1);
 		SetItem(StuffCode::STUFF_BRICK2);
 		SetItem(StuffCode::STUFF_KEY1);
-		SetItem(StuffCode::STUFF_KEY2);
-		SetItem(StuffCode::STUFF_KEY3);
+		SetItem(StuffCode::STUFF_PAPER3);
+		SetItem(StuffCode::STUFF_PAPER2);
 		SetItem(StuffCode::STUFF_PAPER1);
 	}
 
