@@ -127,8 +127,8 @@ void Player::Update(cMap* pMap)
 	}
 
 	//머리위치(카메라 위치)
-	if (playerType == FEMALE) headPosition = position + D3DXVECTOR3(0, 6.0f, 0);
-	else headPosition = position + D3DXVECTOR3(0, 7.2f, 0);
+	if (playerType == FEMALE) headPosition = position + D3DXVECTOR3(0, 8.0f, 0);
+	else headPosition = position + D3DXVECTOR3(0, 8.0f, 0);
 }
 
 void Player::Update(D3DXVECTOR3 pos, float rot, animationState ani, cMap* pMap)

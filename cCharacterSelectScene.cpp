@@ -133,9 +133,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pData->m_nPlayerNum1P = 1;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
 
-			//플레이어 넘버 정하기
-			ConfirmPlayerNum();
-
 			//내 화살표 띄우기
 			p1Text->SetIsHidden(false);
 			p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
@@ -158,9 +155,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
-
-			//플레이어 넘버 정하기
-			ConfirmPlayerNum();
 
 			//내 화살표 띄우기
 			p1Text->SetIsHidden(false);
@@ -253,9 +247,6 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		alpha = 255;
 		Time++;
 
-		//카메라 흔들기
-		//if (Time % CAMERASHAKESPEED == 0) m_vRetargetPos = RandomCircle(SavePt, CAMERASHAKERANGE);
-
 		//카메라 거리 좁히기
 		static float dis = 5.0f;
 		dis -= 0.05f;
@@ -275,7 +266,6 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		{
 		case 1:
 			//다크 라이트 키기
-			//g_pD3DDevice->LightEnable(eLIGHT::D_DARK, true);
 			//밑에 있는 라이트들 꺼주기
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, false);
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
@@ -306,6 +296,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			m_pCamera->SetCameraDistance(0.1f);
 			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
 			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
+			g_pSoundManager->Play("BackGround", 1.0f);
 			break;
 		default:
 			break;
@@ -318,8 +309,6 @@ void cCharacterSelectScene::DeleteBackground()
 	UpdateBeforGameStart();
 
 	static int alpha = 200;
-	//static float x = 1.0f;
-	//static float y = 0.9f;
 	if (alpha <= 0)
 	{
 		m_pRoot->SetIsHidden(true);
@@ -329,7 +318,6 @@ void cCharacterSelectScene::DeleteBackground()
 	cUIImageView* explain = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_EXPLAIN);
 	cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 	cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
-	//cUIButton* button = (cUIButton*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
 	cUITextView* text = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 
 	Background->SetAlpha(alpha);
@@ -337,56 +325,12 @@ void cCharacterSelectScene::DeleteBackground()
 	Player1->SetAlpha(alpha);
 	Player2->SetAlpha(alpha);
 	text->SetIsHidden(true);
-	//button->SetScaling(D3DXVECTOR3(x, y, 0));
 
 	alpha -= DELETEBACKGROUNDSPEED;
-	//if(x > 0) x -= 0.05f;
-	//if(y > 0) y -= 0.05f;
 
-	//if (x <= 0) x = 0;
-	//if (y <= 0) y = 0;
 
 }
 
-D3DXVECTOR3 cCharacterSelectScene::RandomCircle(D3DXVECTOR3 pos, float range)
-{
-	float RandomX = 0;
-	float RandomY = 0;
-
-	RandomX = RND->getFloatFromTo(pos.x, pos.x + range * 2);
-	RandomY = RND->getFloatFromTo(pos.y - range, pos.y + range);
-
-	return D3DXVECTOR3(RandomX, RandomY, pos.z);
-}
-
-void cCharacterSelectScene::ConfirmPlayerNum()
-{
-
-	//1P, 2P 정하기
-	if (!m_isSelect)
-	{
-		//상대방이 아직 클릭하지 않았다면 1P
-		if (g_pData->m_nPlayerNum2P == 0)
-		{
-			g_pData->SetPlayerNum(1);
-		}
-		//클릭했으면 2P
-		else
-		{
-			g_pData->SetPlayerNum(2);
-		}
-		m_isSelect = true;
-	}
-}
-
-void cCharacterSelectScene::OnClick(cUIButton * pSender)
-{
-	/*if (pSender->GetTag() == eUITAG::E_CHARACTERSELECT_BUTTON_START)
-	{
-	m_pCamera->ReTarget(&m_vRetargetPos);
-	m_isDeleteBackground = true;
-	}*/
-}
 
 void cCharacterSelectScene::SetBackground()
 {
@@ -419,18 +363,10 @@ void cCharacterSelectScene::SetBackground()
 	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	ExplainImage->AddChild(pPlyer2Image);
 
-	/*cUIButton*   pStartButton = new cUIButton("UI/button/BlackButton_Normal.png", "UI/button/BlackButton_Over.png",
-	"UI/button/BlackButton_Down.png", D3DXVECTOR3(40, 490, 0));
-	pStartButton->SetTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
-	pStartButton->SetScaling(D3DXVECTOR3(2.0f, 0.45f, 0));
-	pStartButton->SetDelegate(this);
-	pStartButton->SetAlpha(200);
-	ExplainImage->AddChild(pStartButton);*/
 
 	cUITextView* text = new cUITextView("GAME START", D3DXVECTOR3(60, 500, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
 		ST_SIZEN(250, 40), 20, 40, 900);
 	text->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
-	//text->SetIsHidden(true);
 	ExplainImage->AddChild(text);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
