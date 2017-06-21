@@ -146,8 +146,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 
 			//텍스트 변경
-			pExplain->SetText("남자 캐릭터 \n\n\n\n장점:\n힘이 쌔서 무거운 물체를 옮길 수 있다. \n\n\n단점:\n몸집이 커서 좁은 곳은 들어가지 못한다.");
-
+			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25 \n\n특징: 타고난 식성으로 몸집이 크며, 씨름 천하장사를 3번이나 우승한 경력이 있다.");
+		
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
 			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
@@ -183,7 +183,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, true);
 
 			//텍스트 변경
-			pExplain->SetText("여자 캐릭터 \n\n\n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
+			pExplain->SetText("       가희 \n\n\n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
@@ -468,7 +468,7 @@ void cCharacterSelectScene::SetBackground()
 	ExplainImage->AddChild(text);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
-		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(230, 500), 13, 20, 500);
+		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(300, 500), 13, 20, 500);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 

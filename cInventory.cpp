@@ -14,7 +14,6 @@ cInventory::~cInventory()
 {
 	m_pUIBase->Destroy();
 	SAFE_RELEASE(m_pSprite);
-
 }
 
 void cInventory::Setup()
@@ -196,6 +195,7 @@ void cInventory::SetItem(StuffCode ItemName)
 		g_pData->TextOutWarningWord("가방이 꽉 찼습니다.");
 		return;
 	}
+
 	EmptyInven->SetItemTexture(g_pUIvarius->m_mapItemInfo[ItemName].Texture);
 	EmptyInven->SetItemType(g_pUIvarius->m_mapItemInfo[ItemName].ItemType);
 	EmptyInven->SetrcItem(g_pUIvarius->m_mapItemInfo[ItemName].rc);
@@ -294,7 +294,7 @@ void cInventory::MoveItem()
 				
 			}
 
-			//좌표 저장
+			//몇 번 인벤을 클릭했는가
 			SecondTag = CarcCuruntPtInven();
 
 			//만약 인벤토리가 아닌곳을 클릭했다면
