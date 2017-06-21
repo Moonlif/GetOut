@@ -389,7 +389,14 @@ void cSocketManager::UpdateObjectData()
 	{
 		g_pData->m_bStuffSwitch[i] = m_bStuffSwitch[i];
 		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
+		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
 	}
+	g_pData->m_bValve1 = bValve1;
+	g_pData->m_bValve2 = bValve2;
+	g_pData->m_n2FValve1Count = nFValve1Count;
+	g_pData->m_n2FValve2Count = nFValve2Count;
+	g_pData->m_nBrickCount = nBrickCount;
+	
 }
 
 void cSocketManager::UIRender()
@@ -720,13 +727,14 @@ void SendPosition(SOCKET* pSocket)
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
 
-/* 물체와 맵의 정보를 수신 (구현 예정)*/
+/* 물체와 맵의 정보를 수신 */
 void ReceiveObjectData(SOCKET* pSocket)
 {
 	ST_OBJECT_DATA stData;
 	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
-	// << : 수신한 데이터를 버퍼에 적용후 클래스에 적용시킨다.
-	// << : 맵정보만 담을 구조체가 하나 필요함
+	g_pSocketmanager->RecvObjectData(stData);
+	g_pSocketmanager->UpdateObjectData();
+	cout << "맵정보 수신 " << endl;
 }
 
 void SendObjectData(SOCKET* pSocket)
