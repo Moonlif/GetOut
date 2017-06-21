@@ -101,7 +101,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));
 	else                            text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
 
-	g_pData->m_nPlayerNum2P = 2;
+	//g_pData->m_nPlayerNum2P = 2;
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
 	{
