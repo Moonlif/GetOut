@@ -39,7 +39,6 @@ private:
 	D3DXVECTOR3 m_vPosition1P;
 	float m_vRotation1P;
 	animationState m_eAnimState1P;
-
 public:
 	//정훈 - 오브젝트용
 	bool m_isHandOn;

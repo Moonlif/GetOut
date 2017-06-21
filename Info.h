@@ -192,7 +192,7 @@ struct CHATINFO
 {
 	float		time;
 	float		alpha;
-	string		strChat;
+	string		strChat;	
 };
 
 #define CHATSIZE			30
