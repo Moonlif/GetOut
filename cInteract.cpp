@@ -76,13 +76,13 @@ void cInteract::Setup()
 	m_vecStuff[STUFF_DOOR_2NDROOM2]->Setup(STUFF_DOOR_2NDROOM2, D3DXVECTOR3(-5.5f, 28, 10), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4, 0), 0.2f, 0.25f, true);
 	m_vecStuff[STUFF_DOOR_FINAL]->Setup(STUFF_DOOR_FINAL, D3DXVECTOR3(18, 16, -18), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0), D3DXVECTOR3(0, 4.2f, 4), 5.0f, 0.25f, true);
 
-	D3DXCOLOR stColor;
-	stColor.r = 20;
-	stColor.g = 50;
-	stColor.b = 20;
-	m_vPositionFog = D3DXVECTOR3(-33, 14, -15);
-	m_pParticleFog = new cParticleSystem;
-	m_pParticleFog->Setup(cParticleSystem::eParticleType::E_PARTICLE_TYPE_SPREAD, &m_vPositionFog, 1, 100, 10, 10, stColor, 0.0f, 1000.0f, "Texture/alpha_fog_tex.tga");
+	//D3DXCOLOR stColor;
+	//stColor.r = 20;
+	//stColor.g = 50;
+	//stColor.b = 20;
+	//m_vPositionFog = D3DXVECTOR3(-33, 14, -15);
+	//m_pParticleFog = new cParticleSystem;
+	//m_pParticleFog->Setup(cParticleSystem::eParticleType::E_PARTICLE_TYPE_SPREAD, &m_vPositionFog, 1, 100, 10, 10, stColor, 0.0f, 1000.0f, "Texture/alpha_fog_tex.tga");
 }
 
 void cInteract::Update()
@@ -100,13 +100,13 @@ void cInteract::Update()
 	{
 		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve1Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
 		g_pData->m_bValve1 = false;
-		g_pSocketmanager->SetFlagNum(4);
+		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 	}
 	if (g_pData->m_bValve2)
 	{
 		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve2Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
 		g_pData->m_bValve2 = false;
-		g_pSocketmanager->SetFlagNum(4);
+		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 	}
 	if (m_vecStuff[STUFF_WOODBOARD1]->GetSwitch() == false)
 		m_vecStuff[STUFF_WOODBOARD1]->Reposition(g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1], m_vecStuff[STUFF_WOODBOARD1]->GetRotation());
@@ -206,7 +206,7 @@ void cInteract::Update()
 		it->Update();
 	}
 
-	if (m_pParticleFog) m_pParticleFog->Update();
+	//if (m_pParticleFog) m_pParticleFog->Update();
 }
 
 void cInteract::Render()
@@ -216,7 +216,7 @@ void cInteract::Render()
 		it->Render();
 	}
 
-	if (m_pParticleFog) m_pParticleFog->Render();
+	//if (m_pParticleFog) m_pParticleFog->Render();
 }
 
 void cInteract::CheckStuff(D3DXVECTOR3 playerPos)
@@ -263,7 +263,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->GetUseItem() == STUFF_KEY1)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_DOOR_PRISON]->SetRadius(0.01f);
 		}
 		else
@@ -274,7 +274,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		return true;
 	case STUFF_DOOR_1STROOM:
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
-		g_pSocketmanager->SetFlagNum(4);
+		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		m_vecStuff[STUFF_DOOR_1STROOM]->SetRadius(0.01f);
 		g_pSoundManager->Play("door_prison", 0.5f);
 		return true;
@@ -282,7 +282,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->GetUseItem() == STUFF_KEY2)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_DOOR_1STTOILET]->SetRadius(0.01f);
 		}
 		else
@@ -295,7 +295,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->GetUseItem() == STUFF_KEY3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] = true;
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_DOOR_FINAL]->SetRadius(0.01f);
 		}
 		else
@@ -326,7 +326,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (m_n1FBlockCount > 3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_BLOCK] = true;
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_BOARDBLOCK]->SetRadius(0.01f);
 		}
 		return true;
@@ -334,7 +334,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		if (g_pData->m_nPlayerNum1P == 1)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_BOX1]->SetRadius(0.01f);
 		}
 		else
@@ -345,7 +345,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		return true;
 	case STUFF_CHEST3:
 		g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;
-		g_pSocketmanager->SetFlagNum(4);
+		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		m_vecStuff[STUFF_CHEST3]->SetRadius(0.01f);
 		return true;
 	case STUFF_WOODBOARD1:
@@ -357,14 +357,14 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 				g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD1] = true;
 				m_vecStuff[STUFF_WOODBOARD1]->SetRadius(0.01f);
 			}
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		}
 		return true;
 	case STUFF_WOODBOARD2:
 		if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
-			g_pSocketmanager->SetFlagNum(4);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_WOODBOARD2]->SetRadius(0.01f);
 		}
 		return true;
@@ -384,7 +384,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->m_n2FValve1Count = -4;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		g_pSocketmanager->SetFlagNum(4);
+		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		return true;
 	case STUFF_VALVE2:
 		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return true;;
@@ -402,7 +402,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->m_n2FValve2Count = 4;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		g_pSocketmanager->SetFlagNum(4);
+		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		return true;
 	case STUFF_CROWBAR:
 		g_pData->GetItem(STUFF_CROWBAR);
