@@ -115,7 +115,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		//                     1p, 2pÁ¤ÇÏ±â
 		///-------------------------------------------------------------
 
-		g_pData->m_nPlayerNum2P = 2;
+		//g_pData->m_nPlayerNum2P = 2;
 
 		static bool isSelect = false;
 
