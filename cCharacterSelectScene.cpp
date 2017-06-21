@@ -109,13 +109,11 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 		
-		cUITextView* StartOrReady = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
-
 		///-------------------------------------------------------------
 		//                     1p, 2p정하기
 		///-------------------------------------------------------------
 
-		//g_pData->m_nPlayerNum2P = 2;
+		//g_pData->m_nPlayerNum2P = 0;
 
 		static bool isSelect = false;
 
@@ -125,18 +123,11 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			if (g_pData->m_nPlayerNum2P == 0)
 			{
 				g_pData->SetPlayerNum(1);
-
-				//1P면 게임스타트 활성화
-				StartOrReady->SetIsHidden(false);
 			}
 			//클릭했으면 2P
 			else
 			{
 				g_pData->SetPlayerNum(2);
-
-				//2P면 게임스타트 레디로 바꾸기
-				StartOrReady->SetText("R E A D Y");
-				StartOrReady->SetIsHidden(false);
 			}
 			isSelect = true;
 		}
@@ -155,16 +146,11 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 
 			//텍스트 변경
-			pExplain->SetText("남자 캐릭터 \n\n\n\n장점:\n힘이 쌔서 무거운 물체를 옮길 수 있다. \n\n\n단점:\n몸집이 커서 좁은 곳은 들어가지 못한다.");
-
+			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25 \n\n특징: 타고난 식성으로 몸집이 크며, 씨름 천하장사를 3번이나 우승한 경력이 있다.");
+		
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
-			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
-			{
-				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
-			}
+			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -192,16 +178,11 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, true);
 
 			//텍스트 변경
-			pExplain->SetText("여자 캐릭터 \n\n\n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
+			pExplain->SetText("       가희 \n\n\n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
-			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
-			{
-				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
-			}
+			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -368,7 +349,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
 			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
-			g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
+			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
 			break;
 		default:
 			break;
@@ -473,11 +454,11 @@ void cCharacterSelectScene::SetBackground()
 	cUITextView* text = new cUITextView("GAME START", D3DXVECTOR3(60, 500, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
 		ST_SIZEN(250, 40), 20, 40, 900);
 	text->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
-	text->SetIsHidden(true);
+	//text->SetIsHidden(true);
 	ExplainImage->AddChild(text);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
-		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(230, 500), 13, 20, 500);
+		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(300, 500), 13, 20, 500);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 

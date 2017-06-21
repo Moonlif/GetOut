@@ -14,24 +14,12 @@ cChat::~cChat()
 {
 	SAFE_RELEASE(m_fontName);
 	SAFE_RELEASE(m_pSprite);
-	SAFE_DELETE(m_pRoot);
+	m_pRoot->Destroy();
 }
 
 void cChat::Setup()
 {
-	//채팅 셋
-	SetChildWindow();
-
 	//배경 
-	SetBackground();
-}
-
-void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
-{
-	//채팅 셋
-	SetChildWindow(nHandle,startX, startY, Width, Height);
-
-	//배경
 	SetBackground();
 }
 
@@ -43,49 +31,6 @@ void cChat::Update()
 	if (m_pRoot) m_pRoot->Update();
 }
 
-void cChat::Update_ForSocket()
-{
-	//이름 입력
-	char str[256];
-
-	//챗 찾기
-	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
-
-	GetWindowText(m_hWndNaming, str, strlen(str));
-	m_strChat = str;
-
-	if (GetAsyncKeyState(VK_F1) & 0x0001)
-	{
-		SetFocus(g_hWnd);
-	}
-	if (GetAsyncKeyState(VK_F2) & 0x0001)
-	{
-		SetFocus(m_hWndNaming);
-	}
-	if (GetAsyncKeyState(VK_F3) & 0x0001)
-	{
-		SetWindowText(m_hWndNaming, NULL);
-	}
-	if (GetAsyncKeyState(VK_F4) & 0x0001)
-	{
-		g_pSocketmanager->SetIP(m_strChat);
-		SetWindowText(m_hWndNaming, NULL);
-	}
-	if (GetAsyncKeyState(VK_F5) & 0x0001)
-	{
-		g_pSocketmanager->SetMyName(m_strChat);
-		SetWindowText(m_hWndNaming, NULL);
-	}
-	if (GetAsyncKeyState(VK_F6) & 0x0001)
-	{
-		g_pSocketmanager->SetRoomName(m_strChat);
-		SetWindowText(m_hWndNaming, NULL);
-	}
-
-	if (m_pRoot) m_pRoot->Update();
-
-}
-
 void cChat::Render()
 {
 	//렌더
@@ -94,39 +39,7 @@ void cChat::Render()
 	if (m_pRoot) m_pRoot->Render(m_pSprite);
 }
 
-void cChat::Render(int startX, int startY, int Width, int Height)
-{
-	RenderChat(startX, startY, Width, Height);
-	
-	if (m_pRoot) m_pRoot->Render(m_pSprite);
-}
-
-void cChat::SetChildWindow()
-{
-	//WS_VISIBLE
-
-	//이름입력 핸들 생성
-	m_hWndNaming = CreateWindow("edit", "",
-		WS_CHILD | WS_BORDER,
-		0, WINSIZEY - CHATWORDHEIGHT * 10, 250, 20, g_hWnd, HMENU(0), hInst, NULL);
-
-	//폰트 생성
-	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
-}
-
-void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int Height)
-{
-	//WS_VISIBLE
-
-	//이름입력 핸들 생성
-	m_hWndNaming = CreateWindow("edit", "",
-		WS_CHILD | WS_BORDER,
-		startX, startY, startX + Width, startY + Height, g_hWnd, HMENU(nHandle), hInst, NULL);
-
-	//폰트 생성
-	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
-}
-
+//채팅 업데이트
 void cChat::ChatOnOff()
 {
 	//이름 입력
@@ -180,6 +93,7 @@ void cChat::ChatOnOff()
 	}
 }
 
+//채팅 렌더
 void cChat::RenderChat()
 {
 	if (!g_pData->GetIsOnChat()) return;
@@ -204,6 +118,119 @@ void cChat::RenderChat()
 	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 }
 
+//백그라운드 설정
+void cChat::SetBackground()
+{
+	//채팅 셋
+	SetChildWindow();
+
+	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
+
+	cUIchat *chatBackground = new cUIchat(D3DXVECTOR3(0, WINSIZEY- CHATWORDHEIGHT, 0));
+	chatBackground->SetTag(eUITAG::CHAT_TEXT1);
+	chatBackground->SetScaling(D3DXVECTOR3(0.605f, 0.5f, 0.5f));
+	
+	m_pRoot = chatBackground;
+}
+
+//윈도우 설정
+void cChat::SetChildWindow()
+{
+	//WS_VISIBLE
+
+	//이름입력 핸들 생성
+	m_hWndNaming = CreateWindow("edit", "",
+		WS_CHILD | WS_BORDER,
+		0, WINSIZEY - CHATWORDHEIGHT * 10, 250, 20, g_hWnd, HMENU(0), hInst, NULL);
+
+	//폰트 생성
+	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
+}
+
+
+
+
+
+
+
+
+
+
+void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
+{
+	//채팅 셋
+	SetChildWindow(nHandle, startX, startY, Width, Height);
+
+	//배경
+	SetBackground();
+}
+
+
+void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int Height)
+{
+	//WS_VISIBLE
+
+	//이름입력 핸들 생성
+	m_hWndNaming = CreateWindow("edit", "",
+		WS_CHILD | WS_BORDER,
+		startX, startY, startX + Width, startY + Height, g_hWnd, HMENU(nHandle), hInst, NULL);
+
+	//폰트 생성
+	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
+}
+
+
+void cChat::Update_ForSocket()
+{
+	//이름 입력
+	char str[256];
+
+	//챗 찾기
+	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
+
+	GetWindowText(m_hWndNaming, str, strlen(str));
+	m_strChat = str;
+
+	if (GetAsyncKeyState(VK_F1) & 0x0001)
+	{
+		SetFocus(g_hWnd);
+	}
+	if (GetAsyncKeyState(VK_F2) & 0x0001)
+	{
+		SetFocus(m_hWndNaming);
+	}
+	if (GetAsyncKeyState(VK_F3) & 0x0001)
+	{
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetAsyncKeyState(VK_F4) & 0x0001)
+	{
+		g_pSocketmanager->SetIP(m_strChat);
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetAsyncKeyState(VK_F5) & 0x0001)
+	{
+		g_pSocketmanager->SetMyName(m_strChat);
+		SetWindowText(m_hWndNaming, NULL);
+	}
+	if (GetAsyncKeyState(VK_F6) & 0x0001)
+	{
+		g_pSocketmanager->SetRoomName(m_strChat);
+		SetWindowText(m_hWndNaming, NULL);
+	}
+
+	if (m_pRoot) m_pRoot->Update();
+
+}
+
+
+void cChat::Render(int startX, int startY, int Width, int Height)
+{
+	RenderChat(startX, startY, Width, Height);
+
+	if (m_pRoot) m_pRoot->Render(m_pSprite);
+}
+
 void cChat::RenderChat(int startX, int startY, int Width, int Height)
 {
 	//if (!g_pData->GetIsOnChat()) return;
@@ -224,15 +251,4 @@ void cChat::RenderChat(int startX, int startY, int Width, int Height)
 		color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
 	}
 	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
-}
-
-void cChat::SetBackground()
-{
-	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
-
-	cUIchat *chatBackground = new cUIchat(D3DXVECTOR3(0, WINSIZEY- CHATWORDHEIGHT, 0));
-	chatBackground->SetTag(eUITAG::CHAT_TEXT1);
-	chatBackground->SetScaling(D3DXVECTOR3(0.605f, 0.5f, 0.5f));
-	
-	m_pRoot = chatBackground;
 }

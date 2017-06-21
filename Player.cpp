@@ -11,6 +11,8 @@ Player::Player()
 	, player_Weapon(NULL)
 	, playerType(MALE)
 	, aniState(ANIM_IDLE)
+	, walkTime(0.5f)
+	, walkPattern(true)
 {
 }
 
@@ -22,6 +24,9 @@ Player::~Player()
 
 void Player::Setup(PLAYER_TYPE type)
 {
+	g_pSoundManager->AddSound("CharacterMove1", "Sound/EffectSound/walk/walk1.wav", false, false);
+	g_pSoundManager->AddSound("CharacterMove2", "Sound/EffectSound/walk/walk2.wav", false, false);
+
 	playerType = type;
 
 	if (playerType == MALE)
@@ -104,11 +109,11 @@ void Player::Update(cMap* pMap)
 	}
 
 	//서버전송용
-	g_pData->m_vPosition1P = position;
-	g_pData->m_eAnimState1P = aniState;
+	g_pData->Set1PPosition(position);
+	g_pData->Set1PAnimation(aniState);
 
 	//캐릭터 방향
-	rotY = g_pData->m_vRotation1P;
+	g_pData->Set1PRotation(rotY);
 
 	if (playerType == MALE_WEAPON)
 	{
@@ -196,6 +201,7 @@ void Player::MoveCharacter(cMap* pMap)
 		//앞,뒤 이동
 		if (g_pKeyManager->isStayKeyDown('W'))
 		{
+			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
@@ -217,6 +223,7 @@ void Player::MoveCharacter(cMap* pMap)
 		}
 		else if (g_pKeyManager->isStayKeyDown('S'))
 		{
+			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
@@ -239,6 +246,7 @@ void Player::MoveCharacter(cMap* pMap)
 		//좌,우 이동
 		if (g_pKeyManager->isStayKeyDown('A'))
 		{
+			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
@@ -272,6 +280,7 @@ void Player::MoveCharacter(cMap* pMap)
 		}
 		else if (g_pKeyManager->isStayKeyDown('D'))
 		{
+			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
@@ -320,3 +329,21 @@ void Player::MoveCharacter(cMap* pMap)
 //		g_pData->SetIsCollisionWall(false);
 //	}
 //}
+
+void Player::MoveSound()
+{
+	walkTime -= g_pTimeManager->GetElapsedTime();
+
+	if (walkTime < 0 && walkPattern)
+	{
+		g_pSoundManager->Play("CharacterMove1", 0.6f);
+		walkTime = 0.5f;
+		walkPattern = false;
+	}
+	else if (walkTime < 0 && !walkPattern)
+	{
+		g_pSoundManager->Play("CharacterMove2", 0.6f);
+		walkTime = 0.5f;
+		walkPattern = true;
+	}
+}

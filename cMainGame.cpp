@@ -6,7 +6,6 @@ cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
 	, m_pCharacter(NULL)
-	, m_pMonsterManager(NULL)
 	, m_pSkybox(NULL)
 	, m_pTotalUIRender(NULL)
 	, m_pInteract(NULL)
@@ -24,7 +23,6 @@ cMainGame::~cMainGame()
 
 		//character
 		SAFE_DELETE(m_pCharacter);
-		SAFE_DELETE(m_pMonsterManager);
 		SAFE_DELETE(m_pSkybox);
 
 		//ui
@@ -54,8 +52,6 @@ void cMainGame::Setup()
 		//character
 		m_pCharacter = new CharacterManager;
 		m_pCharacter->Setup();
-		m_pMonsterManager = new MonsterManager;
-		m_pMonsterManager->Setup();
 		m_pSkybox = new SkyBox;
 		m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
 
@@ -97,9 +93,6 @@ void cMainGame::Update()
 			start = true;
 			m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
 		}
-
-		if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Update();
-
 		//interact
 		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
 
@@ -121,7 +114,6 @@ void cMainGame::Render()
 
 		//character
 		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
-		if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Render();
 		if (m_pSkybox && g_pData->GetIsStartedGame()) m_pSkybox->Render();
 
 		//interact stuff

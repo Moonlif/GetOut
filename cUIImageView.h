@@ -10,7 +10,7 @@ public:
 protected:
 	LPDIRECT3DTEXTURE9		m_pTexture;
 
-	SYNTHESIZE(int, 		m_nAlpha, Alpha);
+	SYNTHESIZE(int, 		m_nAlpha, Alpha)
 public:
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 

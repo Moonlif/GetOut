@@ -22,17 +22,23 @@ private:
 	//영현 - 아이템 정보 저장
 	StuffCode				m_arrSaveInvenItem[TOTALINVENSIZE];
 	StuffCode				m_arrLoadInvenItem[TOTALINVENSIZE];
-	SYNTHESIZE(bool,		m_IsLoadItem, IsLoadItem)
+	SYNTHESIZE(bool, m_IsLoadItem, IsLoadItem)
 
 	//영현 - 경고문구 띄우기
-	SYNTHESIZE(bool,		m_isWarning, isWarning)
-	SYNTHESIZE(string,		m_strWarningWord, WarningWord)
+	SYNTHESIZE(bool, m_isWarning, isWarning)
+	SYNTHESIZE(string, m_strWarningWord, WarningWord)
 
 	//영현 - 플레이어 정하기
-	SYNTHESIZE(int,			m_nPlayer, PlayerNum)
+	SYNTHESIZE(int, m_nPlayer, PlayerNum)
+
+	//영현 - 엔딩
+	SYNTHESIZE(bool,		m_IsEnding, IsEnding)
 
 	//균영
 	SYNTHESIZE(bool, m_IsCollisionWall, IsCollisionWall)
+	D3DXVECTOR3 m_vPosition1P;
+	float m_vRotation1P;
+	animationState m_eAnimState1P;
 
 public:
 	//정훈 - 오브젝트용
@@ -56,11 +62,8 @@ public:
 	//균영
 	int m_nPlayerNum1P;
 	int m_nPlayerNum2P;
-	D3DXVECTOR3 m_vPosition1P;
 	D3DXVECTOR3 m_vPosition2P;
-	float m_vRotation1P;
 	float m_vRotation2P;
-	animationState m_eAnimState1P;
 	animationState m_eAnimState2P;
 
 public:
@@ -77,6 +80,12 @@ public:
 	void SaveInvenInfo(int Index, StuffCode code) { m_arrSaveInvenItem[Index] = code; }
 	StuffCode LoadInvenInfo(int Index) { return m_arrLoadInvenItem[Index]; }
 
+	D3DXVECTOR3 Get1PPosition();
+	void Set1PPosition(D3DXVECTOR3 stValue);
+	float Get1PRotation();
+	void Set1PRotation(float fValue);
+	animationState Get1PAnimation();
+	void Set1PAnimation(animationState stValue);
 
 	void AddSound();
 };

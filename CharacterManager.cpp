@@ -21,7 +21,7 @@ void CharacterManager::Setup()
 	m_p1Player->SetPosition(D3DXVECTOR3(-30, 0, 18));
 	m_p2Player = new Player;
 	m_p2Player->Setup(FEMALE);
-	m_p2Player->SetPosition(D3DXVECTOR3(-32, 0, 10));
+	m_p2Player->SetPosition(D3DXVECTOR3(-29, 0, 9));
 
 	g_pSocketmanager->SetManPlayer(m_p1Player);
 	g_pSocketmanager->SetWomanPlayer(m_p2Player);

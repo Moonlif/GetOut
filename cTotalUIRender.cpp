@@ -5,6 +5,7 @@
 #include "cInventory.h"
 #include "cChat.h"
 #include "cGamePlay_UI.h"
+#include "cEnding.h"
 
 cTotalUIRender::cTotalUIRender()
 	:m_pChaSelectScene(NULL),
@@ -23,6 +24,7 @@ cTotalUIRender::~cTotalUIRender()
 	SAFE_DELETE(m_pChat);
 	SAFE_RELEASE(m_pFontWarning);
 	SAFE_DELETE(m_pGamePlay);
+	SAFE_DELETE(m_pEnding);
 }
 
 void cTotalUIRender::Setup()
@@ -39,6 +41,9 @@ void cTotalUIRender::Setup()
 	m_pGamePlay = new cGamePlay_UI;
 	m_pGamePlay->Setup();
 
+	m_pEnding = new cEnding;
+	m_pEnding->Setup();
+
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 
 	//경고 폰트 셋업
@@ -53,7 +58,7 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame()) m_pChaSelectScene->Update(camera);
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Update();
 	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen() && g_pData->m_isHandOn) m_pGamePlay->Update();
-
+	if (m_pEnding && g_pData->GetIsEnding()) m_pEnding->Update();
 	if (GetAsyncKeyState('I') & 0x0001)
 	{
 		//게임이 시작되야 인벤이 켜짐
@@ -107,6 +112,8 @@ void cTotalUIRender::Render()
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
 	if (m_pChat) m_pChat->Render();
 	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen() && g_pData->m_isHandOn) m_pGamePlay->Render();
+	if (m_pEnding && g_pData->GetIsEnding()) m_pEnding->Render();
+
 
 	//스타트씬 클릭되면 케릭터셀렉씬 셋업하는과정
 	if (!m_pStartScene->GetIsStartSceneOpen())

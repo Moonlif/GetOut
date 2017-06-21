@@ -11,6 +11,7 @@ cDataManager::cDataManager()
 	, m_PickUpItemCode(StuffCode::STUFF_NONE)
 	, m_IsLoadItem(false)
 	, m_isHandOn(false)
+	, m_IsEnding(false)
 	, m_bValve1(false)
 	, m_bValve2(false)
 	, m_n2FValve1Count(0)
@@ -202,6 +203,54 @@ void cDataManager::TextOutWarningWord(string str)
 {
 	m_isWarning = true;
 	m_strWarningWord = str;
+}
+
+D3DXVECTOR3 cDataManager::Get1PPosition()
+{
+	D3DXVECTOR3 Result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	Result = m_vPosition1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return Result;
+}
+
+void cDataManager::Set1PPosition(D3DXVECTOR3 stValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_vPosition1P = stValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+float cDataManager::Get1PRotation()
+{
+	float Result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	Result = m_vRotation1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return Result;
+}
+
+void cDataManager::Set1PRotation(float fValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_vRotation1P = fValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+animationState cDataManager::Get1PAnimation()
+{
+	animationState result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	result = m_eAnimState1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return result;
+}
+
+void cDataManager::Set1PAnimation(animationState stValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_eAnimState1P = stValue;
+	ReleaseMutex(g_hMutex_DATA);
 }
 
 //사운드 추가

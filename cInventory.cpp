@@ -14,9 +14,6 @@ cInventory::~cInventory()
 {
 	m_pUIBase->Destroy();
 	SAFE_RELEASE(m_pSprite);
-	SAFE_RELEASE(m_pSprite);
-	SAFE_RELEASE(m_pTexture);
-
 }
 
 void cInventory::Setup()
@@ -198,6 +195,7 @@ void cInventory::SetItem(StuffCode ItemName)
 		g_pData->TextOutWarningWord("가방이 꽉 찼습니다.");
 		return;
 	}
+
 	EmptyInven->SetItemTexture(g_pUIvarius->m_mapItemInfo[ItemName].Texture);
 	EmptyInven->SetItemType(g_pUIvarius->m_mapItemInfo[ItemName].ItemType);
 	EmptyInven->SetrcItem(g_pUIvarius->m_mapItemInfo[ItemName].rc);
@@ -244,6 +242,9 @@ void cInventory::MoveItem()
 			FirstClick->SetrcItem(RECT{ 0,0,0,0 });
 			FirstClick->SetItemCode(StuffCode::STUFF_NONE);
 
+			//사운드 플레이
+			g_pSoundManager->Play("pick_generic", 1.0f);
+
 			//마우스포인터에 텍스쳐 렌더하기 위한 값
 			m_IsPick = true;
 
@@ -282,7 +283,6 @@ void cInventory::MoveItem()
 					g_pUIvarius->GetCurClickItemType() == eITEMTYPE::ITEMTYPE_ATTACK)
 				{
 					g_pData->SetUseItem(FirstCode);
-					//cout << g_pData->GetUseItem() << endl;
 				}
 				//사용불가능한 아이템일 때
 				else
@@ -291,9 +291,10 @@ void cInventory::MoveItem()
 					return;
 				}
 
+				
 			}
 
-			//한 곳 좌표 저장
+			//몇 번 인벤을 클릭했는가
 			SecondTag = CarcCuruntPtInven();
 
 			//만약 인벤토리가 아닌곳을 클릭했다면
@@ -329,8 +330,11 @@ void cInventory::MoveItem()
 				FirstClick->SetItemCode(SecondCode);
 			}
 
+			//사운드 플레이
+			g_pSoundManager->Play("drop_generic", 1.0f);
+
 			//서버에 아이템 저장
-			//SaveInvenInfo();
+			SaveInvenInfo();
 
 			//마우스에 렌더하는 값 초기화
 			m_IsPick = false;
@@ -394,6 +398,9 @@ StuffCode cInventory::GetPreparedUsingItem()
 	cUIInvenItem* item = (cUIInvenItem*)m_pInven->FindChildByTag(eUITAG::INVENTORY_USINGITEM);
 	return item->GetItemCode();
 }
+
+
+
 
 //인벤내 아이템 서버에 저장
 void cInventory::SaveInvenInfo()
