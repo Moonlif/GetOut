@@ -708,11 +708,15 @@ void SendPosition(SOCKET* pSocket)
 {
 	SOCKET hSocket = *pSocket;
 	ST_PLAYER_POSITION stSend;
-	stSend.fX = g_pData->m_vPosition1P.x;
-	stSend.fY = g_pData->m_vPosition1P.y;
-	stSend.fZ = g_pData->m_vPosition1P.z;
-	stSend.fAngle = g_pData->m_vRotation1P;
-	stSend.eAnimState = g_pData->m_eAnimState1P;
+	D3DXVECTOR3 Position = g_pData->Get1PPosition();
+	float Rotation = g_pData->Get1PRotation();
+	animationState eAnim = g_pData->Get1PAnimation();
+	
+	stSend.fX = Position.x;
+	stSend.fY = Position.y;
+	stSend.fZ = Position.z;
+	stSend.fAngle = Rotation;
+	stSend.eAnimState = eAnim;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
 

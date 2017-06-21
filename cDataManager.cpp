@@ -204,6 +204,54 @@ void cDataManager::TextOutWarningWord(string str)
 	m_strWarningWord = str;
 }
 
+D3DXVECTOR3 cDataManager::Get1PPosition()
+{
+	D3DXVECTOR3 Result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	Result = m_vPosition1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return Result;
+}
+
+void cDataManager::Set1PPosition(D3DXVECTOR3 stValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_vPosition1P = stValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+float cDataManager::Get1PRotation()
+{
+	float Result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	Result = m_vRotation1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return Result;
+}
+
+void cDataManager::Set1PRotation(float fValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_vRotation1P = fValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+animationState cDataManager::Get1PAnimation()
+{
+	animationState result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	result = m_eAnimState1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return result;
+}
+
+void cDataManager::Set1PAnimation(animationState stValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_eAnimState1P = stValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
 //사운드 추가
 void cDataManager::AddSound()
 {
