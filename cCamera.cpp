@@ -167,7 +167,8 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			m_ptPrevMouse = g_ptMouse;
 
-			g_pData->m_vRotation1P = m_vCamRotAngle.y;
+			//g_pData->m_vRotation1P = m_vCamRotAngle.y;
+			g_pData->Set1PRotation(m_vCamRotAngle.y);
 		}
 		break;
 	case WM_MOUSEWHEEL:
