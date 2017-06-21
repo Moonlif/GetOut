@@ -109,11 +109,11 @@ void Player::Update(cMap* pMap)
 	}
 
 	//서버전송용
-	g_pData->m_vPosition1P = position;
-	g_pData->m_eAnimState1P = aniState;
+	g_pData->Set1PPosition(position);
+	g_pData->Set1PAnimation(aniState);
 
 	//캐릭터 방향
-	rotY = g_pData->m_vRotation1P;
+	g_pData->Set1PRotation(rotY);
 
 	if (playerType == MALE_WEAPON)
 	{
