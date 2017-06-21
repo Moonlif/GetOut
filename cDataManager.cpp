@@ -193,6 +193,8 @@ void cDataManager::GetItem(StuffCode itemCode)
 	else if (itemCode == STUFF_KEY1 || itemCode == STUFF_KEY2 || itemCode == STUFF_KEY3) g_pSoundManager->Play("pick_key", 0.5f);
 	else if (itemCode == STUFF_PAPER1 || itemCode == STUFF_PAPER2 || itemCode == STUFF_PAPER3) g_pSoundManager->Play("pick_paper", 0.5f);
 	else g_pSoundManager->Play("pick_generic", 0.5f);
+
+	cout << "아이템 획득 " << endl;
 }
 
 //경고문구 띄우기
@@ -200,6 +202,54 @@ void cDataManager::TextOutWarningWord(string str)
 {
 	m_isWarning = true;
 	m_strWarningWord = str;
+}
+
+D3DXVECTOR3 cDataManager::Get1PPosition()
+{
+	D3DXVECTOR3 Result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	Result = m_vPosition1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return Result;
+}
+
+void cDataManager::Set1PPosition(D3DXVECTOR3 stValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_vPosition1P = stValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+float cDataManager::Get1PRotation()
+{
+	float Result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	Result = m_vRotation1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return Result;
+}
+
+void cDataManager::Set1PRotation(float fValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_vRotation1P = fValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+animationState cDataManager::Get1PAnimation()
+{
+	animationState result;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	result = m_eAnimState1P;
+	ReleaseMutex(g_hMutex_DATA);
+	return result;
+}
+
+void cDataManager::Set1PAnimation(animationState stValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	m_eAnimState1P = stValue;
+	ReleaseMutex(g_hMutex_DATA);
 }
 
 //사운드 추가
