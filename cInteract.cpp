@@ -197,7 +197,7 @@ void cInteract::Update()
 
 	//checking object
 	D3DXVECTOR3 vPlayerPos;
-	vPlayerPos = g_pData->m_vPosition1P;
+	vPlayerPos = g_pData->Get1PPosition();
 	vPlayerPos.y += 4.0f;	//피킹용 위치로 변경
 	CheckStuff(vPlayerPos);
 
