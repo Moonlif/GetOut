@@ -183,6 +183,7 @@ void cDataManager::DropItem(StuffCode itemCode)
 	else g_pSoundManager->Play("drop_generic", 0.4f);
 
 	g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
+	g_pSocketmanager->AddFlag(FLAG::FLAG_INVENTORY);
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
@@ -198,6 +199,7 @@ void cDataManager::GetItem(StuffCode itemCode)
 	else g_pSoundManager->Play("pick_generic", 0.5f);
 
 	g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
+	g_pSocketmanager->AddFlag(FLAG::FLAG_INVENTORY);
 }
 
 //경고문구 띄우기

@@ -536,7 +536,6 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			FLAG stFlag = FLAG::FLAG_POSITION;
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendPosition(&hSocket);
-			cout << "Send Position" << endl;
 		}
 		if (eFlag & FLAG::FLAG_OBJECT_DATA)
 		{
@@ -544,6 +543,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
+			cout << "SendObjData" << endl;
 		}
 
 		if (eFlag & FLAG::FLAG_INVENTORY)
@@ -552,6 +552,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendInventoryData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_INVENTORY);
+			cout << "Send Inventory Data" << endl;
 		}
 	}
 	closesocket(hSocket);
@@ -674,8 +675,6 @@ void ReceivePosition(SOCKET* pSocket)
 	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
 	g_pData->m_eAnimState2P = stRecv.eAnimState;
-
-	cout << "애니메이션 : " << stRecv.eAnimState << endl;
 }
 
 /* 모든 데이터 수신 */
@@ -724,6 +723,7 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fZ = Position.z;
 	stSend.fAngle = Rotation;
 	stSend.eAnimState = eAnim;
+	if (stSend.fX == 0 && stSend.fY == 0 && stSend.fZ == 0 && stSend.fAngle == 0 && stSend.eAnimState == 0) return;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
 
@@ -761,7 +761,7 @@ void SendInventoryData(SOCKET* pSocket)
 	for (int i = 0; i < INVENTORY_SIZE; ++i)
 	{
 		stData.Stuff[i] = g_pData->m_arrSaveInvenItem[i];
-		cout << "소지물건 :" << stData.Stuff[i] << endl;
 	}
 	send(*pSocket, (char*)&stData, sizeof(ST_INVENTORY_DATA), 0);
+
 }
