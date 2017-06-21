@@ -18,6 +18,8 @@ private:
 	D3DXVECTOR3		direction;
 	float			rotY;
 	bool			isDraw;
+	float			walkTime;
+	bool			walkPattern;
 
 	SkinnedMesh* player;
 	SkinnedMesh* player_Weapon;
@@ -45,5 +47,7 @@ public:
 
 	void MoveCharacter(cMap* pMap);
 	//void CheckPosition(cMap* pMap);
+
+	void MoveSound();
 };
 
