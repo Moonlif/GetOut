@@ -113,7 +113,7 @@ void Player::Update(cMap* pMap)
 	g_pData->Set1PAnimation(aniState);
 
 	//캐릭터 방향
-	g_pData->Set1PRotation(rotY);
+	rotY = g_pData->Get1PRotation();
 
 	if (playerType == MALE_WEAPON)
 	{
@@ -201,13 +201,13 @@ void Player::MoveCharacter(cMap* pMap)
 		//앞,뒤 이동
 		if (g_pKeyManager->isStayKeyDown('W'))
 		{
-			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
 				checkPosition = position - (player_Weapon->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (player_Weapon->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -217,19 +217,20 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (player->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
 		}
 		else if (g_pKeyManager->isStayKeyDown('S'))
 		{
-			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
 				checkPosition = position + (player_Weapon->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (player_Weapon->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -239,6 +240,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (player->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -246,7 +248,6 @@ void Player::MoveCharacter(cMap* pMap)
 		//좌,우 이동
 		if (g_pKeyManager->isStayKeyDown('A'))
 		{
-			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
@@ -259,6 +260,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -274,13 +276,13 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
 		}
 		else if (g_pKeyManager->isStayKeyDown('D'))
 		{
-			MoveSound();
 			if (playerType == MALE_WEAPON)
 			{
 				aniState = ANIM_WALK;
@@ -293,6 +295,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -308,6 +311,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
