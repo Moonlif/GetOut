@@ -145,7 +145,6 @@ void cChat::SetChildWindow()
 	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
 }
 
-
 void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 {
 	//Ã¤ÆÃ ¼Â
