@@ -11,6 +11,8 @@ Player::Player()
 	, player_Weapon(NULL)
 	, playerType(MALE)
 	, aniState(ANIM_IDLE)
+	, walkTime(0.5f)
+	, walkPattern(true)
 {
 }
 
@@ -22,6 +24,9 @@ Player::~Player()
 
 void Player::Setup(PLAYER_TYPE type)
 {
+	g_pSoundManager->AddSound("CharacterMove1", "Sound/EffectSound/walk/walk1.wav", false, false);
+	g_pSoundManager->AddSound("CharacterMove2", "Sound/EffectSound/walk/walk2.wav", false, false);
+
 	playerType = type;
 
 	if (playerType == MALE)
@@ -104,11 +109,11 @@ void Player::Update(cMap* pMap)
 	}
 
 	//서버전송용
-	g_pData->m_vPosition1P = position;
-	g_pData->m_eAnimState1P = aniState;
+	g_pData->Set1PPosition(position);
+	g_pData->Set1PAnimation(aniState);
 
 	//캐릭터 방향
-	rotY = g_pData->m_vRotation1P;
+	rotY = g_pData->Get1PRotation();
 
 	if (playerType == MALE_WEAPON)
 	{
@@ -202,6 +207,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (player_Weapon->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (player_Weapon->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -211,6 +217,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (player->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -223,6 +230,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (player_Weapon->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (player_Weapon->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -232,6 +240,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (player->GetDirection() * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -251,6 +260,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -266,6 +276,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position - (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position -= (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -284,6 +295,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -299,6 +311,7 @@ void Player::MoveCharacter(cMap* pMap)
 				checkPosition = position + (m_vCross * checkPoint * g_pTimeManager->GetElapsedTime());
 				if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
 				{
+					MoveSound();
 					position += (m_vCross * moveSpeed * g_pTimeManager->GetElapsedTime());
 				}
 			}
@@ -320,3 +333,21 @@ void Player::MoveCharacter(cMap* pMap)
 //		g_pData->SetIsCollisionWall(false);
 //	}
 //}
+
+void Player::MoveSound()
+{
+	walkTime -= g_pTimeManager->GetElapsedTime();
+
+	if (walkTime < 0 && walkPattern)
+	{
+		g_pSoundManager->Play("CharacterMove1", 0.6f);
+		walkTime = 0.5f;
+		walkPattern = false;
+	}
+	else if (walkTime < 0 && !walkPattern)
+	{
+		g_pSoundManager->Play("CharacterMove2", 0.6f);
+		walkTime = 0.5f;
+		walkPattern = true;
+	}
+}
