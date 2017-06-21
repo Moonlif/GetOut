@@ -197,8 +197,6 @@ void cDataManager::GetItem(StuffCode itemCode)
 	else if (itemCode == STUFF_PAPER1 || itemCode == STUFF_PAPER2 || itemCode == STUFF_PAPER3) g_pSoundManager->Play("pick_paper", 0.5f);
 	else g_pSoundManager->Play("pick_generic", 0.5f);
 
-	cout << "¾ÆÀÌÅÛ È¹µæ " << endl;
-
 	g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 }
 

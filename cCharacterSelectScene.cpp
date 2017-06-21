@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "cCharacterSelectScene.h"
 
-
 #include "cUIImageView.h"
 #include "cUIObject.h"
 #include "cUIMesh.h"
@@ -16,6 +15,7 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_pPlayer2(NULL)
 	, m_isDeleteBackground(false)
 	, m_vRetargetPos(0, 0, 0)
+	, m_isSelect(false)
 {
 }
 
@@ -44,8 +44,6 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update(cCamera* camera)
 {
-	//cout << g_pSoundManager->GetIsPlaying("CharacterSelectScene") << endl;
-
 	m_pCamera = camera;
 	//첫 배경 알파값 업데이트
 	UpdateSetFirstBackground();
@@ -103,6 +101,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));
 	else                            text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
 
+
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
 	{
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
@@ -112,25 +112,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		///-------------------------------------------------------------
 		//                     1p, 2p정하기
 		///-------------------------------------------------------------
-
-		//g_pData->m_nPlayerNum2P = 0;
-
-		static bool isSelect = false;
-
-		if (!isSelect)
-		{
-			//상대방이 아직 클릭하지 않았다면 1P
-			if (g_pData->m_nPlayerNum2P == 0)
-			{
-				g_pData->SetPlayerNum(1);
-			}
-			//클릭했으면 2P
-			else
-			{
-				g_pData->SetPlayerNum(2);
-			}
-			isSelect = true;
-		}
 
 		///-------------------------------------------------------------
 		//                  1번 플레이어 선택시
@@ -146,11 +127,14 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 
 			//텍스트 변경
-			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25 \n\n특징: 타고난 식성으로 몸집이 크며, 씨름 천하장사를 3번이나 우승한 경력이 있다.");
+			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25 \n\n직업: 씨름선수 \n\n특징: 타고난 식성으로 몸집이 크며, 천하장사를 3번이나 우승한 경력이 있다. \n\n가희를 좋아하고 있다.");
 		
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
+
+			//플레이어 넘버 정하기
+			ConfirmPlayerNum();
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -162,7 +146,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			else if (g_pData->GetPlayerNum() == 2)
 			{
 				p2Text->SetIsHidden(false);
-				p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
+				p2Text->SetPosition(D3DXVECTOR3(70, -130, 0));
 			}
 		}
 		///-------------------------------------------------------------
@@ -178,11 +162,14 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, true);
 
 			//텍스트 변경
-			pExplain->SetText("       가희 \n\n\n\n장점:\n몸집이 날렵하고 작아 좁은 곳에도 들어갈 수 있다. \n\n\n단점:\n힘이 약해 무거운 물체를 옮기지 못한다.");
-
+			pExplain->SetText("       가희 \n\n\n\n성별: 여자\n\n나이: 22 \n\n직업: 모델\n\n특징: 최근 심한 다이어트로 마른 몸매를 유지하고 있으나 영양이 부족해 쉽게 지친다. \n\n관심은 오로지 자기관리!!");
+		
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
+
+			//플레이어 넘버 정하기
+			ConfirmPlayerNum();
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -194,7 +181,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			else if (g_pData->GetPlayerNum() == 2)
 			{
 				p2Text->SetIsHidden(false);
-				p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
+				p2Text->SetPosition(D3DXVECTOR3(200, -130, 0));
 			}
 
 
@@ -403,6 +390,26 @@ D3DXVECTOR3 cCharacterSelectScene::RandomCircle(D3DXVECTOR3 pos, float range)
 	return D3DXVECTOR3(RandomX, RandomY, pos.z);
 }
 
+void cCharacterSelectScene::ConfirmPlayerNum()
+{
+
+	//1P, 2P 정하기
+	if (!m_isSelect)
+	{
+		//상대방이 아직 클릭하지 않았다면 1P
+		if (g_pData->m_nPlayerNum2P != 1 || g_pData->m_nPlayerNum2P != 2)
+		{
+			g_pData->SetPlayerNum(1);
+		}
+		//클릭했으면 2P
+		else
+		{
+			g_pData->SetPlayerNum(2);
+		}
+		m_isSelect = true;
+	}
+}
+
 void cCharacterSelectScene::OnClick(cUIButton * pSender)
 {
 	/*if (pSender->GetTag() == eUITAG::E_CHARACTERSELECT_BUTTON_START)
@@ -458,7 +465,7 @@ void cCharacterSelectScene::SetBackground()
 	ExplainImage->AddChild(text);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
-		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(300, 500), 13, 20, 500);
+		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(280, 500), 13, 20, 500);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 
