@@ -43,7 +43,7 @@ void cMainGame::Setup()
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
-	//g_pSocketmanager->Setup();
+	g_pSocketmanager->Setup();
 
 	//코드 추가
 	{

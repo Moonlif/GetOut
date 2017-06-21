@@ -74,7 +74,7 @@ void Player::Update(cMap* pMap)
 	//캐릭터 이동관련 함수
 	MoveCharacter(pMap);
 	//벽과 충돌중인지 체크
-	CheckPosition(pMap);
+	//CheckPosition(pMap);
 
 	//채팅켜지면 IDLE 상태로 변경
 	if (g_pData->GetIsOnChat())
@@ -306,17 +306,17 @@ void Player::MoveCharacter(cMap* pMap)
 	}
 }
 
-void Player::CheckPosition(cMap* pMap)
-{
-	float checkPoint = 3.0f;
-
-	checkPosition = position - (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
-	if (!pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
-	{
-		g_pData->SetIsCollisionWall(true);
-	}
-	else if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
-	{
-		g_pData->SetIsCollisionWall(false);
-	}
-}
+//void Player::CheckPosition(cMap* pMap)
+//{
+//	float checkPoint = 3.0f;
+//
+//	checkPosition = position - (player->GetDirection() * checkPoint * g_pTimeManager->GetElapsedTime());
+//	if (!pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
+//	{
+//		g_pData->SetIsCollisionWall(true);
+//	}
+//	else if (pMap->GetMovePossible(checkPosition.x, checkPosition.y, checkPosition.z))
+//	{
+//		g_pData->SetIsCollisionWall(false);
+//	}
+//}

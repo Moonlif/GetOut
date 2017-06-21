@@ -150,12 +150,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
-			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
-			{
-				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
-			}
+			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -187,12 +182,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
-			if (g_pSocketmanager->GetFlagNum() == FLAG::FLAG_GENDER ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_ALL_DATA ||
-				g_pSocketmanager->GetFlagNum() == FLAG::FLAG_NONE)
-			{
-				g_pSocketmanager->SetFlagNum(FLAG::FLAG_GENDER);
-			}
+			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -358,8 +348,8 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
-			g_pSocketmanager->InitClientData();
-			g_pSocketmanager->SetFlagNum(FLAG::FLAG_POSITION);
+			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
+			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
 			break;
 		default:
 			break;

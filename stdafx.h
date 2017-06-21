@@ -60,6 +60,7 @@ extern bool g_bDebug;
 extern int g_nFps;
 extern int g_nCountFps;
 extern HANDLE g_hMutex_CHAT;
+extern HANDLE g_hMutex_DATA;
 
 #define SAFE_RELEASE(p) {if(p) p->Release(); p = NULL;}
 #define SAFE_DELETE(p) {if(p) delete p; p = NULL;}

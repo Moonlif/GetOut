@@ -27,12 +27,13 @@
 
 struct ST_ALL_DATA;
 struct ST_OBJECT_DATA;
+struct ST_INVENTORY_DATA;
 class cUIObject;
 class cChat;
 class Player;
-#include "cUIButton.h"
+enum FLAG;
 
-class cSocketManager : public iButtonDelegate
+class cSocketManager
 {
 private:
 	SINGLETONE(cSocketManager);
@@ -84,10 +85,13 @@ private:
 
 	// << : 입력창을 렌더하기 위한 변수들
 	LPD3DXSPRITE m_pSprite;
-	cUIObject* m_pUIRoot;
 	cChat*	m_pTextBox;
 
+	// << : 서버가 동작중인지 확인하기 위한 변수
+	SYNTHESIZE(bool, IsRun, ServerRun);
+
 public:
+	void AddFlag(FLAG eFlag);
 	void Calc_Position();
 	void Destroy();
 	char* GetIP();
@@ -102,14 +106,13 @@ public:
 	void SetRoomName(string szName);
 	void Setup_DATA();
 	void Setup_CHAT();
+	void SubFlag(FLAG eFlag);
 	void Update();
 	void UpdatePosition(float  x, float y, float z);
 	void UpdateRotation(float Rotate);
 	void UpdateObjectData();
 
 	void UIRender();
-
-	virtual void OnClick(cUIButton* pSender) override;
 };
 
 enum FLAG
@@ -120,27 +123,18 @@ enum FLAG
 	FLAG_ALL_DATA = 1 << 3,
 	FLAG_GENDER = 1 << 4,
 	FLAG_POSITION = 1 << 5,
-	FLAG_OBJECT_DATA = 1 << 6
-};
-
-struct ST_FLAG
-{
-	char szRoomName[50] = { 0, };	// << : key
-	int nNetworkID;
-	int nPlayerIndex;
-	int eFlag;
+	FLAG_OBJECT_DATA = 1 << 6,
+	FLAG_INVENTORY = 1 << 7
 };
 
 struct ST_PLAYER_POSITION
 {
-	char  szRoomName[50] = { 0, };	// << : Key
-	int	  nPlayerIndex;				// << : Player Index
 	animationState eAnimState;		// << : Animation index
 	float fX;
 	float fY;
 	float fZ;
 	float fAngle;
-	ST_PLAYER_POSITION() : nPlayerIndex(0), eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
+	ST_PLAYER_POSITION() : eAnimState(ANIM_IDLE), fX(0.0f), fY(0.0f), fZ(0.0f), fAngle(0.0f) {};
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 
@@ -159,6 +153,11 @@ struct ST_OBJECT_DATA
 	int nFValve1Count;
 	int nFValve2Count;
 	int nBrickCount;
+};
+
+struct ST_INVENTORY_DATA
+{
+	StuffCode Stuff[INVENTORY_SIZE];
 };
 
 struct ST_CHAT
