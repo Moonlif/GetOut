@@ -181,6 +181,8 @@ void cDataManager::DropItem(StuffCode itemCode)
 
 	if (itemCode == STUFF_KEY1 || itemCode == STUFF_KEY2 || itemCode == STUFF_KEY3) g_pSoundManager->Play("drop_key", 0.5f);
 	else g_pSoundManager->Play("drop_generic", 0.4f);
+
+	g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 }
 
 void cDataManager::GetItem(StuffCode itemCode)
@@ -196,6 +198,8 @@ void cDataManager::GetItem(StuffCode itemCode)
 	else g_pSoundManager->Play("pick_generic", 0.5f);
 
 	cout << "¾ÆÀÌÅÛ È¹µæ " << endl;
+
+	g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 }
 
 //°æ°í¹®±¸ ¶ç¿ì±â
