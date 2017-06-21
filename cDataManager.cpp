@@ -193,6 +193,8 @@ void cDataManager::GetItem(StuffCode itemCode)
 	else if (itemCode == STUFF_KEY1 || itemCode == STUFF_KEY2 || itemCode == STUFF_KEY3) g_pSoundManager->Play("pick_key", 0.5f);
 	else if (itemCode == STUFF_PAPER1 || itemCode == STUFF_PAPER2 || itemCode == STUFF_PAPER3) g_pSoundManager->Play("pick_paper", 0.5f);
 	else g_pSoundManager->Play("pick_generic", 0.5f);
+
+	cout << "¾ÆÀÌÅÛ È¹µæ " << endl;
 }
 
 //°æ°í¹®±¸ ¶ç¿ì±â
