@@ -75,8 +75,6 @@ void cChat::ChatOnOff()
 			//아무것도 입력 안할시 리턴
 			if (m_strChat == "") return;
 
-			//m_strChat += " ";
-			
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
 
@@ -101,14 +99,14 @@ void cChat::RenderChat()
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
 	D3DXCOLOR color;
-	if (g_pData->GetPlayerNum() == 1)
+	if (g_pData->m_nPlayerNum1P == 1)
 	{
 		color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
-		m_strChat = "Player1: " + m_strChat;
+		m_strChat = "우석: " + m_strChat;
 	}
-	else if (g_pData->GetPlayerNum() == 2)
+	else if (g_pData->m_nPlayerNum1P == 2)
 	{
-		m_strChat = "Player2: " + m_strChat;
+		m_strChat = "가희: " + m_strChat;
 		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
 	}
 	else
@@ -148,14 +146,6 @@ void cChat::SetChildWindow()
 }
 
 
-
-
-
-
-
-
-
-
 void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 {
 	//채팅 셋
@@ -164,7 +154,6 @@ void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 	//배경
 	SetBackground();
 }
-
 
 void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int Height)
 {
@@ -178,7 +167,6 @@ void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int H
 	//폰트 생성
 	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
 }
-
 
 void cChat::Update_ForSocket()
 {
@@ -222,7 +210,6 @@ void cChat::Update_ForSocket()
 	if (m_pRoot) m_pRoot->Update();
 
 }
-
 
 void cChat::Render(int startX, int startY, int Width, int Height)
 {

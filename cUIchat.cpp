@@ -87,14 +87,15 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 		//ÄÃ·¯ ¼³Á¤(1P = »¡°­, 2P = ³ì»ö)
 		D3DXCOLOR color;
 		string str;
-		if (g_pData->GetPlayerNum() == 1)
+
+		if (g_pData->m_nPlayerNum1P == 1)
 		{
 			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, m_vChat[i].alpha);
-			str = "Player1: " + m_vChat[i].strChat;
+			str = "¿ì¼®: " + m_vChat[i].strChat;
 		}
-		else if (g_pData->GetPlayerNum() == 2)
+		else if (g_pData->m_nPlayerNum1P == 2)
 		{
-			str = "Player2: " + m_vChat[i].strChat;
+			str = "°¡Èñ: " + m_vChat[i].strChat;
 			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, m_vChat[i].alpha);
 		}
 		else

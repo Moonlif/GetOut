@@ -101,7 +101,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));
 	else                            text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
 
-
+	g_pData->m_nPlayerNum2P = 2;
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
 	{
@@ -136,18 +136,9 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//플레이어 넘버 정하기
 			ConfirmPlayerNum();
 
-			//1p일 때
-			if (g_pData->GetPlayerNum() == 1)
-			{
-				p1Text->SetIsHidden(false);
-				p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
-			}
-			//2p일 때
-			else if (g_pData->GetPlayerNum() == 2)
-			{
-				p2Text->SetIsHidden(false);
-				p2Text->SetPosition(D3DXVECTOR3(70, -130, 0));
-			}
+			//내 화살표 띄우기
+			p1Text->SetIsHidden(false);
+			p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
 		}
 		///-------------------------------------------------------------
 		//                  2번 플레이어 선택시
@@ -171,20 +162,10 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//플레이어 넘버 정하기
 			ConfirmPlayerNum();
 
-			//1p일 때
-			if (g_pData->GetPlayerNum() == 1)
-			{
-				p1Text->SetIsHidden(false);
-				p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));
-			}
-			//2p일 때
-			else if (g_pData->GetPlayerNum() == 2)
-			{
-				p2Text->SetIsHidden(false);
-				p2Text->SetPosition(D3DXVECTOR3(200, -130, 0));
-			}
-
-
+			//내 화살표 띄우기
+			p1Text->SetIsHidden(false);
+			p1Text->SetPosition(D3DXVECTOR3(205, -25, 0));
+			
 		}
 
 		///-------------------------------------------------------------
@@ -227,26 +208,14 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	///-------------------------------------------------------------
 	if (g_pData->m_nPlayerNum2P != 0)
 	{
-		//상대방이 1P일 때
-		if (g_pData->GetPlayerNum() == 2)
-		{
-			p1Text->SetIsHidden(false);
-			p1Text->SetAlpha(100);
-			//남자를 선택하고 있을 때
-			if (g_pData->m_nPlayerNum2P == 1)   p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
-			//여자를 선택하고 있을 때
-			else p1Text->SetPosition(D3DXVECTOR3(200, -25, 0));
-		}
-		//상대방이 2P일 때
-		else if (g_pData->GetPlayerNum() == 1)
-		{
-			p2Text->SetIsHidden(false);
-			p2Text->SetAlpha(100);
-			//남자를 선택하고 있을 때
-			if (g_pData->m_nPlayerNum2P == 1)   p2Text->SetPosition(D3DXVECTOR3(70, -110, 0));
-			//여자를 선택하고 있을 때
-			else p2Text->SetPosition(D3DXVECTOR3(200, -110, 0));
-		}
+		p2Text->SetIsHidden(false);
+		p2Text->SetAlpha(100);
+
+		//남자를 선택하고 있을 때
+		if (g_pData->m_nPlayerNum2P == 1)   p2Text->SetPosition(D3DXVECTOR3(70, -130, 0));
+		//여자를 선택하고 있을 때
+		else p2Text->SetPosition(D3DXVECTOR3(205, -130, 0));
+		
 	}
 }
 
@@ -397,7 +366,7 @@ void cCharacterSelectScene::ConfirmPlayerNum()
 	if (!m_isSelect)
 	{
 		//상대방이 아직 클릭하지 않았다면 1P
-		if (g_pData->m_nPlayerNum2P != 1 || g_pData->m_nPlayerNum2P != 2)
+		if (g_pData->m_nPlayerNum2P == 0)
 		{
 			g_pData->SetPlayerNum(1);
 		}
@@ -425,21 +394,21 @@ void cCharacterSelectScene::SetBackground()
 	pBackgroundImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	m_pRoot = pBackgroundImage;
 
-
-
 	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(870, 140, 0), 0);
 	ExplainImage->SetScaling(D3DXVECTOR3(0.45f, 0.65f, 1.0f));
 	ExplainImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_EXPLAIN);
 	m_pRoot->AddChild(ExplainImage);
 
-	cUIImageView* pPlyer1Text = new cUIImageView("UI/CharacterSelectScene/P1.png", D3DXVECTOR3(-500, 0, 0), 255);
+	cUIImageView* pPlyer1Text = new cUIImageView("UI/CharacterSelectScene/arrow1.png", D3DXVECTOR3(-500, 0, 0), 255);
 	pPlyer1Text->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
 	pPlyer1Text->SetIsHidden(true);
+	pPlyer1Text->SetScaling(D3DXVECTOR3(1.0f, 0.5f, 0));
 	ExplainImage->AddChild(pPlyer1Text);
 
-	cUIImageView* pPlyer2Text = new cUIImageView("UI/CharacterSelectScene/P2.png", D3DXVECTOR3(-100, 0, 0), 255);
+	cUIImageView* pPlyer2Text = new cUIImageView("UI/CharacterSelectScene/arrow2.png", D3DXVECTOR3(-100, 0, 0), 255);
 	pPlyer2Text->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
 	pPlyer2Text->SetIsHidden(true);
+	pPlyer2Text->SetScaling(D3DXVECTOR3(1.0f, 0.5f, 0));
 	ExplainImage->AddChild(pPlyer2Text);
 
 	cUIImageView* pPlyer1Image = new cUIImageView("UI/CharacterSelectScene/cha1.png", D3DXVECTOR3(60, -100, 0), 0);
