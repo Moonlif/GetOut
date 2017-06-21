@@ -410,6 +410,8 @@ void cInventory::SaveInvenInfo()
 		cUIInvenItem* p = (cUIInvenItem*)m_pInven->GetChild()[i];
 		g_pData->SaveInvenInfo(i, p->GetItemCode());
 	}
+	
+	g_pSocketmanager->AddFlag(FLAG::FLAG_INVENTORY);
 }
 
 void cInventory::LoadInvenInfo()

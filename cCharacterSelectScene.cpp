@@ -15,6 +15,7 @@ cCharacterSelectScene::cCharacterSelectScene()
 	, m_pPlayer2(NULL)
 	, m_isDeleteBackground(false)
 	, m_vRetargetPos(0, 0, 0)
+	, m_isSelect(false)
 {
 }
 
@@ -100,6 +101,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));
 	else                            text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
 
+
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
 	{
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
@@ -109,25 +112,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 		///-------------------------------------------------------------
 		//                     1p, 2p정하기
 		///-------------------------------------------------------------
-
-		g_pData->m_nPlayerNum2P = 2;
-
-		static bool isSelect = false;
-
-		if (!isSelect)
-		{
-			//상대방이 아직 클릭하지 않았다면 1P
-			if (g_pData->m_nPlayerNum2P == 0)
-			{
-				g_pData->SetPlayerNum(1);
-			}
-			//클릭했으면 2P
-			else
-			{
-				g_pData->SetPlayerNum(2);
-			}
-			isSelect = true;
-		}
 
 		///-------------------------------------------------------------
 		//                  1번 플레이어 선택시
@@ -148,6 +132,9 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
+
+			//플레이어 넘버 정하기
+			ConfirmPlayerNum();
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -180,6 +167,9 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
+
+			//플레이어 넘버 정하기
+			ConfirmPlayerNum();
 
 			//1p일 때
 			if (g_pData->GetPlayerNum() == 1)
@@ -398,6 +388,26 @@ D3DXVECTOR3 cCharacterSelectScene::RandomCircle(D3DXVECTOR3 pos, float range)
 	RandomY = RND->getFloatFromTo(pos.y - range, pos.y + range);
 
 	return D3DXVECTOR3(RandomX, RandomY, pos.z);
+}
+
+void cCharacterSelectScene::ConfirmPlayerNum()
+{
+
+	//1P, 2P 정하기
+	if (!m_isSelect)
+	{
+		//상대방이 아직 클릭하지 않았다면 1P
+		if (g_pData->m_nPlayerNum2P != 1 || g_pData->m_nPlayerNum2P != 2)
+		{
+			g_pData->SetPlayerNum(1);
+		}
+		//클릭했으면 2P
+		else
+		{
+			g_pData->SetPlayerNum(2);
+		}
+		m_isSelect = true;
+	}
 }
 
 void cCharacterSelectScene::OnClick(cUIButton * pSender)

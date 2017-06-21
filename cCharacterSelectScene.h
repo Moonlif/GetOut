@@ -49,6 +49,8 @@ public:
 	void DeleteBackground();
 	D3DXVECTOR3 RandomCircle(D3DXVECTOR3 pos, float range);
 
+	void ConfirmPlayerNum();
+
 	virtual void OnClick(cUIButton* pSender) override;
 };
 
