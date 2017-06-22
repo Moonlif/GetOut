@@ -141,7 +141,9 @@ void cInteract::Update()
 		m_vecStuff[STUFF_DOOR_2NDROOM2]->Reposition(D3DXVECTOR3(-5.5f, 28, 10), m_vecStuff[STUFF_DOOR_2NDROOM2]->GetRotation(), 0.01f);
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] && m_vecStuff[STUFF_DOOR_FINAL]->GetSwitch() == false)
 		m_vecStuff[STUFF_DOOR_FINAL]->Reposition(m_vecStuff[STUFF_DOOR_FINAL]->GetPosition(), D3DXVECTOR3(0, D3DX_PI, 0), 0.01f);
-	
+	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] && m_vecStuff[STUFF_DOOR_FINAL]->GetSwitch() == false)
+		g_pData->SetIsEnding(true);
+
 	//act button1 & button2 (on 2nd floor)
 	m_n2FButton1Count = 0;
 	m_n2FButton2Count = 0;
@@ -307,7 +309,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		}
 		else
 		{
-			g_pData->TextOutWarningWord(string("'현관 열쇠'가 필요합니다."));
+			g_pData->TextOutWarningWord(string("'최종 암호'가 필요합니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
 	}
@@ -474,7 +476,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 	case STUFF_KEY3:
 	{
 		g_pData->GetItem(STUFF_KEY3);
-		g_pData->TextOutWarningWord(string("'현관 열쇠'를 얻었습니다."));
+		g_pData->TextOutWarningWord(string("'최종 암호'를 얻었습니다."));
 	}
 	return true;
 	case STUFF_BRICK1:
