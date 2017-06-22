@@ -547,7 +547,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
-			cout << "SendObjData" << endl;
+			cout << "Send Map Status" << endl;
 		}
 
 		if (eFlag & FLAG::FLAG_INVENTORY)
@@ -603,15 +603,18 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		case FLAG::FLAG_NETWORK_ID:
 			SendNetworkID(&hSocket, g_pSocketmanager->GetNetworkID(), &isConnected);
+			cout << "NetworkID 전송" << endl;
 			break;
 		case FLAG::FLAG_GENDER:
 			ReceiveGender(&hSocket);
+			cout << "Gender 수신" << endl;
 			break;
 		case FLAG::FLAG_POSITION:
 			ReceivePosition(&hSocket);
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
 			ReceiveObjectData(&hSocket);
+			cout << "Map Status 수신" << endl;
 			break;
 		}
 	}
@@ -626,7 +629,6 @@ void ReceiveNetworkID(SOCKET* pSocket)
 	int nID;
 	recv(*pSocket, (char*)&nID, sizeof(int), 0);
 	g_pSocketmanager->SetNetworkID(nID);
-	cout << "네트워크 아이디 " << nID << endl;
 }
 
 /* 방이 연결 가능한지 확인 */
@@ -679,7 +681,6 @@ void ReceivePosition(SOCKET* pSocket)
 	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
 	g_pData->m_eAnimState2P = stRecv.eAnimState;
-	cout << "상대 좌표 Y :" << stRecv.fY << endl;
 }
 
 /* 모든 데이터 수신 */
@@ -689,7 +690,6 @@ void ReceiveAllData(SOCKET* pSocket)
 	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
 	g_pSocketmanager->RecvClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
 	g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
-	cout << "ReceiveAllData" << endl;
 }
 
 /* 자신의 성별을 서버에게 전송합니다 */
@@ -739,7 +739,6 @@ void ReceiveObjectData(SOCKET* pSocket)
 	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
 	g_pSocketmanager->RecvObjectData(stData);
 	g_pSocketmanager->UpdateObjectData();
-	cout << "맵정보 수신 " << endl;
 }
 
 void SendObjectData(SOCKET* pSocket)
