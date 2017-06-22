@@ -7,7 +7,7 @@ cChat::cChat()
 	:m_hWndNaming(NULL)
 	, m_pRoot(NULL)
 	, m_pSprite(NULL)
-	, m_IsMyChat(false)
+	, m_nMyChat(0)
 {
 }
 
@@ -55,10 +55,26 @@ void cChat::ChatOnOff()
 	//현재 채팅 푸쉬
 	if (!g_pData->m_listChat_RECV.empty())
 	{		
-		chat->PushChat(g_pData->m_listChat_RECV.front(), m_IsMyChat);
-		g_pData->m_listChat_RECV.pop_front();
+		if (g_pData->GetIsStartedGame())
+		{
+			//자신의 채팅이 아닐 땐 상대방젠더 넘버
+			if (m_nMyChat == 0) m_nMyChat = g_pData->m_nPlayerNum2P;
 
-		m_IsMyChat = false;
+			//내채팅은 그대로
+			chat->PushChat(g_pData->m_listChat_RECV.front(), m_nMyChat);
+			g_pData->m_listChat_RECV.pop_front();
+		}
+		else
+		{
+			if (g_pData->GetPlayerNum() == 1) m_nMyChat = 1;
+			else if(g_pData->GetPlayerNum() == 2) m_nMyChat = 2;
+			else m_nMyChat = 0;
+
+			chat->PushChat(g_pData->m_listChat_RECV.front(), m_nMyChat);
+			g_pData->m_listChat_RECV.pop_front();
+		}
+		
+		m_nMyChat = 0;
 	}
 
 	if (GetAsyncKeyState(VK_RETURN) & 0x0001)
@@ -82,9 +98,9 @@ void cChat::ChatOnOff()
 			g_pData->Chat(m_strChat);
 
 			//내챗!
-			m_IsMyChat = true;
+			m_nMyChat = g_pData->m_nPlayerNum1P;
 
-			//chat->PushChat(m_strChat, m_IsMyChat);
+			//chat->PushChat(m_strChat, m_nMyChat);
 		}
 		//채팅 켰을 때
 		else
