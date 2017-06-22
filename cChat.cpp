@@ -54,8 +54,7 @@ void cChat::ChatOnOff()
 
 	//ÇöÀç Ã¤ÆÃ Çª½¬
 	if (!g_pData->m_listChat_RECV.empty())
-	{
-		
+	{		
 		chat->PushChat(g_pData->m_listChat_RECV.front(), m_IsMyChat);
 		g_pData->m_listChat_RECV.pop_front();
 
@@ -84,6 +83,8 @@ void cChat::ChatOnOff()
 
 			//³»Ãª!
 			m_IsMyChat = true;
+
+			//chat->PushChat(m_strChat, m_IsMyChat);
 		}
 		//Ã¤ÆÃ Ä×À» ¶§
 		else
