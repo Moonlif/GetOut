@@ -110,17 +110,21 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 		//시작안했을땐 플레이어 넘버에 따라 채팅색갈이 다름
 		else
 		{
+
 			if (g_pData->GetPlayerNum() == 1)
 			{
 				color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+				str = m_vChat[i].strChat;
 			}
 			else if (g_pData->GetPlayerNum() == 2)
 			{
 				color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+				str = m_vChat[i].strChat;
 			}
 			else
 			{
 				color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+				str = m_vChat[i].strChat;
 			}
 		}
 		g_pFontManager->TextOut2D(m_pFont, str, rc, color);
