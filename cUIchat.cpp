@@ -88,12 +88,12 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 		D3DXCOLOR color;
 		string str;
 
-		if (g_pData->m_nPlayerNum1P == 1)
+		if (m_vChat[i].gender == 1)
 		{
 			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, m_vChat[i].alpha);
 			str = "¿ì¼®: " + m_vChat[i].strChat;
 		}
-		else if (g_pData->m_nPlayerNum1P == 2)
+		else if (m_vChat[i].gender == 2)
 		{
 			str = "°¡Èñ: " + m_vChat[i].strChat;
 			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, m_vChat[i].alpha);
@@ -112,8 +112,9 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 	cUIObject::Render(pSprite);
 }
 
-void cUIchat::PushChat(string str)
+void cUIchat::PushChat(string str, bool IsYou)
 {
+	
 
 	for (int i = CHATSIZE - 1; i > 0; --i)
 	{
@@ -125,4 +126,6 @@ void cUIchat::PushChat(string str)
 	m_vChat[0].time = CHATTIME;
 	m_vChat[0].alpha = 1.0f;
 
+	if (IsYou) m_vChat[0].gender = g_pData->m_nPlayerNum1P;
+	else m_vChat[0].gender = g_pData->m_nPlayerNum2P;
 }

@@ -9,6 +9,7 @@
 #include "CharacterManager.h"
 #include "MonsterManager.h"
 #include "SkyBox.h"
+#include "ParticleManager.h"
 
 class cMainGame
 {
@@ -26,6 +27,7 @@ private:
 	CharacterManager* m_pCharacter;
 	MonsterManager* m_pMonsterManager;
 	SkyBox* m_pSkybox;
+	ParticleManager* m_pParticleManager;
 
 	//ui
 	cTotalUIRender*		m_pTotalUIRender;

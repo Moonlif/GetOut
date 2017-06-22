@@ -5,7 +5,7 @@ Monster::Monster()
 	: position(D3DXVECTOR3(0, 0, 0))
 	, direction(D3DXVECTOR3(0, 0, 1))
 	, rotY(0.0f)
-	, monAni(ANIM_IDLE)
+	, monAni(ANIM_DEATH)
 	, attackSphere(BoundingShere(D3DXVECTOR3(0, 0, 0), 2.0f))
 	, attackSphereMesh(NULL)
 {

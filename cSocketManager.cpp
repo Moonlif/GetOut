@@ -389,7 +389,14 @@ void cSocketManager::UpdateObjectData()
 	{
 		g_pData->m_bStuffSwitch[i] = m_bStuffSwitch[i];
 		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
+		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
 	}
+	g_pData->m_bValve1 = bValve1;
+	g_pData->m_bValve2 = bValve2;
+	g_pData->m_n2FValve1Count = nFValve1Count;
+	g_pData->m_n2FValve2Count = nFValve2Count;
+	g_pData->m_nBrickCount = nBrickCount;
+	
 }
 
 void cSocketManager::UIRender()
@@ -529,7 +536,6 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			FLAG stFlag = FLAG::FLAG_POSITION;
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendPosition(&hSocket);
-			cout << "Send Position" << endl;
 		}
 		if (eFlag & FLAG::FLAG_OBJECT_DATA)
 		{
@@ -537,6 +543,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
+			cout << "SendObjData" << endl;
 		}
 
 		if (eFlag & FLAG::FLAG_INVENTORY)
@@ -545,6 +552,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendInventoryData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_INVENTORY);
+			cout << "Send Inventory Data" << endl;
 		}
 	}
 	closesocket(hSocket);
@@ -667,8 +675,6 @@ void ReceivePosition(SOCKET* pSocket)
 	g_pSocketmanager->UpdatePosition(stRecv.fX, stRecv.fY, stRecv.fZ);
 	g_pSocketmanager->UpdateRotation(stRecv.fAngle);
 	g_pData->m_eAnimState2P = stRecv.eAnimState;
-
-	cout << "애니메이션 : " << stRecv.eAnimState << endl;
 }
 
 /* 모든 데이터 수신 */
@@ -717,16 +723,18 @@ void SendPosition(SOCKET* pSocket)
 	stSend.fZ = Position.z;
 	stSend.fAngle = Rotation;
 	stSend.eAnimState = eAnim;
+	if (stSend.fX == 0 && stSend.fY == 0 && stSend.fZ == 0 && stSend.fAngle == 0 && stSend.eAnimState == 0) return;
 	send(hSocket, (char*)&stSend, sizeof(ST_PLAYER_POSITION), 0);
 }
 
-/* 물체와 맵의 정보를 수신 (구현 예정)*/
+/* 물체와 맵의 정보를 수신 */
 void ReceiveObjectData(SOCKET* pSocket)
 {
 	ST_OBJECT_DATA stData;
 	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
-	// << : 수신한 데이터를 버퍼에 적용후 클래스에 적용시킨다.
-	// << : 맵정보만 담을 구조체가 하나 필요함
+	g_pSocketmanager->RecvObjectData(stData);
+	g_pSocketmanager->UpdateObjectData();
+	cout << "맵정보 수신 " << endl;
 }
 
 void SendObjectData(SOCKET* pSocket)
@@ -753,7 +761,7 @@ void SendInventoryData(SOCKET* pSocket)
 	for (int i = 0; i < INVENTORY_SIZE; ++i)
 	{
 		stData.Stuff[i] = g_pData->m_arrSaveInvenItem[i];
-		cout << "소지물건 :" << stData.Stuff[i] << endl;
 	}
 	send(*pSocket, (char*)&stData, sizeof(ST_INVENTORY_DATA), 0);
+
 }
