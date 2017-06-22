@@ -454,6 +454,7 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 				}
 				else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == false && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {	// Æ®·¦
 					g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] = true;
+					g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 					if (isTrapOpen != true) {
 						if (y > 0) {
 							isTrapIng = true;
