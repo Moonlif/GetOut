@@ -2,6 +2,8 @@
 
 class cUIObject;
 
+#define CREDITSPEED 1;
+
 class cEnding
 {
 public:

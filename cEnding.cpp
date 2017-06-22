@@ -19,7 +19,11 @@ void cEnding::Setup()
 {
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
-	m_pText = "±èÁ¤ÈÆ \n¼Õ¿µÇö\nÃÖÁøÈ£\n±è±Õ¿µ\nÀ¯Áö»ó";
+	m_pText = "±èÁ¤ÈÆ\n";
+	m_pText += "¼Õ¿µÇö\n";
+	m_pText += "ÃÖÁøÈ£\n";
+	m_pText += "±è±Õ¿µ\n";
+	m_pText += "À¯Áö»ó\n";
 
 	cUIImageView* backGround = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0), 1.0f);
 	m_pRoot = backGround;
@@ -40,7 +44,7 @@ void cEnding::Update()
 	
 	static D3DXVECTOR3 pos = text1->GetPosition();
 
-	pos.y--;
+	pos.y -= CREDITSPEED;
 	
 	text1->SetPosition(pos);
 
