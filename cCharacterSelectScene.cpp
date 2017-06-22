@@ -122,7 +122,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 
 			//텍스트 변경
 			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25 \n\n직업: 씨름선수 \n\n특징: 타고난 식성으로 몸집이 크며, 천하장사를 3번이나 우승한 경력이 있다. \n\n가희를 좋아하고 있다.");
-		
+
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);
@@ -132,13 +132,16 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
 
 			//플레이어 정하기
-			if (g_pData->m_nPlayerNum2P == 0)
+			if (!m_isSelect)
 			{
-				g_pData->SetPlayerNum(1);
-			}
-			else
-			{
-				g_pData->SetPlayerNum(2);
+				if (g_pData->m_nPlayerNum2P == 0)
+				{
+					g_pData->SetPlayerNum(1);
+				}
+				else
+				{
+					g_pData->SetPlayerNum(2);
+				}
 			}
 		}
 		///-------------------------------------------------------------
@@ -165,13 +168,16 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			p1Text->SetPosition(D3DXVECTOR3(205, -25, 0));
 			
 			//플레이어 정하기
-			if (g_pData->m_nPlayerNum2P == 0)
+			if (!m_isSelect)
 			{
-				g_pData->SetPlayerNum(1);
-			}
-			else
-			{
-				g_pData->SetPlayerNum(2);
+				if (g_pData->m_nPlayerNum2P == 0)
+				{
+					g_pData->SetPlayerNum(1);
+				}
+				else
+				{
+					g_pData->SetPlayerNum(2);
+				}
 			}
 		}
 
