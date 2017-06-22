@@ -2,6 +2,7 @@
 
 class cUIObject;
 class cCamera;
+
 #define IMAGECHANGESPEED 12
 #define CAMERASHAKESPEED 5
 #define CAMERASHAKERANGE 0.5f
@@ -45,5 +46,6 @@ public:
 	void UpdateCharacterSelect();
 	void UpdateBeforGameStart();
 	void DeleteBackground();
+
 };
 

@@ -19,13 +19,13 @@ cCharacterSelectScene::cCharacterSelectScene()
 {
 }
 
-
 cCharacterSelectScene::~cCharacterSelectScene()
 {
 	m_pRoot->Destroy();
 	SAFE_RELEASE(m_pSprite);
 	m_pPlayer1->Destroy();
 	m_pPlayer2->Destroy();
+	SAFE_DELETE(m_pCamera);
 }
 
 void cCharacterSelectScene::Setup()
@@ -44,6 +44,7 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update(cCamera* camera)
 {
+	
 	m_pCamera = camera;
 	//첫 배경 알파값 업데이트
 	UpdateSetFirstBackground();
@@ -66,7 +67,6 @@ void cCharacterSelectScene::Render()
 	m_pRoot->Render(m_pSprite);
 	m_pPlayer1->Render(m_pSprite);
 	m_pPlayer2->Render(m_pSprite);
-
 }
 
 void cCharacterSelectScene::UpdateSetFirstBackground()
@@ -96,22 +96,16 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 	cUIImageView* p1Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
 	cUIImageView* p2Text = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
 
-
 	cUITextView* text = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
 	if (PtInRect(&text->Getrc(), g_ptMouse)) text->SetTextColor(D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f));
 	else                            text->SetTextColor(D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f));
 
-	//g_pData->m_nPlayerNum2P = 2;
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
 	{
 		cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 		cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 		cUITextView* pExplain = (cUITextView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
-		
-		///-------------------------------------------------------------
-		//                     1p, 2p정하기
-		///-------------------------------------------------------------
 
 		///-------------------------------------------------------------
 		//                  1번 플레이어 선택시
@@ -136,6 +130,16 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//내 화살표 띄우기
 			p1Text->SetIsHidden(false);
 			p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
+
+			//플레이어 정하기
+			if (g_pData->m_nPlayerNum2P == 0)
+			{
+				g_pData->SetPlayerNum(1);
+			}
+			else
+			{
+				g_pData->SetPlayerNum(2);
+			}
 		}
 		///-------------------------------------------------------------
 		//                  2번 플레이어 선택시
@@ -160,6 +164,15 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			p1Text->SetIsHidden(false);
 			p1Text->SetPosition(D3DXVECTOR3(205, -25, 0));
 			
+			//플레이어 정하기
+			if (g_pData->m_nPlayerNum2P == 0)
+			{
+				g_pData->SetPlayerNum(1);
+			}
+			else
+			{
+				g_pData->SetPlayerNum(2);
+			}
 		}
 
 		///-------------------------------------------------------------
@@ -176,14 +189,8 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			//같은 플레이어 선택중이라면 게임시작 안됨
 			if (g_pData->m_nPlayerNum1P == g_pData->m_nPlayerNum2P)
 			{
-				if (g_pData->GetPlayerNum() == 1)
-				{
-					g_pData->TextOutWarningWord("플레이어2와 다른 캐릭을 선택해 주세요.");
-				}
-				else if (g_pData->GetPlayerNum() == 2)
-				{
-					g_pData->TextOutWarningWord("플레이어1과 다른 캐릭을 선택해 주세요.");
-				}
+				g_pData->TextOutWarningWord("상대방과 다른 캐릭을 선택해 주세요.");
+
 				return;
 			}
 
@@ -191,7 +198,6 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pSoundManager->Play("LoadingScene", 1.0f);
 			m_pCamera->ReTarget(&m_vRetargetPos);
 			m_isDeleteBackground = true;
-			// << : 여기서 초기화 및 좌표 전송하게 변경해야함
 		}
 
 
@@ -261,7 +267,6 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		nImage++;
 		Time = 0;
 
-
 		switch (nImage)
 		{
 		case 1:
@@ -330,7 +335,6 @@ void cCharacterSelectScene::DeleteBackground()
 
 
 }
-
 
 void cCharacterSelectScene::SetBackground()
 {

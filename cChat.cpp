@@ -33,7 +33,7 @@ void cChat::Update()
 
 void cChat::Render()
 {
-	//렌더
+	//자신이 치는 채팅 렌더
 	RenderChat();
 
 	if (m_pRoot) m_pRoot->Render(m_pSprite);
@@ -54,7 +54,7 @@ void cChat::ChatOnOff()
 	//현재 채팅 푸쉬
 	if (!g_pData->m_listChat_RECV.empty())
 	{
-		chat->PushChat(g_pData->m_listChat_RECV.front());
+		chat->PushChat(g_pData->m_listChat_RECV.front(), false);
 		g_pData->m_listChat_RECV.pop_front();
 	}
 
@@ -79,7 +79,7 @@ void cChat::ChatOnOff()
 			g_pData->Chat(m_strChat);
 
 			//현재 채팅 푸쉬
-			chat->PushChat(m_strChat);
+			chat->PushChat(m_strChat, true);
 		}
 		//채팅 켰을 때
 		else
@@ -91,29 +91,52 @@ void cChat::ChatOnOff()
 	}
 }
 
-//채팅 렌더
+//자신이 치는 채팅 렌더
 void cChat::RenderChat()
 {
 	if (!g_pData->GetIsOnChat()) return;
 	//이름 렌더
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
-	D3DXCOLOR color;
-	if (g_pData->m_nPlayerNum1P == 1)
+	if (g_pData->GetIsStartedGame())
 	{
-		color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
-		m_strChat = "우석: " + m_strChat;
-	}
-	else if (g_pData->m_nPlayerNum1P == 2)
-	{
-		m_strChat = "가희: " + m_strChat;
-		color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+		D3DXCOLOR color;
+		if (g_pData->m_nPlayerNum1P == 1)
+		{
+			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+			m_strChat = "우석: " + m_strChat;
+		}
+		else if (g_pData->m_nPlayerNum1P == 2)
+		{
+			m_strChat = "가희: " + m_strChat;
+			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+		}
+		else
+		{
+			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+		}
+		g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 	}
 	else
 	{
-		color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+		D3DXCOLOR color;
+		if (g_pData->GetPlayerNum() == 1)
+		{
+			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+			
+		}
+		else if (g_pData->GetPlayerNum() == 2)
+		{
+			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+		}
+		else
+		{
+			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+		}
+		g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 	}
-	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
+
+	
 }
 
 //백그라운드 설정
@@ -145,6 +168,10 @@ void cChat::SetChildWindow()
 	g_pFontManager->CreateFont2D(m_fontName, CHATWORDWIDTH, CHATWORDHEIGHT, 900);
 }
 
+
+///
+// 소켓용
+///
 
 void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 {

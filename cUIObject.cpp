@@ -16,7 +16,6 @@ cUIObject::cUIObject()
 
 cUIObject::~cUIObject()
 {
-	//Destroy();
 }
 
 void cUIObject::SetPosition(float x, float y, float z)
