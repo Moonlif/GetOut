@@ -1,6 +1,6 @@
 #pragma once
 
-class MonsterManager;
+class cUIObject;
 
 class cEnding
 {
@@ -9,6 +9,10 @@ public:
 	~cEnding();
 
 private:
+	cUIObject*		m_pRoot;
+	LPD3DXSPRITE	m_pSprite;
+
+	string			m_pText;
 
 public:
 	void Setup();

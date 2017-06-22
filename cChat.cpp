@@ -69,8 +69,7 @@ void cChat::ChatOnOff()
 			if (g_pData->GetPlayerNum() == 1)
 			{
 				if (m_nMyChat == 0) m_nMyChat = 2;
-				else m_nMyChat = 1;
-				
+				else m_nMyChat = 1;				
 			}
 			else if (g_pData->GetPlayerNum() == 2)
 			{

@@ -164,6 +164,8 @@ enum eUITAG
 	INVENTORY_TEXT_COMBINE,
 
 	CHAT_TEXT1,
+
+	ENDING_TEXT,
 };
 
 enum eButtonTag
