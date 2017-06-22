@@ -88,22 +88,41 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 		D3DXCOLOR color;
 		string str;
 
-		if (m_vChat[i].gender == 1)
+		//플레이중에는 사람에 따라 색이 다름
+		if (g_pData->GetIsStartedGame())
 		{
-			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, m_vChat[i].alpha);
-			str = "우석: " + m_vChat[i].strChat;
+			if (m_vChat[i].gender == 1)
+			{
+				color = D3DXCOLOR(0.9f, 0.5f, 0.5f, m_vChat[i].alpha);
+				str = "우석: " + m_vChat[i].strChat;
+			}
+			else if (m_vChat[i].gender == 2)
+			{
+				str = "가희: " + m_vChat[i].strChat;
+				color = D3DXCOLOR(0.5f, 0.5f, 0.9f, m_vChat[i].alpha);
+			}
+			else
+			{
+				str = m_vChat[i].strChat;
+				color = D3DXCOLOR(0.5f, 0.9f, 0.5f, m_vChat[i].alpha);
+			}
 		}
-		else if (m_vChat[i].gender == 2)
-		{
-			str = "가희: " + m_vChat[i].strChat;
-			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, m_vChat[i].alpha);
-		}
+		//시작안했을땐 플레이어 넘버에 따라 채팅색갈이 다름
 		else
 		{
-			str = m_vChat[i].strChat;
-			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, m_vChat[i].alpha);
+			if (g_pData->GetPlayerNum() == 1)
+			{
+				color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+			}
+			else if (g_pData->GetPlayerNum() == 2)
+			{
+				color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+			}
+			else
+			{
+				color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+			}
 		}
-
 		g_pFontManager->TextOut2D(m_pFont, str, rc, color);
 	}
 
