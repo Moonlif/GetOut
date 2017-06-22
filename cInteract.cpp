@@ -260,6 +260,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 	switch (stuffCode)
 	{
 	case STUFF_DOOR_PRISON:
+	{
 		if (g_pData->GetUseItem() == STUFF_KEY1)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] = true;
@@ -271,14 +272,18 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->TextOutWarningWord(string("'감옥 열쇠'가 필요합니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_DOOR_1STROOM:
+	{
 		g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] = true;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		m_vecStuff[STUFF_DOOR_1STROOM]->SetRadius(0.01f);
 		g_pSoundManager->Play("door_prison", 0.5f);
-		return true;
+	}
+	return true;
 	case STUFF_DOOR_1STTOILET:
+	{
 		if (g_pData->GetUseItem() == STUFF_KEY2)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] = true;
@@ -290,8 +295,10 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->TextOutWarningWord(string("'1층 열쇠'가 필요합니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_DOOR_FINAL:
+	{
 		if (g_pData->GetUseItem() == STUFF_KEY3)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] = true;
@@ -303,8 +310,10 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->TextOutWarningWord(string("'현관 열쇠'가 필요합니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_BOARDBLOCK:
+	{
 		if (g_pData->GetUseItem() == STUFF_CROWBAR)
 		{
 			if (g_pData->m_nPlayerNum1P == 1)
@@ -329,8 +338,10 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_BOARDBLOCK]->SetRadius(0.01f);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_BOX1:
+	{
 		if (g_pData->m_nPlayerNum1P == 1)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_BASEMENT_BOX1] = true;
@@ -342,13 +353,17 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			g_pData->TextOutWarningWord(string("상자를 밀기에는 힘이 모자랍니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_CHEST3:
+	{
 		g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST] = true;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		m_vecStuff[STUFF_CHEST3]->SetRadius(0.01f);
-		return true;
+	}
+	return true;
 	case STUFF_WOODBOARD1:
+	{
 		if (m_vecStuff[STUFF_WOODBOARD1]->GetPosition().x > -32 && g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] == true)
 		{
 			g_pData->m_vStuffPosition[SWITCH_FIRSTFLOOR_WOODBOARD1] = m_vecStuff[STUFF_WOODBOARD1]->GetPosition() + D3DXVECTOR3(-9, 0, 0);
@@ -359,16 +374,20 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			}
 			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_WOODBOARD2:
+	{
 		if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true)
 		{
 			g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_WOODBOARD2] = true;
 			g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 			m_vecStuff[STUFF_WOODBOARD2]->SetRadius(0.01f);
 		}
-		return true;
+	}
+	return true;
 	case STUFF_VALVE1:
+	{
 		if (m_vecStuff[STUFF_VALVE1]->GetSwitch()) return true;;
 		g_pData->SetValve1(true);
 		int temp = g_pData->GetValve1Count();
@@ -388,13 +407,15 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		}
 		else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = false;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
-		return true;
+	}
+	return true;
 	case STUFF_VALVE2:
-		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return true;;
+	{
+		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return true;
 		g_pData->SetValve2(true);
-		int temp = g_pData->GetValve2Count();
-		if (lButton) g_pData->SetValve2Count(temp - 1);
-		else g_pData->SetValve2Count(temp + 1);
+		int temp2 = g_pData->GetValve2Count();
+		if (lButton) g_pData->SetValve2Count(temp2 - 1);
+		else g_pData->SetValve2Count(temp2 + 1);
 
 		if (g_pData->GetValve2Count() <= -4)
 		{
@@ -409,59 +430,85 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		}
 		else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = false;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
-		return true;
+	}
+	return true;
 	case STUFF_CROWBAR:
+	{
 		g_pData->GetItem(STUFF_CROWBAR);
 		g_pData->TextOutWarningWord(string("'빠루'를 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_PAPER1:
+	{
 		if (g_pData->m_bStuffSwitch[SWITCH_BASEMENT_CHEST])
 		{
 			g_pData->GetItem(STUFF_PAPER1);
 			g_pData->TextOutWarningWord(string("'힌트1(Academy)'을 얻었습니다."));
 		}
-		return true;
+	}
+	return true;
 	case STUFF_PAPER2:
+	{
 		g_pData->GetItem(STUFF_PAPER2);
 		g_pData->TextOutWarningWord(string("'힌트2(Game)'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_PAPER3:
+	{
 		g_pData->GetItem(STUFF_PAPER3);
 		g_pData->TextOutWarningWord(string("'힌트3(Seoul)'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_KEY1:
+	{
 		g_pData->GetItem(STUFF_KEY1);
 		g_pData->TextOutWarningWord(string("'감옥 열쇠'를 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_KEY2:
+	{
 		g_pData->GetItem(STUFF_KEY2);
 		g_pData->TextOutWarningWord(string("'1층 열쇠'를 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_KEY3:
+	{
 		g_pData->GetItem(STUFF_KEY3);
 		g_pData->TextOutWarningWord(string("'현관 열쇠'를 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_BRICK1:
+	{
 		g_pData->GetItem(STUFF_BRICK1);
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_BRICK2:
+	{
 		g_pData->GetItem(STUFF_BRICK2);
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_BRICK3:
+	{
 		g_pData->GetItem(STUFF_BRICK3);
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_BRICK4:
+	{
 		g_pData->GetItem(STUFF_BRICK4);
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_BRICK5:
+	{
 		g_pData->GetItem(STUFF_BRICK5);
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		return true;
+	}
+	return true;
 	case STUFF_BRICKPILE:
+	{
 		if (g_pData->GetBrickCount() >= 5)
 		{
 			m_vecStuff[STUFF_BRICKPILE]->SetRadius(0.01f);
@@ -469,9 +516,10 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		}
 		g_pData->GetItem(StuffCode(STUFF_BRICK1 + g_pData->m_nBrickCount));
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		int temp = g_pData->GetBrickCount();
-		g_pData->SetBrickCount(temp + 1);
-		return true;
+		int temp3 = g_pData->GetBrickCount();
+		g_pData->SetBrickCount(temp3 + 1);
+	}
+	return true;
 	}
 
 	return false;
