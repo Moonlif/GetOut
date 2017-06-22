@@ -89,20 +89,22 @@ void cMainGame::Update()
 
 	if (m_pCamera) m_pCamera->Update();
 	{
-		//map
-
-		//character
-		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update(m_pMap);
-		static bool start = false;
-		if (g_pData->GetIsStartedGame() && start == false)
+		if (!g_pData->GetIsEnding())
 		{
-			start = true;
-			m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
-		}
-		if (m_pParticleManager && g_pData->GetIsStartedGame())  m_pParticleManager->Update();
+			//character
+			if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Update(m_pMap);
+			static bool start = false;
+			if (g_pData->GetIsStartedGame() && start == false)
+			{
+				start = true;
+				m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
+			}
+			if (m_pParticleManager && g_pData->GetIsStartedGame())  m_pParticleManager->Update();
 
-		//interact
-		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
+			//interact
+			if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Update();
+		}
+
 
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Update(m_pCamera);
@@ -117,17 +119,20 @@ void cMainGame::Render()
 
 	//코드 추가
 	{
-		//map
-		if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
+		if (!g_pData->GetIsEnding())
+		{
+			//map
+			if (m_pMap && g_pData->GetIsStartedGame()) m_pMap->Render();
 
-		//character
-		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
-		if (m_pSkybox && g_pData->GetIsStartedGame()) m_pSkybox->Render();
-		if (m_pParticleManager && g_pData->GetIsStartedGame()) m_pParticleManager->Render();
+			//character
+			if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
+			if (m_pSkybox && g_pData->GetIsStartedGame()) m_pSkybox->Render();
+			if (m_pParticleManager && g_pData->GetIsStartedGame()) m_pParticleManager->Render();
 
-		//interact stuff
-		if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
+			//interact stuff
+			if (m_pInteract && g_pData->GetIsStartedGame()) m_pInteract->Render();
 
+		}
 		//ui
 		if (m_pTotalUIRender) m_pTotalUIRender->Render();
 

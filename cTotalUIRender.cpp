@@ -78,16 +78,6 @@ void cTotalUIRender::Update(cCamera* camera)
 
 	}
 
-	if (GetAsyncKeyState('0') & 0x0001)
-	{
-		SetItem(StuffCode::STUFF_BRICK1);
-		SetItem(StuffCode::STUFF_BRICK2);
-		SetItem(StuffCode::STUFF_KEY1);
-		SetItem(StuffCode::STUFF_PAPER3);
-		SetItem(StuffCode::STUFF_PAPER2);
-		SetItem(StuffCode::STUFF_PAPER1);
-	}
-
 	if (g_pData->GetIsLoadItem())
 	{
 		m_pInventory->LoadInvenInfo();
