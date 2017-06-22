@@ -79,6 +79,11 @@ cSocketManager::cSocketManager()
 	, m_pPlMan(NULL)
 	, m_pPlWoman(NULL)
 	, IsRun(false)
+	, bValve1(false)
+	, bValve2(false)
+	, nFValve1Count(0)
+	, nFValve2Count(0)
+	, nBrickCount(0)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -122,7 +127,6 @@ void cSocketManager::Destroy()
 	SAFE_DELETE(m_pTextBox);
 	SAFE_RELEASE(m_pSprite);
 
-	hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
 	CloseHandle(hChatSend);
 	CloseHandle(hChatRecv);
 	CloseHandle(hDataRecv_Serv);
