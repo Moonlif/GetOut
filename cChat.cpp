@@ -105,6 +105,8 @@ void cChat::RenderChat()
 		{
 			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
 			m_strChat = "¿ì¼®: " + m_strChat;
+
+			
 		}
 		else if (g_pData->m_nPlayerNum1P == 2)
 		{
@@ -120,11 +122,8 @@ void cChat::RenderChat()
 	else
 	{
 		D3DXCOLOR color;
-		if (g_pData->GetPlayerNum() == 1)
-		{
-			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
-			
-		}
+		if (g_pData->GetPlayerNum() == 1)	color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+		
 		else if (g_pData->GetPlayerNum() == 2)
 		{
 			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
