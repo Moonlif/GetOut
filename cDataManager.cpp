@@ -297,3 +297,83 @@ void cDataManager::AddSound()
 
 	}
 }
+
+bool cDataManager::GetValve1()
+{
+	bool ValveStatus;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	ValveStatus = m_bValve1;
+	ReleaseMutex(g_hMutex_DATA);
+	return ValveStatus;
+}
+
+bool cDataManager::GetValve2()
+{
+	bool ValveStatus;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	ValveStatus = m_bValve2;
+	ReleaseMutex(g_hMutex_DATA);
+	return ValveStatus;
+}
+
+int cDataManager::GetValve1Count()
+{
+	int ValveCount;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	ValveCount = m_n2FValve1Count;
+	ReleaseMutex(g_hMutex_DATA);
+	return ValveCount;
+}
+
+int cDataManager::GetValve2Count()
+{
+	int ValveCount;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	ValveCount = m_n2FValve2Count;;
+	ReleaseMutex(g_hMutex_DATA);
+	return ValveCount;
+}
+
+int cDataManager::GetBrickCount()
+{
+	int BrickCount;
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	BrickCount = m_nBrickCount;
+	ReleaseMutex(g_hMutex_DATA);
+	return BrickCount;
+}
+
+void cDataManager::SetValve1(bool bValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	g_pData->m_bValve1 = bValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+void cDataManager::SetValve2(bool bValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	g_pData->m_bValve2 = bValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+void cDataManager::SetValve1Count(int nValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	g_pData->m_n2FValve1Count = nValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+void cDataManager::SetValve2Count(int nValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	g_pData->m_n2FValve2Count = nValue;
+	ReleaseMutex(g_hMutex_DATA);
+}
+
+void cDataManager::SetBrickCount(int nValue)
+{
+	WaitForSingleObject(g_hMutex_DATA, INFINITE);
+	g_pData->m_nBrickCount = nValue;
+	ReleaseMutex(g_hMutex_DATA);
+}

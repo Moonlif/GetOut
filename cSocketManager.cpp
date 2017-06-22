@@ -395,11 +395,11 @@ void cSocketManager::UpdateObjectData()
 		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
 		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
 	}
-	g_pData->m_bValve1 = bValve1;
-	g_pData->m_bValve2 = bValve2;
-	g_pData->m_n2FValve1Count = nFValve1Count;
-	g_pData->m_n2FValve2Count = nFValve2Count;
-	g_pData->m_nBrickCount = nBrickCount;
+	g_pData->SetValve1(bValve1);
+	g_pData->SetValve2(bValve2);
+	g_pData->SetValve1Count(nFValve1Count);
+	g_pData->SetValve2Count(nFValve2Count);
+	g_pData->SetBrickCount(nBrickCount);
 	
 }
 
@@ -756,11 +756,11 @@ void SendObjectData(SOCKET* pSocket)
 		stData.mapRotZ[i] = Rotation.z;
 		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
 	}
-	stData.bValve1 = g_pData->m_bValve1;
-	stData.bValve2 = g_pData->m_bValve2;
-	stData.nFValve1Count = g_pData->m_n2FValve1Count;
-	stData.nFValve2Count = g_pData->m_n2FValve2Count;
-	stData.nBrickCount = g_pData->m_nBrickCount;
+	stData.bValve1 = g_pData->GetValve1();
+	stData.bValve2 = g_pData->GetValve2();
+	stData.nFValve1Count = g_pData->GetValve1Count();
+	stData.nFValve2Count = g_pData->GetValve2Count();
+	stData.nBrickCount = g_pData->GetBrickCount();
 	
 	send(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
 }

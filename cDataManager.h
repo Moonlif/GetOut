@@ -39,6 +39,14 @@ private:
 	D3DXVECTOR3 m_vPosition1P;
 	float m_vRotation1P;
 	animationState m_eAnimState1P;
+
+	//정훈 - 밸브 상태 및 벽돌 개수
+	bool m_bValve1;									//2층 Valve1을 클릭했는지
+	bool m_bValve2;									//2층 Valve2을 클릭했는지
+	int m_n2FValve1Count;							//2층 Valve1의 로테이션 값 (범위: -4 ~ 4)
+	int m_n2FValve2Count;							//2층 Valve2의 로테이션 값 (범위: -4 ~ 4)
+	int m_nBrickCount;								//1층 벽돌무더기에서 벽돌을 몇개 가져갔는지
+
 public:
 	//정훈 - 오브젝트용
 	bool m_isHandOn;
@@ -49,11 +57,6 @@ public:
 	bool m_bStuffSwitch[SWITCH_LASTNUM];			//아이템일 경우 맵에 있는게 true
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
-	bool m_bValve1;									//2층 Valve1을 클릭했는지
-	bool m_bValve2;									//2층 Valve2을 클릭했는지
-	int m_n2FValve1Count;							//2층 Valve1의 로테이션 값 (범위: -4 ~ 4)
-	int m_n2FValve2Count;							//2층 Valve2의 로테이션 값 (범위: -4 ~ 4)
-	int m_nBrickCount;								//1층 벽돌무더기에서 벽돌을 몇개 가져갔는지
 
 	//지상 - 채팅
 	list<string> m_listChat_RECV;
@@ -87,5 +90,17 @@ public:
 	void Set1PAnimation(animationState stValue);
 
 	void AddSound();
+
+	bool GetValve1();
+	bool GetValve2();
+	int GetValve1Count();
+	int GetValve2Count();
+	int GetBrickCount();
+
+	void SetValve1(bool bValue);
+	void SetValve2(bool bValue);
+	void SetValve1Count(int nValue);
+	void SetValve2Count(int nValue);
+	void SetBrickCount(int nValue);
 };
 
