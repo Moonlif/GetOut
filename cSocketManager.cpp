@@ -756,6 +756,12 @@ void SendObjectData(SOCKET* pSocket)
 		stData.mapRotZ[i] = Rotation.z;
 		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
 	}
+	stData.bValve1 = g_pData->m_bValve1;
+	stData.bValve2 = g_pData->m_bValve2;
+	stData.nFValve1Count = g_pData->m_n2FValve1Count;
+	stData.nFValve2Count = g_pData->m_n2FValve2Count;
+	stData.nBrickCount = g_pData->m_nBrickCount;
+	
 	send(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
 }
 
