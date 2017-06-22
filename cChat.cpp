@@ -99,18 +99,16 @@ void cChat::ChatOnOff()
 void cChat::RenderChat()
 {
 	if (!g_pData->GetIsOnChat()) return;
+	D3DXCOLOR color;
 	//이름 렌더
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
 	if (g_pData->GetIsStartedGame())
 	{
-		D3DXCOLOR color;
 		if (g_pData->m_nPlayerNum1P == 1)
 		{
 			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
-			m_strChat = "우석: " + m_strChat;
-
-			
+			m_strChat = "우석: " + m_strChat;		
 		}
 		else if (g_pData->m_nPlayerNum1P == 2)
 		{
@@ -120,14 +118,14 @@ void cChat::RenderChat()
 		else
 		{
 			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
-		}
-		g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
+		}	
 	}
 	else
 	{
-		D3DXCOLOR color;
-		if (g_pData->GetPlayerNum() == 1)	color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
-		
+		if (g_pData->GetPlayerNum() == 1)
+		{
+			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+		}
 		else if (g_pData->GetPlayerNum() == 2)
 		{
 			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
@@ -136,10 +134,9 @@ void cChat::RenderChat()
 		{
 			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
 		}
-		g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 	}
 
-	
+	g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 }
 
 //백그라운드 설정
