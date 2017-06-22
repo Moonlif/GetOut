@@ -25,7 +25,6 @@ cCharacterSelectScene::~cCharacterSelectScene()
 	SAFE_RELEASE(m_pSprite);
 	m_pPlayer1->Destroy();
 	m_pPlayer2->Destroy();
-	SAFE_DELETE(m_pCamera);
 }
 
 void cCharacterSelectScene::Setup()
