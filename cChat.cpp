@@ -7,6 +7,7 @@ cChat::cChat()
 	:m_hWndNaming(NULL)
 	, m_pRoot(NULL)
 	, m_pSprite(NULL)
+	, m_IsMyChat(false)
 {
 }
 
@@ -54,8 +55,11 @@ void cChat::ChatOnOff()
 	//현재 채팅 푸쉬
 	if (!g_pData->m_listChat_RECV.empty())
 	{
-		chat->PushChat(g_pData->m_listChat_RECV.front(), false);
+		
+		chat->PushChat(g_pData->m_listChat_RECV.front(), m_IsMyChat);
 		g_pData->m_listChat_RECV.pop_front();
+
+		m_IsMyChat = false;
 	}
 
 	if (GetAsyncKeyState(VK_RETURN) & 0x0001)
@@ -78,8 +82,8 @@ void cChat::ChatOnOff()
 			//서버로 데이터 전송
 			g_pData->Chat(m_strChat);
 
-			//현재 채팅 푸쉬
-			chat->PushChat(m_strChat, true);
+			//내챗!
+			m_IsMyChat = true;
 		}
 		//채팅 켰을 때
 		else
@@ -168,9 +172,9 @@ void cChat::SetChildWindow()
 }
 
 
-///
+///---------------------------------------------------
 // 소켓용
-///
+///----------------------------------------------------
 
 void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 {

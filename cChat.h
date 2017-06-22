@@ -16,6 +16,7 @@ private:
 
 	cUIObject*				m_pRoot;
 	LPD3DXSPRITE			m_pSprite;
+	bool					m_IsMyChat;
 public:
 	void Setup();
 	void Setup(int nHandle, int startX, int startY, int Width, int Height);
