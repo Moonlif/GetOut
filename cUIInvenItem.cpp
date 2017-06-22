@@ -27,8 +27,6 @@ cUIInvenItem::cUIInvenItem(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 
 cUIInvenItem::~cUIInvenItem()
 {
-	SAFE_RELEASE(m_pTexture);
-	SAFE_RELEASE(m_pItemTexture);
 }
 
 void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
