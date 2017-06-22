@@ -98,13 +98,13 @@ void cInteract::Update()
 		m_vecStuff[STUFF_TRAP]->Reposition(D3DXVECTOR3(-38, 12, 18.5f), D3DXVECTOR3(0, 0, -D3DX_PI / 2.0f));
 	if (g_pData->m_bValve1)
 	{
-		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve1Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
+		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)(g_pData->m_n2FValve1Count * D3DX_PI / 2.0f), D3DX_PI / 2.0f, 0));
 		g_pData->m_bValve1 = false;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 	}
 	if (g_pData->m_bValve2)
 	{
-		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)g_pData->m_n2FValve2Count * D3DX_PI / 2.0f, D3DX_PI / 2.0f, 0));
+		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)(g_pData->m_n2FValve2Count * D3DX_PI / 2.0f), D3DX_PI / 2.0f, 0));
 		g_pData->m_bValve2 = false;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 	}
@@ -314,7 +314,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			}
 			else
 			{
-				g_pData->TextOutWarningWord(string("빠루 사용하기에 STR이 부족합니다."));
+				g_pData->TextOutWarningWord(string("빠루 사용하기에 힘이 부족합니다."));
 				g_pSoundManager->Play("cancle", 0.5f);
 			}
 		}
@@ -339,7 +339,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		}
 		else
 		{
-			g_pData->TextOutWarningWord(string("상자를 밀기에는 STR이 모자랍니다."));
+			g_pData->TextOutWarningWord(string("상자를 밀기에는 힘이 모자랍니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
 		return true;
