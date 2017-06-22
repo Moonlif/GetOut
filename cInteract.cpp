@@ -314,7 +314,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 			}
 			else
 			{
-				g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+				g_pData->TextOutWarningWord(string("빠루 사용하기에 STR이 부족합니다."));
 				g_pSoundManager->Play("cancle", 0.5f);
 			}
 		}
@@ -339,7 +339,7 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		}
 		else
 		{
-			g_pData->TextOutWarningWord(string("여자가 하기엔 힘이 모자랍니다."));
+			g_pData->TextOutWarningWord(string("상자를 밀기에는 STR이 모자랍니다."));
 			g_pSoundManager->Play("cancle", 0.5f);
 		}
 		return true;
