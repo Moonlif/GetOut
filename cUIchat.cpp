@@ -110,13 +110,12 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 		//시작안했을땐 플레이어 넘버에 따라 채팅색갈이 다름
 		else
 		{
-
-			if (g_pData->GetPlayerNum() == 1)
+			if (m_vChat[i].gender == 1)
 			{
 				color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
 				str = m_vChat[i].strChat;
 			}
-			else if (g_pData->GetPlayerNum() == 2)
+			else if (m_vChat[i].gender == 2)
 			{
 				color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
 				str = m_vChat[i].strChat;
@@ -135,9 +134,8 @@ void cUIchat::Render(LPD3DXSPRITE pSprite)
 	cUIObject::Render(pSprite);
 }
 
-void cUIchat::PushChat(string str, bool IsYou)
+void cUIchat::PushChat(string str, int Gender)
 {
-	
 
 	for (int i = CHATSIZE - 1; i > 0; --i)
 	{
@@ -148,7 +146,6 @@ void cUIchat::PushChat(string str, bool IsYou)
 	m_vChat[0].strChat = str;
 	m_vChat[0].time = CHATTIME;
 	m_vChat[0].alpha = 1.0f;
+	m_vChat[0].gender = Gender;
 
-	if (IsYou) m_vChat[0].gender = g_pData->m_nPlayerNum1P;
-	else m_vChat[0].gender = g_pData->m_nPlayerNum2P;
 }
