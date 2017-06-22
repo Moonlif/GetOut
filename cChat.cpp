@@ -119,7 +119,21 @@ void cChat::RenderChat()
 	}
 	else
 	{
-
+		D3DXCOLOR color;
+		if (g_pData->GetPlayerNum() == 1)
+		{
+			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
+			
+		}
+		else if (g_pData->GetPlayerNum() == 2)
+		{
+			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
+		}
+		else
+		{
+			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
+		}
+		g_pFontManager->TextOut2D(m_fontName, m_strChat, rc, color);
 	}
 
 	
