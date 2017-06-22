@@ -96,16 +96,16 @@ void cInteract::Update()
 		m_vecStuff[STUFF_CHEST3]->Reposition(D3DXVECTOR3(10, 6, 18), D3DXVECTOR3(0, -D3DX_PI / 2.0f, -D3DX_PI / 2.0f));
 	if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] && m_vecStuff[STUFF_TRAP]->GetSwitch() == false)
 		m_vecStuff[STUFF_TRAP]->Reposition(D3DXVECTOR3(-38, 12, 18.5f), D3DXVECTOR3(0, 0, -D3DX_PI / 2.0f));
-	if (g_pData->m_bValve1)
+	if (g_pData->GetValve1())
 	{
-		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)(g_pData->m_n2FValve1Count * D3DX_PI / 2.0f), D3DX_PI / 2.0f, 0));
-		g_pData->m_bValve1 = false;
+		m_vecStuff[STUFF_VALVE1]->Reposition(m_vecStuff[STUFF_VALVE1]->GetPosition(), D3DXVECTOR3((float)(g_pData->GetValve1Count() * D3DX_PI / 2.0f), D3DX_PI / 2.0f, 0));
+		g_pData->SetValve1(false);
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 	}
-	if (g_pData->m_bValve2)
+	if (g_pData->GetValve2())
 	{
-		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)(g_pData->m_n2FValve2Count * D3DX_PI / 2.0f), D3DX_PI / 2.0f, 0));
-		g_pData->m_bValve2 = false;
+		m_vecStuff[STUFF_VALVE2]->Reposition(m_vecStuff[STUFF_VALVE2]->GetPosition(), D3DXVECTOR3((float)(g_pData->GetValve2Count() * D3DX_PI / 2.0f), D3DX_PI / 2.0f, 0));
+		g_pData->SetValve2(false);
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 	}
 	if (m_vecStuff[STUFF_WOODBOARD1]->GetSwitch() == false)
@@ -370,38 +370,44 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		return true;
 	case STUFF_VALVE1:
 		if (m_vecStuff[STUFF_VALVE1]->GetSwitch()) return true;;
-		g_pData->m_bValve1 = true;
-		if (lButton) g_pData->m_n2FValve1Count--;
-		else g_pData->m_n2FValve1Count++;
-		if (g_pData->m_n2FValve1Count >= 4)
+		g_pData->SetValve1(true);
+		int temp = g_pData->GetValve1Count();
+		if (lButton) g_pData->SetValve1Count(temp - 1);
+		else g_pData->SetValve1Count(temp + 1);
+
+		if (g_pData->GetValve1Count() >= 4)
 		{
-			g_pData->m_n2FValve1Count = 4;
+			g_pData->SetValve1Count(4);
 			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = true;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		else if (g_pData->m_n2FValve1Count < -4)
+		else if (g_pData->GetValve1Count() < -4)
 		{
-			g_pData->m_n2FValve1Count = -4;
+			g_pData->SetValve1Count(-4);
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
+		else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE1] = false;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		return true;
 	case STUFF_VALVE2:
 		if (m_vecStuff[STUFF_VALVE2]->GetSwitch()) return true;;
-		g_pData->m_bValve2 = true;
-		if (lButton) g_pData->m_n2FValve2Count--;
-		else g_pData->m_n2FValve2Count++;
-		if (g_pData->m_n2FValve2Count <= -4)
+		g_pData->SetValve2(true);
+		int temp = g_pData->GetValve2Count();
+		if (lButton) g_pData->SetValve2Count(temp - 1);
+		else g_pData->SetValve2Count(temp + 1);
+
+		if (g_pData->GetValve2Count() <= -4)
 		{
-			g_pData->m_n2FValve2Count = -4;
+			g_pData->SetValve2Count(-4);
 			g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = true;
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
-		else if (g_pData->m_n2FValve2Count > 4)
+		else if (g_pData->GetValve2Count() > 4)
 		{
-			g_pData->m_n2FValve2Count = 4;
+			g_pData->SetValve2Count(4);
 			g_pSoundManager->Play("2nd_valvelock", 0.5f);
 		}
+		else g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_VALVE2] = false;
 		g_pSocketmanager->AddFlag(FLAG::FLAG_OBJECT_DATA);
 		return true;
 	case STUFF_CROWBAR:
@@ -456,14 +462,15 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
 		return true;
 	case STUFF_BRICKPILE:
-		if (g_pData->m_nBrickCount >= 5)
+		if (g_pData->GetBrickCount() >= 5)
 		{
 			m_vecStuff[STUFF_BRICKPILE]->SetRadius(0.01f);
 			return true;
 		}
 		g_pData->GetItem(StuffCode(STUFF_BRICK1 + g_pData->m_nBrickCount));
 		g_pData->TextOutWarningWord(string("'벽돌'을 얻었습니다."));
-		g_pData->m_nBrickCount++;
+		int temp = g_pData->GetBrickCount();
+		g_pData->SetBrickCount(temp + 1);
 		return true;
 	}
 
