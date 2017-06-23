@@ -1,31 +1,6 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
-//쓰레드
-#include <process.h>
-unsigned __stdcall SetupPlayer(LPVOID lpParam)
-{
-	CharacterManager* pPlayer = (CharacterManager*)lpParam;
-	pPlayer->Setup();
-	g_nThreadCount++;
-	return 0;
-}
-unsigned __stdcall SetupInteract(LPVOID lpParam)
-{
-	g_pData->Setup();
-	cInteract* pInteract = (cInteract*)lpParam;
-	pInteract->Setup();
-	g_nThreadCount++;
-	return 0;
-}
-unsigned __stdcall SetupMap(LPVOID lpParam)
-{
-	cMap* pInteract = (cMap*)lpParam;
-	pInteract->Setup();
-	g_nThreadCount++;
-	return 0;
-}
-
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
@@ -76,21 +51,21 @@ void cMainGame::Setup()
 	//코드 추가
 	{
 		g_pData->AddSound();
-		//g_pData->Setup();
+		g_pData->Setup();
 
 		//character
 		m_pCharacter = new CharacterManager;
-		//m_pCharacter->Setup();
+		m_pCharacter->Setup();
 		m_pSkybox = new SkyBox;
 		m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
 
 		//map
 		m_pMap = new cMap;
-		//m_pMap->Setup();
+		m_pMap->Setup();
 
 		//interact
 		m_pInteract = new cInteract;
-		//m_pInteract->Setup();
+		m_pInteract->Setup();
 
 		//ui
 		m_pTotalUIRender = new cTotalUIRender;
@@ -101,16 +76,6 @@ void cMainGame::Setup()
 		D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f),	D3DXVECTOR3(-1, -1, -1));
 
 		m_pCamera->ReTarget(&m_pTotalUIRender->GetCamraStartPos());
-	}
-
-	//쓰레드
-	{
-		//player
-		thPlayerSetup = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*))SetupPlayer, m_pCharacter, 0, NULL);
-		//interact
-		thInteractSetup = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*))SetupInteract, m_pInteract, 0, NULL);
-		//map
-		thMapSetup = (HANDLE)_beginthreadex(NULL, 0, (unsigned(_stdcall*)(void*))SetupMap, m_pMap, 0, NULL);
 	}
 }
 

@@ -36,7 +36,6 @@ using namespace std;
 #define _CRT_SECURE_NO_WARNINGS
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
-
 #include <vector>
 #include <map>
 #include <set>
@@ -47,7 +46,6 @@ using namespace std;
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 
-using namespace std;
 
 #include <d3dx9.h>
 #pragma comment(lib, "d3d9.lib")
