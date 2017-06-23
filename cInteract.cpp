@@ -120,10 +120,10 @@ void cInteract::Update()
 		m_vecStuff[STUFF_BUTTON3]->Reposition(D3DXVECTOR3(-11.5f, 24, 14), D3DXVECTOR3(D3DX_PI, 0, 0));
 	if (g_pData->m_bStuffSwitch[SWITCH_SECONDFLOOR_BUTTON2] == false && m_vecStuff[STUFF_BUTTON3]->GetSwitch() == false)
 		m_vecStuff[STUFF_BUTTON3]->Reposition(D3DXVECTOR3(-11.5f, 24.5f, 14), D3DXVECTOR3(D3DX_PI, 0, 0));
-	
+
 	//open door
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_PRISON] && m_vecStuff[STUFF_DOOR_PRISON]->GetSwitch() == false)
-		m_vecStuff[STUFF_DOOR_PRISON]->Reposition(m_vecStuff[STUFF_DOOR_PRISON]->GetPosition(), D3DXVECTOR3(0, D3DX_PI/2.0f, 0));
+		m_vecStuff[STUFF_DOOR_PRISON]->Reposition(m_vecStuff[STUFF_DOOR_PRISON]->GetPosition(), D3DXVECTOR3(0, D3DX_PI / 2.0f, 0));
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STROOM] && m_vecStuff[STUFF_DOOR_1STROOM]->GetSwitch() == false)
 		m_vecStuff[STUFF_DOOR_1STROOM]->Reposition(m_vecStuff[STUFF_DOOR_1STROOM]->GetPosition(), D3DXVECTOR3(0, -D3DX_PI, 0));
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_1STTOILET] && m_vecStuff[STUFF_DOOR_1STTOILET]->GetSwitch() == false)
@@ -142,7 +142,11 @@ void cInteract::Update()
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] && m_vecStuff[STUFF_DOOR_FINAL]->GetSwitch() == false)
 		m_vecStuff[STUFF_DOOR_FINAL]->Reposition(m_vecStuff[STUFF_DOOR_FINAL]->GetPosition(), D3DXVECTOR3(0, D3DX_PI, 0), 0.01f);
 	if (g_pData->m_bStuffSwitch[SWITCH_DOOR_FINAL] && m_vecStuff[STUFF_DOOR_FINAL]->GetSwitch() == false)
+	{
+		g_pSoundManager->Stop("BackGround");
+		g_pSoundManager->Play("EndingScene", 1.0f);
 		g_pData->SetIsEnding(true);
+	}
 
 	//act button1 & button2 (on 2nd floor)
 	m_n2FButton1Count = 0;
@@ -465,6 +469,9 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 	{
 		g_pData->GetItem(STUFF_KEY1);
 		g_pData->TextOutWarningWord(string("'°¨¿Á ¿­¼è'¸¦ ¾ò¾ú½À´Ï´Ù."));
+		g_pSoundManager->Stop("BackGround");
+		g_pSoundManager->Play("EndingScene", 1.0f);
+		g_pData->SetIsEnding(true);
 	}
 	return true;
 	case STUFF_KEY2:
