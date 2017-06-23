@@ -47,7 +47,7 @@ void cTotalUIRender::Setup()
 	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
 
 	//경고 폰트 셋업
-	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 25, 500);
+	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 30, 500);
 }
 
 void cTotalUIRender::Update(cCamera* camera)

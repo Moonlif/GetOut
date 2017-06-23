@@ -36,7 +36,33 @@ void cDataManager::Setup()
 {
 
 	//사운드 추가
-	AddSound();
+	//정훈 사운드 정보
+	{
+		g_pSoundManager->AddSound("pick_generic", "Sound/EffectSound/Interaction/pick_generic.ogg", false, false);
+		g_pSoundManager->AddSound("pick_key", "Sound/EffectSound/Interaction/pick_key.ogg", false, false);
+		g_pSoundManager->AddSound("pick_knife", "Sound/EffectSound/Interaction/pick_knife.ogg", false, false);
+		g_pSoundManager->AddSound("pick_paper", "Sound/EffectSound/Interaction/pick_paper.ogg", false, false);
+
+		g_pSoundManager->AddSound("drop_key", "Sound/EffectSound/Interaction/25_drop_key.ogg", false, false);
+		g_pSoundManager->AddSound("drop_generic", "Sound/EffectSound/Interaction/pickaxe_charge.ogg", false, false);
+
+		g_pSoundManager->AddSound("door_prison", "Sound/EffectSound/Interaction/door_prison_open.ogg", false, false);
+		g_pSoundManager->AddSound("door_1stRoom", "Sound/EffectSound/Interaction/door_mansion_close.ogg", false, false);
+		g_pSoundManager->AddSound("door_2ndRoom1", "Sound/EffectSound/Interaction/01_door.ogg", false, false);
+		g_pSoundManager->AddSound("door_2ndRoom2", "Sound/EffectSound/Interaction/move_gate.ogg", false, false);
+		g_pSoundManager->AddSound("door_final", "Sound/EffectSound/Interaction/29_exit_door.ogg", false, false);
+
+		g_pSoundManager->AddSound("base_box", "Sound/EffectSound/Interaction/door_level_wood_close.ogg", false, false);
+		g_pSoundManager->AddSound("base_chest", "Sound/EffectSound/Interaction/gameplay_open_chest.ogg", false, false);
+		g_pSoundManager->AddSound("1st_wood1", "Sound/EffectSound/Interaction/16_ladder_down.ogg", false, false);
+		g_pSoundManager->AddSound("1st_wood2", "Sound/EffectSound/Interaction/04_place_wood.ogg", false, false);
+		g_pSoundManager->AddSound("1st_woodblock", "Sound/EffectSound/Interaction/18_touch_bridge1.ogg", false, false);
+		g_pSoundManager->AddSound("2nd_button", "Sound/EffectSound/Interaction/roll_rock.ogg", false, false);
+		g_pSoundManager->AddSound("2nd_valve", "Sound/EffectSound/Interaction/13_attach_wheel.ogg", false, false);
+		g_pSoundManager->AddSound("2nd_valvelock", "Sound/EffectSound/Interaction/12_valve_stuck.ogg", false, false);
+		g_pSoundManager->AddSound("cancle", "Sound/EffectSound/Interaction/cancle.mp3", false, false);
+
+	}
 
 	//정훈 - 충돌 오브젝트 정보
 	{
@@ -268,34 +294,8 @@ void cDataManager::AddSound()
 	//진호
 	g_pSoundManager->AddSound("break_wood", "Sound/EffectSound/break_wood.ogg", true, false);
 	g_pSoundManager->AddSound("BackGround", "Sound/BackGround/BackGround.ogg", true, true);
+	g_pSoundManager->AddSound("EndingScene", "Sound/Background/03_puzzle_secret.ogg", true, true);
 	
-	//정훈 사운드 정보
-	{
-		g_pSoundManager->AddSound("pick_generic", "Sound/EffectSound/Interaction/pick_generic.ogg", false, false);
-		g_pSoundManager->AddSound("pick_key", "Sound/EffectSound/Interaction/pick_key.ogg", false, false);
-		g_pSoundManager->AddSound("pick_knife", "Sound/EffectSound/Interaction/pick_knife.ogg", false, false);
-		g_pSoundManager->AddSound("pick_paper", "Sound/EffectSound/Interaction/pick_paper.ogg", false, false);
-
-		g_pSoundManager->AddSound("drop_key", "Sound/EffectSound/Interaction/25_drop_key.ogg", false, false);
-		g_pSoundManager->AddSound("drop_generic", "Sound/EffectSound/Interaction/pickaxe_charge.ogg", false, false);
-
-		g_pSoundManager->AddSound("door_prison", "Sound/EffectSound/Interaction/door_prison_open.ogg", false, false);
-		g_pSoundManager->AddSound("door_1stRoom", "Sound/EffectSound/Interaction/door_mansion_close.ogg", false, false);
-		g_pSoundManager->AddSound("door_2ndRoom1", "Sound/EffectSound/Interaction/01_door.ogg", false, false);
-		g_pSoundManager->AddSound("door_2ndRoom2", "Sound/EffectSound/Interaction/move_gate.ogg", false, false);
-		g_pSoundManager->AddSound("door_final", "Sound/EffectSound/Interaction/29_exit_door.ogg", false, false);
-
-		g_pSoundManager->AddSound("base_box", "Sound/EffectSound/Interaction/door_level_wood_close.ogg", false, false);
-		g_pSoundManager->AddSound("base_chest", "Sound/EffectSound/Interaction/gameplay_open_chest.ogg", false, false);
-		g_pSoundManager->AddSound("1st_wood1", "Sound/EffectSound/Interaction/16_ladder_down.ogg", false, false);
-		g_pSoundManager->AddSound("1st_wood2", "Sound/EffectSound/Interaction/04_place_wood.ogg", false, false);
-		g_pSoundManager->AddSound("1st_woodblock", "Sound/EffectSound/Interaction/18_touch_bridge1.ogg", false, false);
-		g_pSoundManager->AddSound("2nd_button", "Sound/EffectSound/Interaction/roll_rock.ogg", false, false);
-		g_pSoundManager->AddSound("2nd_valve", "Sound/EffectSound/Interaction/13_attach_wheel.ogg", false, false);
-		g_pSoundManager->AddSound("2nd_valvelock", "Sound/EffectSound/Interaction/12_valve_stuck.ogg", false, false);
-		g_pSoundManager->AddSound("cancle", "Sound/EffectSound/Interaction/cancle.mp3", false, false);
-
-	}
 }
 
 bool cDataManager::GetValve1()

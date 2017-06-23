@@ -120,7 +120,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 
 			//텍스트 변경
-			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25 \n\n직업: 씨름선수 \n\n특징: 타고난 식성으로 몸집이 크며, 천하장사를 3번이나 우승한 경력이 있다. \n\n가희를 좋아하고 있다.");
+			pExplain->SetText("       우석 \n\n\n\n성별: 남자\n\n나이: 25\n직업: 씨름선수 \n\nSTR    17\nWeight 95kg\n\n특징:\n꾸준한 운동으로 무거운 물건들도 쉽게 옮긴다. \n\n가희를 좋아하고 있다.");
 
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 1;
@@ -156,7 +156,7 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, true);
 
 			//텍스트 변경
-			pExplain->SetText("       가희 \n\n\n\n성별: 여자\n\n나이: 22 \n\n직업: 모델\n\n특징: 최근 심한 다이어트로 마른 몸매를 유지하고 있으나 영양이 부족해 쉽게 지친다. \n\n관심은 오로지 자기관리!!");
+			pExplain->SetText("       가희 \n\n\n\n성별: 여자\n\n나이: 22 \n직업: 모델\n\nSTR    10\nWeight 47kg\n\n특징:\n몸집이 작아 좁은 곳도 쉽게 통과 가능하다. \n\n관심은 오로지 자기관리!!");
 		
 			//데이터 메니져에 선택한 데이터 보내주기
 			g_pData->m_nPlayerNum1P = 2;
@@ -379,7 +379,7 @@ void cCharacterSelectScene::SetBackground()
 	ExplainImage->AddChild(text);
 
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
-		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(280, 500), 13, 20, 500);
+		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(280, 500), 10, 20, 900);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 

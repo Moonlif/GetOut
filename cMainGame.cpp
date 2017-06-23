@@ -51,6 +51,7 @@ void cMainGame::Setup()
 
 	//코드 추가
 	{
+		g_pData->AddSound();
 		g_pData->Setup();
 
 		//character
@@ -58,8 +59,6 @@ void cMainGame::Setup()
 		m_pCharacter->Setup();
 		m_pSkybox = new SkyBox;
 		m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
-		//m_pParticleManager = new ParticleManager;
-		//m_pParticleManager->CreateParticle();
 
 		//map
 		m_pMap = new cMap;
