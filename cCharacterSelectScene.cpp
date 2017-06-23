@@ -270,6 +270,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	if (Time > IMAGECHANGESPEED)
 	{
 		nImage++;
+		if (nImage >= 6) nImage = 6;
 		Time = 0;
 
 		switch (nImage)
@@ -299,14 +300,17 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			break;
 		case 6:
 			//게임 시작
-			img6->SetIsHidden(true);
-			g_pData->SetIsStartedGame(true);
-			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
-			g_pSoundManager->Stop("LoadingScene");
-			m_pCamera->SetCameraDistance(0.1f);
-			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
-			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
-			g_pSoundManager->Play("BackGround", 1.0f);
+			if (g_nThreadCount == 3)
+			{
+				img6->SetIsHidden(true);
+				g_pData->SetIsStartedGame(true);
+				g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
+				g_pSoundManager->Stop("LoadingScene");
+				m_pCamera->SetCameraDistance(0.1f);
+				if (g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
+				g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
+				g_pSoundManager->Play("BackGround", 1.0f);
+			}
 			break;
 		default:
 			break;

@@ -27,6 +27,7 @@ int g_nCountFps;
 cMainGame* g_pMainGame;
 HANDLE g_hMutex_CHAT;
 HANDLE g_hMutex_DATA;
+int g_nThreadCount = 0;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,

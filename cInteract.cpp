@@ -469,9 +469,6 @@ bool cInteract::PickStuff(StuffCode stuffCode, bool lButton)
 	{
 		g_pData->GetItem(STUFF_KEY1);
 		g_pData->TextOutWarningWord(string("'°¨¿Á ¿­¼è'¸¦ ¾ò¾ú½À´Ï´Ù."));
-		g_pSoundManager->Stop("BackGround");
-		g_pSoundManager->Play("EndingScene", 1.0f);
-		g_pData->SetIsEnding(true);
 	}
 	return true;
 	case STUFF_KEY2:

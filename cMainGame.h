@@ -35,6 +35,10 @@ private:
 	//interact
 	cInteract* m_pInteract;
 
+	//HANDLE
+	HANDLE thPlayerSetup;
+	HANDLE thInteractSetup;
+	HANDLE thMapSetup;
 public:
 	void Setup();
 	void Update();
