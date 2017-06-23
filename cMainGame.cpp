@@ -47,7 +47,7 @@ void cMainGame::Setup()
 	m_pCamera = new cCamera;
 	m_pCamera->Setup(NULL);
 
-	g_pSocketmanager->Setup();
+	//g_pSocketmanager->Setup();
 
 	//코드 추가
 	{
@@ -58,8 +58,14 @@ void cMainGame::Setup()
 		m_pCharacter->Setup();
 		m_pSkybox = new SkyBox;
 		m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
-		//m_pParticleManager = new ParticleManager;
-		//m_pParticleManager->CreateParticle();
+		if (g_pData->GetIsEnding())
+		{
+			m_pParticleManager = new ParticleManager;
+			m_pParticleManager->CreateParticle();
+		}
+		m_pMonsterManager = new MonsterManager;
+		m_pMonsterManager->CreateMonster(D3DXVECTOR3(-5, 0, -30.0f), "Monster1/", "Monster1.X");
+		m_pMonsterManager->CreateMonster(D3DXVECTOR3(5, 0, -30.0f), "Monster1/", "Monster1.X");
 
 		//map
 		m_pMap = new cMap;
@@ -99,6 +105,7 @@ void cMainGame::Update()
 			start = true;
 			m_pCamera->ReTarget(&m_pCharacter->GetTargetPos());
 		}
+		if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Update();
 		if (m_pParticleManager && g_pData->GetIsStartedGame())  m_pParticleManager->Update();
 
 		//interact
@@ -122,6 +129,7 @@ void cMainGame::Render()
 
 		//character
 		if (m_pCharacter && g_pData->GetIsStartedGame()) m_pCharacter->Render();
+		if (m_pMonsterManager && g_pData->GetIsStartedGame()) m_pMonsterManager->Render();
 		if (m_pSkybox && g_pData->GetIsStartedGame()) m_pSkybox->Render();
 		if (m_pParticleManager && g_pData->GetIsStartedGame()) m_pParticleManager->Render();
 

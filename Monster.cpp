@@ -51,6 +51,8 @@ void Monster::Update()
 		break;
 	}
 
+	if(monAni = ANIM_WALK) moveMonster();
+
 	//몬스터 방향, 위치
 	monster->SetRotation(rotY);
 	monster->SetPosition(position);
@@ -59,4 +61,48 @@ void Monster::Update()
 void Monster::Render()
 {
 	if (monster) monster->UpdateAndRender();
+}
+
+void Monster::moveMonster()
+{
+	rotY = GetAngle(position, g_pData->Get1PPosition());
+
+	direction = position - g_pData->Get1PPosition();
+	D3DXVec3Normalize(&direction, &direction);
+
+	position -= (direction * 8.0f * g_pTimeManager->GetElapsedTime());
+	monster->SetPosition(position);
+}
+
+float Monster::GetAngle(D3DXVECTOR3& myPosition, D3DXVECTOR3& targetPosition)
+{
+	D3DXVECTOR3 a(0, 0, 1);
+	D3DXVECTOR3 b = myPosition - targetPosition;
+
+	float aLength = D3DXVec3Length(&a);
+	float bLength = D3DXVec3Length(&b);
+	float dot = D3DXVec3Dot(&a, &b);
+
+	D3DXVECTOR3 cross;
+	D3DXVec3Cross(&cross, &a, &b);
+	if (cross.y < 0)
+	{
+		dot *= -1;
+	}
+
+	float angle = acos(dot / (aLength * bLength));
+
+	D3DXVECTOR3 c(1, 0, 0);
+	bool over180 = false;
+	if (D3DXVec3Dot(&b, &c) < 0.0f)
+	{
+		over180 = true;
+	}
+
+	if (over180)
+	{
+		angle += D3DX_PI;
+	}
+
+	return angle;
 }

@@ -21,5 +21,8 @@ public:
 	void Setup(D3DXVECTOR3 pos, char* szFolder, char* szFile);
 	void Update();
 	void Render();
+
+	void moveMonster();
+	float GetAngle(D3DXVECTOR3& myPosition, D3DXVECTOR3& targetPosition);
 };
 
