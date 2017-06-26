@@ -201,7 +201,7 @@ void cChat::SetChildWindow()
 void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 {
 	//채팅 셋
-	SetChildWindow(nHandle, startX, startY, Width, Height);
+	//SetChildWindow(nHandle, startX, startY, Width, Height);
 
 	//배경
 	SetBackground();

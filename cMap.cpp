@@ -25,22 +25,6 @@ cMap::~cMap()
 
 void cMap::Setup()
 {
-	/*
-	g_pLightManager->SetPointLight(5,
-		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
-		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
-		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
-		D3DXVECTOR3(0,1,5), 100.0f);
-
-	g_pD3DDevice->LightEnable(5, true);
-	*/
-	/*
-	g_pLightManager->SetPointLight(eLIGHT::P_B1F_PRISON,
-		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
-		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
-		D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f),
-		D3DXVECTOR3(5, 1, 5), 10.0f);
-	*/
 	m_pFloor = new cFloor;
 	m_pFloor->Setup();
 	m_pWall = new cWall;
@@ -304,11 +288,19 @@ void cMap::RenderObject()
 	m_pObjBox->Render(1, -31.5, 13.1, 12, 0);
 	m_pObjBox->Render(1, -31.5, 15.1, 10, 0);
 	m_pObjBox->Render(1, -31.5, 13.1, 10, 0);
-
 	m_pLamp->Render(0.1, -11, 6, 5, 0);
 }
 
 
+/*==========================================================================
+Summary: 케릭터가 surface내에 이동이 가능한지 판단과 그에 따른 높이 설정
+Parameters:
+[in] x - 케릭터의 좌표 x값
+[out] &y - 케릭터의 좌표 y값
+[in] z - 케릭터의 좌표 z값
+Returns: true 이동이 가능 false 이동이 불가능
+Worker: 최진호
+==========================================================================*/
 bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
 {
 
@@ -364,7 +356,16 @@ bool cMap::GetSurfaceHeight(IN float x, OUT float & y, IN float z)
 
 static bool isTrapIng;
 static bool isTrapOpen;
-bool cMap::GetObjectSurface(IN float x, OUT float & y, IN float z)
+/*==========================================================================
+Summary: 케릭터가 object surface내에 이동이 가능한지 판단
+Parameters:
+[in] x - 케릭터의 좌표 x값
+[in] y - 케릭터의 좌표 y값
+[in] z - 케릭터의 좌표 z값
+Returns: true 이동이 가능 false 이동이 불가능
+Worker: 최진호
+==========================================================================*/
+bool cMap::GetObjectSurface(IN float x, IN float y, IN float z)
 {
 	if (isTrapIng) return false;
 	int floor;
@@ -412,8 +413,16 @@ bool cMap::GetObjectSurface(IN float x, OUT float & y, IN float z)
 		return true;
 	}
 }
-
-bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
+/*==========================================================================
+Summary: 케릭터가 pass surface내에 이동이 가능한지 판단
+Parameters:
+[in] x - 케릭터의 좌표 x값
+[in] y - 케릭터의 좌표 y값
+[in] z - 케릭터의 좌표 z값
+Returns: true 이동이 가능 false 이동이 불가능
+Worker: 최진호
+==========================================================================*/
+bool cMap::GetPassSurface(IN float x, IN float y, IN float z)
 {
 	{
 		PassSurface vec[200];
@@ -463,16 +472,21 @@ bool cMap::GetPassSurface(IN float x, OUT float & y, IN float z)
 					}
 					else return false;
 				}
-			//	else if (g_pData->m_bStuffSwitch[SWITCH_FIRSTFLOOR_TRAP] == true && vec[i + 0].nindex == SWITCH_FIRSTFLOOR_TRAP) {		// 트랩
-				
-		//		}
 				else
 					return false;
 			}
 		}
 	}
 }
-
+/*==========================================================================
+Summary: 모든 surface에 검사에 따라 최종적 이동가능 판단 여부 
+Parameters:
+[in] x - 케릭터의 좌표 x값
+[out] y - 케릭터의 좌표 y값
+[in] z - 케릭터의 좌표 z값
+Returns: true 이동이 가능 false 이동이 불가능
+Worker: 최진호
+==========================================================================*/
 bool cMap::GetMovePossible(IN float x, OUT float & y, IN float z)
 {
 	if (isTrapIng && y > 0) {

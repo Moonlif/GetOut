@@ -6,7 +6,6 @@ class cFloor
 {
 private:
 	std::vector<cRectMake*> m_vecFloorRect;
-
 	/**********************
 	ÁöÇÏ
 	**********************/
@@ -26,7 +25,6 @@ private:
 	cRectMake* m_pFFRoomCollision;
 	cRectMake* m_pFFBathRoom;
 	cRectMake* m_pBloodPrint;
-
 	cRectMake* m_pFFLivingRoom;
 	cRectMake* m_pFFLivingRoom2;
 	cRectMake* m_pFFPassage;
