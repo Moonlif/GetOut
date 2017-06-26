@@ -43,7 +43,6 @@ private:
 	SOCKET hSocket_CHAT, hSocket_DATA;
 	SOCKADDR_IN ServAdr_CHAT, ServAdr_DATA, ClntAdr_DATA;
 	HANDLE hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
-	HANDLE hDataThread;
 	char HostIP[16] = { 0, };
 
 	// << : 좌표 계산을 위해 필요한 변수들

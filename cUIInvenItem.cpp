@@ -13,9 +13,11 @@ cUIInvenItem::cUIInvenItem(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 	: m_pItemTexture(NULL)
 	, m_nItemType(eITEMTYPE::ITEMTYPE_NONE)
 {
+	//알파값저장
 	m_nAlpha = alpha;
-	D3DXIMAGE_INFO stImageInfo;
 
+	//텍스처 인포 저장
+	D3DXIMAGE_INFO stImageInfo;
 	m_pTexture = g_pTextureManager->GetTexture(szFullPath, &stImageInfo);
 
 	m_stSize.nWidth = stImageInfo.Width;
@@ -27,8 +29,6 @@ cUIInvenItem::cUIInvenItem(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 
 cUIInvenItem::~cUIInvenItem()
 {
-	SAFE_RELEASE(m_pTexture);
-	SAFE_RELEASE(m_pItemTexture);
 }
 
 void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
@@ -120,12 +120,14 @@ void cUIInvenItem::Render(LPD3DXSPRITE pSprite)
 
 }
 
+//비어있는 인벤 찾기
 cUIInvenItem* cUIInvenItem::FindEmptyInven()
 {
 	if (m_pItemTexture == NULL) return this;
 
 	for each (auto c in m_vecChild)
 	{
+		//조합이나, 사용인벤칸은 컨티뉴
 		if (c->GetTag() == eUITAG::INVENTORY_COMBINE_1 || c->GetTag() == eUITAG::INVENTORY_COMBINE_2 ||
 			c->GetTag() == eUITAG::INVENTORY_COMBINE_3 || c->GetTag() == eUITAG::INVENTORY_USINGITEM) continue;
 

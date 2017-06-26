@@ -36,7 +36,6 @@ using namespace std;
 #define _CRT_SECURE_NO_WARNINGS
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
-
 #include <vector>
 #include <map>
 #include <set>
@@ -59,6 +58,7 @@ extern int g_nFps;
 extern int g_nCountFps;
 extern HANDLE g_hMutex_CHAT;
 extern HANDLE g_hMutex_DATA;
+extern int g_nThreadCount;
 
 #define SAFE_RELEASE(p) {if(p) p->Release(); p = NULL;}
 #define SAFE_DELETE(p) {if(p) delete p; p = NULL;}

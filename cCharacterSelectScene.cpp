@@ -272,6 +272,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	if (Time > IMAGECHANGESPEED)
 	{
 		nImage++;
+		if (nImage >= 6) nImage = 6;
 		Time = 0;
 
 		switch (nImage)
@@ -309,6 +310,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pSoundManager->Play("BackGround", 1.0f);
 			//1인칭 시점을 위한 카메라 디스턴스
 			m_pCamera->SetCameraDistance(0.1f);
+
 			//소켓
 			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
 			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);	

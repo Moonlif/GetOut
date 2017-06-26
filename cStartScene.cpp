@@ -73,7 +73,7 @@ void cStartScene::Render()
 	m_pStartSceneRoot->Render(m_pSprite);
 }
 
-void cStartScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void cStartScene::WndProc(UINT message)
 {
 	switch (message)
 	{

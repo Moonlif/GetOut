@@ -15,9 +15,11 @@ cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 	, m_pSkinnedMesh(NULL)
 	, m_nCountAnim(0.0f)
 {
-
+	//세팅값 저장
 	m_eType = meshType;
 	m_vPosition = pos;
+
+	//메쉬타입에 따른 메쉬 생성
 	switch (meshType)
 	{
 	case cUIMesh::BOX:
@@ -45,9 +47,8 @@ cUIMesh::cUIMesh(eMESHTYPE meshType, D3DXVECTOR3 pos)
 	}
 
 	
-
+	//머터리얼 설정
 	ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
-
 	m_stMtl.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
 	m_stMtl.Diffuse = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
 	m_stMtl.Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
@@ -64,6 +65,7 @@ void cUIMesh::Update()
 {
 	if (m_isHidden)
 	{
+		//히든시 애니메이션, 애니메이션 카운트값 
 		m_nCountAnim = 0;
 		m_pSkinnedMesh->SetAnimationIndexBlend(1);
 		return;
@@ -73,25 +75,21 @@ void cUIMesh::Update()
 	{
 		if (m_nCountAnim >= 2.0f)
 		{
+			//액션 애니메이션 후 아이들값으로 변경
 			m_pSkinnedMesh->SetAnimationIndexBlend(3);
 		}
+		//애니 카운트 더해주기
 		if(!m_isHidden)m_nCountAnim += g_pTimeManager->GetElapsedTime();
-
-		//0 죽음
-		//1 총쏘기
-		//2 달리기
 	}
 	else if (m_eType == cUIMesh::FEMALE)
 	{
-		if (m_nCountAnim >= 2.0f)
+		if (m_nCountAnim >= 1.0f)
 		{
+			//액션 애니메이션 후 아이들값으로 변경
 			m_pSkinnedMesh->SetAnimationIndexBlend(3);
 		}
-		m_nCountAnim += g_pTimeManager->GetElapsedTime();
+		//애니 카운트 더해주기
 		if (!m_isHidden)m_nCountAnim += g_pTimeManager->GetElapsedTime();
-		//0 죽음
-		//1 공격
-		//2 달리기
 	}
 
 	cUIObject::Update();
@@ -101,6 +99,7 @@ void cUIMesh::Render(LPD3DXSPRITE pSprite)
 {
 	if (m_isHidden) return;
 
+	//메쉬 타입에 따른 렌더
 	if (m_eType == eMESHTYPE::BOX || m_eType == eMESHTYPE::SPHERE)
 	{
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);

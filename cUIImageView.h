@@ -8,9 +8,9 @@ public:
 	virtual ~cUIImageView();
 
 protected:
-	LPDIRECT3DTEXTURE9		m_pTexture;
+	LPDIRECT3DTEXTURE9		m_pTexture;						//이미지 텍스쳐
 
-	SYNTHESIZE(int, 		m_nAlpha, Alpha)
+	SYNTHESIZE(int, 		m_nAlpha, Alpha)				//알파값
 public:
 	virtual void Render(LPD3DXSPRITE pSprite) override;
 

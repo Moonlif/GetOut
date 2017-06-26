@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
-
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)
@@ -51,6 +50,7 @@ void cMainGame::Setup()
 
 	//코드 추가
 	{
+		g_pData->AddSound();
 		g_pData->Setup();
 
 		//character
@@ -58,8 +58,6 @@ void cMainGame::Setup()
 		m_pCharacter->Setup();
 		m_pSkybox = new SkyBox;
 		m_pSkybox->Initialize(D3DXVECTOR3(0, 0, 0));
-		//m_pParticleManager = new ParticleManager;
-		//m_pParticleManager->CreateParticle();
 
 		//map
 		m_pMap = new cMap;
@@ -148,7 +146,7 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (m_pCamera) m_pCamera->WndProc(hWnd, message, wParam, lParam);
 
 	//스타트씬에서 아무키나 눌러서 시작하면 업데이트, 렌더 안하기 위함. by 영현 17.05.30
-	if (m_pTotalUIRender) m_pTotalUIRender->WndProc(hWnd, message, wParam, lParam);
+	if (m_pTotalUIRender) m_pTotalUIRender->WndProc(message);
 
 	switch (message)
 	{

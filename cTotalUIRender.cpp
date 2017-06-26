@@ -10,7 +10,7 @@
 cTotalUIRender::cTotalUIRender()
 	:m_pChaSelectScene(NULL),
 	m_pStartScene(NULL)
-	, m_pCamraStartPos(0, 0, 0)
+	, m_vCamraStartPos(0, 0, 0)
 	, m_pInventory(NULL)
 {
 }
@@ -47,10 +47,10 @@ void cTotalUIRender::Setup()
 	m_pEnding = new cEnding;
 	m_pEnding->Setup();
 
-	m_pCamraStartPos = D3DXVECTOR3(0, 0, 0);
+	m_vCamraStartPos = D3DXVECTOR3(0, 0, 0);
 
 	//경고 폰트 셋업
-	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 25, 500);
+	g_pFontManager->CreateFont2D(m_pFontWarning, 15, 30, 500);
 }
 
 void cTotalUIRender::Update(cCamera* camera)
@@ -83,7 +83,6 @@ void cTotalUIRender::Update(cCamera* camera)
 	if (g_pData->GetIsLoadItem())
 	{
 		m_pInventory->LoadInvenInfo();
-		g_pData->SetIsLoadItem(false);
 	}
 
 	//경고 문구 띄우기
@@ -99,11 +98,17 @@ void cTotalUIRender::Update(cCamera* camera)
 
 void cTotalUIRender::Render()
 {
+	//스타트씬
 	if (m_pStartScene && !g_pData->GetIsStartedGame()) m_pStartScene->Render();
+	//셀렉씬
 	if (m_pChaSelectScene && !g_pData->GetIsStartedGame() && !m_pStartScene->GetIsStartSceneOpen()) m_pChaSelectScene->Render();
+	//인벤토리
 	if (m_pInventory && g_pData->GetIsInvenOpen()) m_pInventory->Render();
+	//채팅
 	if (m_pChat) m_pChat->Render();
+	//게임플레이 UI
 	if (m_pGamePlay && g_pData->GetIsStartedGame() && !g_pData->GetIsInvenOpen() && g_pData->m_isHandOn) m_pGamePlay->Render();
+	//엔딩
 	if (m_pEnding && g_pData->GetIsEnding()) m_pEnding->Render();
 
 	RECT rc{ 0, 30, WINSIZEX, 100 };
@@ -112,9 +117,9 @@ void cTotalUIRender::Render()
 		DT_CENTER | DT_TOP | DT_NOCLIP);
 }
 
-void cTotalUIRender::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void cTotalUIRender::WndProc(UINT message)
 {
-	m_pStartScene->WndProc(hWnd, message, wParam, lParam);
+	m_pStartScene->WndProc(message);
 }
 
 void cTotalUIRender::SetItem(StuffCode ItemName)
@@ -127,6 +132,7 @@ StuffCode cTotalUIRender::GetPreparedUsingItem()
 	return m_pInventory->GetPreparedUsingItem();
 }
 
+//경고문구 제한시간 관련 업데이트
 void cTotalUIRender::LimitWarningTextCount()
 {
 	static int countBag = 0;

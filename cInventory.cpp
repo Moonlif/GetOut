@@ -42,6 +42,7 @@ void cInventory::Render()
 //인벤토리 첫 세팅
 void cInventory::SetInventoryBase()
 {
+	//인벤 배경
 	cUIImageView *BlackBackground = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0.0f), 250);
 	BlackBackground->SetTag(eUITAG::INVENTORY_IMAGE_BACKGROUND);
 	m_pUIBase = BlackBackground;
@@ -186,6 +187,7 @@ void cInventory::SetInventoryBase()
 //아이템 습득시 부르는 함수
 void cInventory::SetItem(StuffCode ItemName)
 {
+	//비어있는 인벤을 찾는다
 	cUIInvenItem* EmptyInven = m_pInven->FindEmptyInven();
 
 	//가방이 풀일 때
@@ -194,7 +196,8 @@ void cInventory::SetItem(StuffCode ItemName)
 		g_pData->TextOutWarningWord("가방이 꽉 찼습니다.");
 		return;
 	}
-
+	
+	//비어있는 인벤에 아이템 저장
 	EmptyInven->SetItemTexture(g_pUIvarius->m_mapItemInfo[ItemName].Texture);
 	EmptyInven->SetItemType(g_pUIvarius->m_mapItemInfo[ItemName].ItemType);
 	EmptyInven->SetrcItem(g_pUIvarius->m_mapItemInfo[ItemName].rc);
@@ -402,7 +405,6 @@ StuffCode cInventory::GetPreparedUsingItem()
 	return item->GetItemCode();
 }
 
-
 //인벤내 아이템 서버에 저장
 void cInventory::SaveInvenInfo()
 {
@@ -434,7 +436,7 @@ void cInventory::LoadInvenInfo()
 		p->SetItemCode(code);
 	}
 
-
+	g_pData->SetIsLoadItem(false);
 }
 
 //조합버튼 클릭시 

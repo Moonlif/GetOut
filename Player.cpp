@@ -193,7 +193,7 @@ void Player::Render()
 void Player::MoveCharacter(cMap* pMap)
 {
 	float checkPoint = 2.0f;
-	float moveSpeed = 1.5f;
+	float moveSpeed = 2.0f;
 
 	//채팅꺼진 상태에서만 작동
 	if (!g_pData->GetIsOnChat())

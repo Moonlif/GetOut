@@ -79,6 +79,11 @@ cSocketManager::cSocketManager()
 	, m_pPlMan(NULL)
 	, m_pPlWoman(NULL)
 	, IsRun(false)
+	, bValve1(false)
+	, bValve2(false)
+	, nFValve1Count(0)
+	, nFValve2Count(0)
+	, nBrickCount(0)
 {
 	InitializeCriticalSection(&cs);		// << : Init CRITICAL SECTION (임계영역 초기화)
 	InitializeCriticalSection(&cs2);	// << : 2
@@ -119,10 +124,9 @@ void cSocketManager::Calc_Position()
 /* 모든 스레드를 종료하고 소켓을 닫습니다 */
 void cSocketManager::Destroy()
 {
-	SAFE_DELETE(m_pTextBox);
+	SAFE_RELEASE(m_pTextBox);
 	SAFE_RELEASE(m_pSprite);
 
-	hChatSend, hChatRecv, hDataRecv_Serv, hDataSend_Serv;
 	CloseHandle(hChatSend);
 	CloseHandle(hChatRecv);
 	CloseHandle(hDataRecv_Serv);
@@ -391,11 +395,11 @@ void cSocketManager::UpdateObjectData()
 		g_pData->m_vStuffPosition[i] = m_vStuffPosition[i];
 		g_pData->m_vStuffRotation[i] = m_vStuffRotation[i];
 	}
-	g_pData->m_bValve1 = bValve1;
-	g_pData->m_bValve2 = bValve2;
-	g_pData->m_n2FValve1Count = nFValve1Count;
-	g_pData->m_n2FValve2Count = nFValve2Count;
-	g_pData->m_nBrickCount = nBrickCount;
+	g_pData->SetValve1(bValve1);
+	g_pData->SetValve2(bValve2);
+	g_pData->SetValve1Count(nFValve1Count);
+	g_pData->SetValve2Count(nFValve2Count);
+	g_pData->SetBrickCount(nBrickCount);
 	
 }
 
@@ -543,7 +547,7 @@ unsigned int _stdcall SEND_REQUEST_SERVER(LPVOID lpParam)
 			send(hSocket, (char*)&stFlag, sizeof(FLAG), 0);
 			SendObjectData(&hSocket);
 			g_pSocketmanager->SubFlag(FLAG::FLAG_OBJECT_DATA);
-			cout << "SendObjData" << endl;
+			cout << "Send Map Status" << endl;
 		}
 
 		if (eFlag & FLAG::FLAG_INVENTORY)
@@ -599,15 +603,18 @@ unsigned int _stdcall RECV_REQUEST_SERVER(LPVOID lpParam)
 			break;
 		case FLAG::FLAG_NETWORK_ID:
 			SendNetworkID(&hSocket, g_pSocketmanager->GetNetworkID(), &isConnected);
+			cout << "NetworkID 전송" << endl;
 			break;
 		case FLAG::FLAG_GENDER:
 			ReceiveGender(&hSocket);
+			cout << "Gender 수신" << endl;
 			break;
 		case FLAG::FLAG_POSITION:
 			ReceivePosition(&hSocket);
 			break;
 		case FLAG::FLAG_OBJECT_DATA:
 			ReceiveObjectData(&hSocket);
+			cout << "Map Status 수신" << endl;
 			break;
 		}
 	}
@@ -622,7 +629,6 @@ void ReceiveNetworkID(SOCKET* pSocket)
 	int nID;
 	recv(*pSocket, (char*)&nID, sizeof(int), 0);
 	g_pSocketmanager->SetNetworkID(nID);
-	cout << "네트워크 아이디 " << nID << endl;
 }
 
 /* 방이 연결 가능한지 확인 */
@@ -684,7 +690,6 @@ void ReceiveAllData(SOCKET* pSocket)
 	recv(*pSocket, (char*)&Recv, sizeof(ST_ALL_DATA), 0);	// << : 데이터 수신
 	g_pSocketmanager->RecvClientData(Recv);					// << : 수신한 모든 데이터를 적용한다.
 	g_pSocketmanager->AddFlag(FLAG::FLAG_GENDER);		// << : 성별을 선택하고 상대의 성별을 확인해야함
-	cout << "ReceiveAllData" << endl;
 }
 
 /* 자신의 성별을 서버에게 전송합니다 */
@@ -734,7 +739,6 @@ void ReceiveObjectData(SOCKET* pSocket)
 	int result = recv(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
 	g_pSocketmanager->RecvObjectData(stData);
 	g_pSocketmanager->UpdateObjectData();
-	cout << "맵정보 수신 " << endl;
 }
 
 void SendObjectData(SOCKET* pSocket)
@@ -752,6 +756,12 @@ void SendObjectData(SOCKET* pSocket)
 		stData.mapRotZ[i] = Rotation.z;
 		stData.mapIsRunning[i] = g_pData->m_bStuffSwitch[i];
 	}
+	stData.bValve1 = g_pData->GetValve1();
+	stData.bValve2 = g_pData->GetValve2();
+	stData.nFValve1Count = g_pData->GetValve1Count();
+	stData.nFValve2Count = g_pData->GetValve2Count();
+	stData.nBrickCount = g_pData->GetBrickCount();
+	
 	send(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
 }
 
