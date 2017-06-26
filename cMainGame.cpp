@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
-
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pMap(NULL)

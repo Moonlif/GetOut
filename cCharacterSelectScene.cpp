@@ -270,6 +270,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	if (Time > IMAGECHANGESPEED)
 	{
 		nImage++;
+		if (nImage >= 6) nImage = 6;
 		Time = 0;
 
 		switch (nImage)
@@ -304,7 +305,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
 			g_pSoundManager->Stop("LoadingScene");
 			m_pCamera->SetCameraDistance(0.1f);
-			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
+			if (g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
 			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
 			g_pSoundManager->Play("BackGround", 1.0f);
 			break;
