@@ -208,6 +208,8 @@ void cInventory::SetItem(StuffCode ItemName)
 //아이템 옮기기
 void cInventory::MoveItem()
 {
+	if (!g_pData->GetIsInvenOpen()) return;
+
 	static cUIInvenItem* FirstClick = NULL;
 	static cUIInvenItem* SecondClick = NULL;
 	eUITAG FirstTag = eUITAG::EMPTY;
