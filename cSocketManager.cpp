@@ -124,7 +124,7 @@ void cSocketManager::Calc_Position()
 /* 모든 스레드를 종료하고 소켓을 닫습니다 */
 void cSocketManager::Destroy()
 {
-	SAFE_DELETE(m_pTextBox);
+	SAFE_RELEASE(m_pTextBox);
 	SAFE_RELEASE(m_pSprite);
 
 	CloseHandle(hChatSend);
