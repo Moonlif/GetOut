@@ -14,12 +14,21 @@ cRectMake::~cRectMake()
 	//if(m_pTexture) SAFE_RELEASE(m_pTexture);
 }
 
+/*==========================================================================
+Summary: 사각형을 만들기 위한 함수
+Parameters:
+[in] v - 바닥이 만들어지는 벡터
+[in] v1 - 바닥이 만들어지는 벡터
+[in] v2 - 바닥이 만들어지는 벡터
+[in] *szFile - 사각형에 텍스쳐를 입히기 위한 파일 경로
+Returns:
+Worker: 최진호
+==========================================================================*/
 void cRectMake::Setup(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, char * szFile)
 {
 	
 	// 2 3
 	// 0 1
-	
 	ST_PNT_VERTEX _verTex;
 	D3DXVECTOR3 n;
 	D3DXVec3Normalize(&n, &n);

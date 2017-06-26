@@ -56,9 +56,8 @@ public:
 	cSurface* getSurface() { return m_pSurface; };
 	cObjectSurface* getObjSurface() { return m_pObjSurface; };
 	bool GetSurfaceHeight(IN float x, OUT float & y, IN float z);
-	bool GetObjectSurface(IN float x, OUT float & y, IN float z);
-	bool GetPassSurface(IN float x, OUT float & y, IN float z);
+	bool GetObjectSurface(IN float x, IN float y, IN float z);
+	bool GetPassSurface(IN float x, IN float y, IN float z);
 	bool GetMovePossible(IN float x, OUT float & y, IN float z);
-	//int getIndex{return m_pSurface.}
 };
 

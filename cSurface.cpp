@@ -314,6 +314,19 @@ void cSurface::PassSetup()
 	
 }
 
+/*==========================================================================
+Summary: 이동할 surface들을 관리하는 벡터에 넣는 함수
+Parameters:
+[in] floor - surface가 만들어지는 층
+[in] v0 - 바닥이 만들어지는 벡터
+[in] v1 - 바닥이 만들어지는 벡터
+[in] v2 - 바닥이 만들어지는 벡터
+[in] v3 - 바닥이 만들어지는 벡터
+[in] *rec - 바닥이 만들어진 사각형
+Returns: 
+Worker: 최진호
+==========================================================================*/
+
 void cSurface::InsertVector(int floor, D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, cRectMake* rec)
 {
 	Surface sf0, sf1, sf2, sf3;
@@ -335,7 +348,18 @@ void cSurface::InsertVector(int floor, D3DXVECTOR3 v0, D3DXVECTOR3 v1, D3DXVECTO
 	vecVertex.push_back(sf3);
 	vecSurface.push_back(rec);
 }
-
+/*==========================================================================
+Summary: 상황에 따라 이동가능한 통로 surface들을 관리하는 벡터에 넣는 함수
+Parameters:
+[in] v0 - 바닥이 만들어지는 벡터
+[in] v1 - 바닥이 만들어지는 벡터
+[in] v2 - 바닥이 만들어지는 벡터
+[in] v3 - 바닥이 만들어지는 벡터
+[in] index - 만들어진 바닥의 고유 인덱스
+[in] *rec - 바닥이 만들어진 사각형
+Returns:
+Worker: 최진호
+==========================================================================*/
 void cSurface::PassInput(PassSurface v0, PassSurface v1, PassSurface v2, PassSurface v3, int index, cRectMake* rec)
 {
 	v0.nindex = index;

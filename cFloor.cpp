@@ -39,15 +39,6 @@ void cFloor::Setup()
 		, "Texture/maps/blood_stain_small.dds");
 	m_vecFloorRect.push_back(m_pB1FBlood);
 	
-	/*
-	m_pB1Water = new cRectMake;
-	m_pB1Water->Setup(D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 0)
-		, D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 4)
-		, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 4)
-		, D3DXVECTOR3(CENTERX + 12, B1F, CENTERZ + 0)
-		, "Texture/maps/water_sewer_streaming.dds");
-	m_vecFloorRect.push_back(m_pB1Water);
-	*/
 	//Ã¹¹æ ¹Ù´Ú
 	m_pB1FRoom = new cRectMake;
 	m_pB1FRoom->Setup(D3DXVECTOR3(CENTERX + 8, B1F, CENTERZ + 0)

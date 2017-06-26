@@ -11,7 +11,16 @@ cObjectSurface::~cObjectSurface()
 {
 	
 }
-
+/*==========================================================================
+Summary: 오브젝트들에 따른 이동제한을 걸기 위한 바닥을 벡터에 넣는 함수 
+Parameters:
+[in] v - 바닥이 만들어지는 벡터
+[in] v1 - 바닥이 만들어지는 벡터
+[in] v2 - 바닥이 만들어지는 벡터
+[in] floor - 사각형이 만들어지는 층
+Returns:
+Worker: 최진호
+==========================================================================*/
 void cObjectSurface::AddSurface(D3DXVECTOR3 v, D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3, int floor)
 {
 	ObjectSurface vertex;
