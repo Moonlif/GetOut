@@ -10,14 +10,20 @@ cUIImageView::cUIImageView()
 
 cUIImageView::cUIImageView(char * szFullPath, D3DXVECTOR3 pos, int alpha)
 {
+	//알파값 설정
 	m_nAlpha = alpha;
+
+	//이미지 정보를 담고 있는 변수 생성
 	D3DXIMAGE_INFO stImageInfo;
 
+	//텍스처 생성
 	m_pTexture = g_pTextureManager->GetTexture(szFullPath, &stImageInfo);
 
+	//넓이 높이 저장
 	m_stSize.nWidth = stImageInfo.Width;
 	m_stSize.nHeight = stImageInfo.Height;
 
+	//포지션 저장
 	m_vPosition = pos;
 }
 

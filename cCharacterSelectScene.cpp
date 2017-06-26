@@ -29,6 +29,7 @@ cCharacterSelectScene::~cCharacterSelectScene()
 
 void cCharacterSelectScene::Setup()
 {
+	//스프라이트 생성
 	D3DXCreateSprite(g_pD3DDevice, &m_pSprite);
 
 	//백그라운드 UI
@@ -43,7 +44,7 @@ void cCharacterSelectScene::Setup()
 
 void cCharacterSelectScene::Update(cCamera* camera)
 {
-	
+	//카메라 리타겟을 위한 값
 	m_pCamera = camera;
 	//첫 배경 알파값 업데이트
 	UpdateSetFirstBackground();
@@ -70,19 +71,23 @@ void cCharacterSelectScene::Render()
 
 void cCharacterSelectScene::UpdateSetFirstBackground()
 {
+	//알파값 초기화
 	static int nAlpha = 0;
+	
+	//알파값이 255넘으면 업데이트 안함
 	if (nAlpha >= 255) return;
+
+	//태그값으로 각 UI 찾기
 	cUIImageView* Player1 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 	cUIImageView* Player2 = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	cUIImageView* Background = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	cUIImageView* Explain = (cUIImageView*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_EXPLAIN);
-	//cUIButton* Button = (cUIButton*)m_pRoot->FindChildByTag(eUITAG::E_CHARACTERSELECT_BUTTON_START);
 
+	//각 UI 알파값에 따라 선명하게 
 	Player1->SetAlpha(nAlpha);
 	Player2->SetAlpha(nAlpha);
 	if (nAlpha <= 250) Background->SetAlpha(nAlpha);
 	if (nAlpha <= 200) Explain->SetAlpha(nAlpha);
-	//Button->SetAlpha(nAlpha);
 
 	nAlpha += SETBACKGROUNDSPEED;
 }
@@ -130,17 +135,12 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			p1Text->SetIsHidden(false);
 			p1Text->SetPosition(D3DXVECTOR3(70, -25, 0));
 
-			//플레이어 정하기
+			//먼저 클릭한 사람이 1P
 			if (!m_isSelect)
 			{
-				if (g_pData->m_nPlayerNum2P == 0)
-				{
-					g_pData->SetPlayerNum(1);
-				}
-				else
-				{
-					g_pData->SetPlayerNum(2);
-				}
+				if (g_pData->m_nPlayerNum2P == 0)	g_pData->SetPlayerNum(1);
+				else	g_pData->SetPlayerNum(2);
+
 			}
 		}
 		///-------------------------------------------------------------
@@ -166,17 +166,12 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 			p1Text->SetIsHidden(false);
 			p1Text->SetPosition(D3DXVECTOR3(205, -25, 0));
 			
-			//플레이어 정하기
+			//먼저 클릭한 사람이 1P
 			if (!m_isSelect)
 			{
-				if (g_pData->m_nPlayerNum2P == 0)
-				{
-					g_pData->SetPlayerNum(1);
-				}
-				else
-				{
-					g_pData->SetPlayerNum(2);
-				}
+				if (g_pData->m_nPlayerNum2P == 0)	g_pData->SetPlayerNum(1);				
+				else	g_pData->SetPlayerNum(2);
+				
 			}
 		}
 
@@ -199,9 +194,14 @@ void cCharacterSelectScene::UpdateCharacterSelect()
 				return;
 			}
 
+			//사운드 스탑, 시작
 			g_pSoundManager->Stop("CharacterSelectScene");
 			g_pSoundManager->Play("LoadingScene", 1.0f);
+
+			//카메라 이동
 			m_pCamera->ReTarget(&m_vRetargetPos);
+
+			//백그라운드 없애기 트루
 			m_isDeleteBackground = true;
 		}
 
@@ -244,6 +244,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	cUIImageView* img5 = (cUIImageView*)m_pGameStart->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART5);
 	cUIImageView* img6 = (cUIImageView*)m_pGameStart->FindChildByTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART6);
 
+	//알파값 적용
 	if (alpha < 255) alpha += 4;
 	img1->SetAlpha(alpha);
 	img2->SetAlpha(alpha);
@@ -252,7 +253,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	img5->SetAlpha(alpha);
 	img6->SetAlpha(alpha);
 
-	//카메라 흔들기
+
 	if (alpha >= 255)
 	{
 		alpha = 255;
@@ -267,6 +268,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 
 
 	//배경이미지 바꿔주기
+	//일정 시간이 지나면 렌더할 이미지 변경
 	if (Time > IMAGECHANGESPEED)
 	{
 		nImage++;
@@ -275,8 +277,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 		switch (nImage)
 		{
 		case 1:
-			//다크 라이트 키기
-			//밑에 있는 라이트들 꺼주기
+			//캐릭터 밑에 있는 라이트들 꺼주기
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER1, false);
 			g_pD3DDevice->LightEnable(eLIGHT::S_CHARACTERSELECT_PLAYER2, false);
 			img1->SetIsHidden(true);
@@ -301,12 +302,16 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 			//게임 시작
 			img6->SetIsHidden(true);
 			g_pData->SetIsStartedGame(true);
+			//메인 라이트 킴
 			g_pD3DDevice->LightEnable(eLIGHT::D_MAIN_LIGHT, true);
+			//사운드 스탑 앤 스타트
 			g_pSoundManager->Stop("LoadingScene");
-			m_pCamera->SetCameraDistance(0.1f);
-			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
-			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);
 			g_pSoundManager->Play("BackGround", 1.0f);
+			//1인칭 시점을 위한 카메라 디스턴스
+			m_pCamera->SetCameraDistance(0.1f);
+			//소켓
+			if(g_pSocketmanager->GetServerRun()) g_pSocketmanager->InitClientData();
+			g_pSocketmanager->AddFlag(FLAG::FLAG_POSITION);	
 			break;
 		default:
 			break;
@@ -314,6 +319,7 @@ void cCharacterSelectScene::UpdateBeforGameStart()
 	}
 }
 
+//게임 시작시 UI 알파값 줄여가며 서서히 지움
 void cCharacterSelectScene::DeleteBackground()
 {
 	UpdateBeforGameStart();
@@ -341,49 +347,58 @@ void cCharacterSelectScene::DeleteBackground()
 
 }
 
+//첫 세팅
 void cCharacterSelectScene::SetBackground()
 {
+	//배경이미지
 	cUIImageView* pBackgroundImage = new cUIImageView("UI/CharacterSelectScene/size_Amnesia.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	pBackgroundImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_BACKGROUND);
 	m_pRoot = pBackgroundImage;
 
+	//캐릭터 설명 이미지
 	cUIImageView* ExplainImage = new cUIImageView("UI/CharacterSelectScene/scroll_tall.png", D3DXVECTOR3(870, 140, 0), 0);
 	ExplainImage->SetScaling(D3DXVECTOR3(0.45f, 0.65f, 1.0f));
 	ExplainImage->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_EXPLAIN);
 	m_pRoot->AddChild(ExplainImage);
 
+	//1p 선택 화살표
 	cUIImageView* pPlyer1Text = new cUIImageView("UI/CharacterSelectScene/arrow1.png", D3DXVECTOR3(-500, 0, 0), 255);
 	pPlyer1Text->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1TEXT);
 	pPlyer1Text->SetIsHidden(true);
 	pPlyer1Text->SetScaling(D3DXVECTOR3(1.0f, 0.5f, 0));
 	ExplainImage->AddChild(pPlyer1Text);
 
+	//2p 선택 화살표
 	cUIImageView* pPlyer2Text = new cUIImageView("UI/CharacterSelectScene/arrow2.png", D3DXVECTOR3(-100, 0, 0), 255);
 	pPlyer2Text->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2TEXT);
 	pPlyer2Text->SetIsHidden(true);
 	pPlyer2Text->SetScaling(D3DXVECTOR3(1.0f, 0.5f, 0));
 	ExplainImage->AddChild(pPlyer2Text);
 
+	//남자 캐릭터 이미지
 	cUIImageView* pPlyer1Image = new cUIImageView("UI/CharacterSelectScene/cha1.png", D3DXVECTOR3(60, -100, 0), 0);
 	pPlyer1Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER1FACE);
 	ExplainImage->AddChild(pPlyer1Image);
 
+	//여자 캐릭터 이미지
 	cUIImageView* pPlyer2Image = new cUIImageView("UI/CharacterSelectScene/cha2.png", D3DXVECTOR3(190, -100, 0), 0);
 	pPlyer2Image->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_PLAYER2FACE);
 	ExplainImage->AddChild(pPlyer2Image);
 
-
+	//게임시작 텍스트
 	cUITextView* text = new cUITextView("GAME START", D3DXVECTOR3(60, 500, 0), D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f),
 		ST_SIZEN(250, 40), 20, 40, 900);
 	text->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_GAMESTART);
 	ExplainImage->AddChild(text);
 
+	//캐릭 설명 텍스트
 	cUITextView* pExplain = new cUITextView(" ", D3DXVECTOR3(35, 26, 0),
 		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), ST_SIZEN(280, 500), 10, 20, 900);
 	pExplain->SetTag(eUITAG::E_CHARACTERSELECT_TEXT_EXPLAIN);
 	ExplainImage->AddChild(pExplain);
 
 	//------------------------------------------------------------------------------
+	//게임 진입시 이미지
 	cUIImageView* gameStart6 = new cUIImageView("UI/CharacterSelectScene/welcome_bg06.jpg", D3DXVECTOR3(0, 0, 1.0f), 0);
 	gameStart6->SetTag(eUITAG::E_CHARACTERSELECT_IMAGE_GAMESTART6);
 	m_pGameStart = gameStart6;
@@ -414,11 +429,13 @@ void cCharacterSelectScene::SetBackground()
 //플레이어 메쉬, 조명 셋업
 void cCharacterSelectScene::SetMesh()
 {
+	//1번케릭
 	cUIMesh* pPlayer1 = new cUIMesh(cUIMesh::eMESHTYPE::MALE, D3DXVECTOR3(-0.5f, -1, 1));
 	pPlayer1->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER1);
 	pPlayer1->SetIsHidden(true);
 	m_pPlayer1 = pPlayer1;
 
+	//2번케릭
 	cUIMesh* pPlayer2 = new cUIMesh(cUIMesh::eMESHTYPE::FEMALE, D3DXVECTOR3(-0.5f, -1, 1));
 	pPlayer2->SetTag(eUITAG::E_CHARACTERSELECT_MESH_PLAYER2);
 	pPlayer2->SetIsHidden(true);
@@ -426,12 +443,14 @@ void cCharacterSelectScene::SetMesh()
 
 	D3DXCOLOR color(0.8f, 0.8f, 0.0f, 1.0f);
 
+	//1번케릭 조명
 	cUILight* pLight1 = new cUILight;
 	pLight1->SetSpotLight(eLIGHT::S_CHARACTERSELECT_PLAYER1, color, D3DXVECTOR3(0, -2.3f, 0),
 		10.0f, D3DX_PI / 2, D3DX_PI / 4, D3DXVECTOR3(0, 1, 0));
 	pLight1->SetTag(eUITAG::E_CHARACTERSELECT_LIGHT_PLAYER1);
 	m_pPlayer1->AddChild(pLight1);
 
+	//2번케릭 조명
 	cUILight* pLight2 = new cUILight;
 	pLight2->SetSpotLight(eLIGHT::S_CHARACTERSELECT_PLAYER2, color, D3DXVECTOR3(0, -2.3f, 0),
 		10.0f, D3DX_PI / 2, D3DX_PI / 4, D3DXVECTOR3(0, 1, 0));

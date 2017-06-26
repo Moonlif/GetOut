@@ -8,7 +8,10 @@ cUIchat::cUIchat()
 
 cUIchat::cUIchat(D3DXVECTOR3 pos)
 {
+	//벡터를 챗사이즈 만큼 리사이징
 	m_vChat.resize(CHATSIZE);
+
+	//벡터 초기화
 	for (int i = 0; i < CHATSIZE; ++i)
 	{
 		m_vChat[i].strChat = " ";
@@ -38,11 +41,13 @@ cUIchat::~cUIchat()
 
 void cUIchat::Update()
 {
-
+	//모든 채팅은 시간이 지나면서 알파값이 서서히 낮아지며 완전히 사라진다
 	for (int i = 0; i < CHATSIZE; ++i)
 	{
+		//채팅내용이 아무것도 없을 시 컨티뉴
 		if (m_vChat[i].strChat == " ") continue;
 
+		//채팅잔존 줄이기
 		m_vChat[i].time--;
 
 		//챗타임이 100보다 작을 때 알파값 조절
@@ -140,9 +145,12 @@ void cUIchat::PushChat(string str, int Gender)
 	for (int i = CHATSIZE - 1; i > 0; --i)
 	{
 		if (m_vChat[i - 1].strChat == " ") continue;
+		
+		//채팅을 한칸씩 뒤로 미룸
 		m_vChat[i] = m_vChat[i - 1];
 	}
 
+	//비어있는 0번채팅에 새로운 채팅을 푸쉬함
 	m_vChat[0].strChat = str;
 	m_vChat[0].time = CHATTIME;
 	m_vChat[0].alpha = 1.0f;

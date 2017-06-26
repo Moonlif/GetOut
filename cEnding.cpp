@@ -28,13 +28,11 @@ void cEnding::Setup()
 	cUIImageView* backGround = new cUIImageView("UI/BlackBackground.png", D3DXVECTOR3(0, 0, 0), 1.0f);
 	m_pRoot = backGround;
 
-
 	cUITextView* text = new cUITextView(m_pText, D3DXVECTOR3(0, WINSIZEY, 0), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
 		ST_SIZEN(WINSIZEX, WINSIZEY * 10), 30, 45, 900);
 	text->SetDrawTextFormat(DT_CENTER | DT_TOP);
 	text->SetTag(eUITAG::ENDING_TEXT);
 	m_pRoot->AddChild(text);
-
 
 }
 
@@ -53,7 +51,6 @@ void cEnding::Update()
 
 void cEnding::Render()
 {
-
 	if (m_pRoot) m_pRoot->Render(m_pSprite);
 }
 
