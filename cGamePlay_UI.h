@@ -9,11 +9,8 @@ public:
 	~cGamePlay_UI();
 
 private:
-	vector<cMtlTex*>	m_vecHand;	
-	LPD3DXMESH			m_MeshHand;
-
-	cUIImageView*		m_pImage;
-	LPD3DXSPRITE		m_pSprite;
+	cUIImageView*		m_pImage;			//이미지
+	LPD3DXSPRITE		m_pSprite;			//스프라이트
 public:
 	void Setup();
 	void Update();

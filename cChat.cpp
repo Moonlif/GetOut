@@ -15,6 +15,7 @@ cChat::~cChat()
 {
 	SAFE_RELEASE(m_fontName);
 	SAFE_RELEASE(m_pSprite);
+
 	m_pRoot->Destroy();
 }
 
@@ -43,47 +44,15 @@ void cChat::Render()
 //채팅 업데이트
 void cChat::ChatOnOff()
 {
-	//이름 입력
+	//버퍼
 	char str[256];
 
-	//챗 찾기
-	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
-
+	//핸들에 입력한 채팅 복사
 	GetWindowText(m_hWndNaming, str, strlen(str));
 	m_strChat = str;
 
 	//현재 채팅 푸쉬
-	if (!g_pData->m_listChat_RECV.empty())
-	{		
-		if (g_pData->GetIsStartedGame())
-		{
-			//자신의 채팅이 아닐 땐 상대방젠더 넘버
-			if (m_nMyChat == 0) m_nMyChat = g_pData->m_nPlayerNum2P;
-
-			//내채팅은 그대로
-			chat->PushChat(g_pData->m_listChat_RECV.front(), m_nMyChat);
-			g_pData->m_listChat_RECV.pop_front();
-		}
-		else
-		{
-			if (g_pData->GetPlayerNum() == 1)
-			{
-				if (m_nMyChat == 0) m_nMyChat = 2;
-				else m_nMyChat = 1;				
-			}
-			else if (g_pData->GetPlayerNum() == 2)
-			{
-				if (m_nMyChat == 0) m_nMyChat = 1;
-				else m_nMyChat = 2;
-			}
-			else m_nMyChat = 0;
-
-			chat->PushChat(g_pData->m_listChat_RECV.front(), m_nMyChat);
-			g_pData->m_listChat_RECV.pop_front();
-		}
-		
-		m_nMyChat = 0;
-	}
+	PushChat();
 
 	if (GetAsyncKeyState(VK_RETURN) & 0x0001)
 	{
@@ -107,8 +76,6 @@ void cChat::ChatOnOff()
 
 			//내챗!
 			m_nMyChat = g_pData->m_nPlayerNum1P;
-
-			//chat->PushChat(m_strChat, m_nMyChat);
 		}
 		//채팅 켰을 때
 		else
@@ -128,13 +95,16 @@ void cChat::RenderChat()
 	//이름 렌더
 	RECT rc{ 0, WINSIZEY - CHATWORDHEIGHT, 200, WINSIZEY };
 
+	//게임시작시
 	if (g_pData->GetIsStartedGame())
 	{
+		//남자를 택했을때
 		if (g_pData->m_nPlayerNum1P == 1)
 		{
 			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
 			m_strChat = "우석: " + m_strChat;		
 		}
+		//여자를 택했을 때
 		else if (g_pData->m_nPlayerNum1P == 2)
 		{
 			m_strChat = "가희: " + m_strChat;
@@ -145,12 +115,15 @@ void cChat::RenderChat()
 			color = D3DXCOLOR(0.5f, 0.9f, 0.5f, 1.0f);
 		}	
 	}
+	//게임시작전
 	else
 	{
+		//1P일 때
 		if (g_pData->GetPlayerNum() == 1)
 		{
 			color = D3DXCOLOR(0.9f, 0.5f, 0.5f, 1.0f);
 		}
+		//2P일 때
 		else if (g_pData->GetPlayerNum() == 2)
 		{
 			color = D3DXCOLOR(0.5f, 0.5f, 0.9f, 1.0f);
@@ -179,11 +152,53 @@ void cChat::SetBackground()
 	m_pRoot = chatBackground;
 }
 
+//채팅 푸쉬
+void cChat::PushChat()
+{
+	//챗 찾기
+	cUIchat *chat = (cUIchat*)m_pRoot->FindChildByTag(eUITAG::CHAT_TEXT1);
+
+	if (!g_pData->m_listChat_RECV.empty())
+	{
+		//게임시작 후(채팅 색이 남자, 여자로 채팅이 나뉨)
+		if (g_pData->GetIsStartedGame())
+		{
+			//자신의 채팅이 아닐 땐 상대방젠더 넘버
+			if (m_nMyChat == 0) m_nMyChat = g_pData->m_nPlayerNum2P;
+
+			//내채팅은 그대로
+			chat->PushChat(g_pData->m_listChat_RECV.front(), m_nMyChat);
+			g_pData->m_listChat_RECV.pop_front();
+		}
+		//게임시작 전(채팅 색이 P1, P2로 채팅이 나뉨)
+		else
+		{
+			//P1일때
+			if (g_pData->GetPlayerNum() == 1)
+			{
+				if (m_nMyChat == 0) m_nMyChat = 2;
+				else m_nMyChat = 1;
+			}
+			//P2일때
+			else if (g_pData->GetPlayerNum() == 2)
+			{
+				if (m_nMyChat == 0) m_nMyChat = 1;
+				else m_nMyChat = 2;
+			}
+			//아무것도 아닐 때
+			else m_nMyChat = 0;
+
+			chat->PushChat(g_pData->m_listChat_RECV.front(), m_nMyChat);
+			g_pData->m_listChat_RECV.pop_front();
+		}
+
+		m_nMyChat = 0;
+	}
+}
+
 //윈도우 설정
 void cChat::SetChildWindow()
 {
-	//WS_VISIBLE
-
 	//이름입력 핸들 생성
 	m_hWndNaming = CreateWindow("edit", "",
 		WS_CHILD | WS_BORDER,
@@ -197,7 +212,6 @@ void cChat::SetChildWindow()
 ///---------------------------------------------------
 // 소켓용
 ///----------------------------------------------------
-
 void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 {
 	//배경
@@ -206,8 +220,6 @@ void cChat::Setup(int nHandle, int startX, int startY, int Width, int Height)
 
 void cChat::SetChildWindow(int nHandle, int startX, int startY, int Width, int Height)
 {
-	//WS_VISIBLE
-
 	//이름입력 핸들 생성
 	m_hWndNaming = CreateWindow("edit", "",
 		WS_CHILD | WS_BORDER,

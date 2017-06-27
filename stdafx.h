@@ -46,7 +46,6 @@ using namespace std;
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 
-
 #include <d3dx9.h>
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")

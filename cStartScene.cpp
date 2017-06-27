@@ -29,9 +29,6 @@ void cStartScene::Setup()
 	m_pStartSceneRoot->AddChild(m_pStartText);
 
 	g_pSoundManager->Play("StartScene", 1.0f);
-
-	//	m_pStartText->SetIsHidden(true);
-	//m_IsStartSceneOpen = false;
 }
 
 void cStartScene::Update()
@@ -76,7 +73,7 @@ void cStartScene::Render()
 	m_pStartSceneRoot->Render(m_pSprite);
 }
 
-void cStartScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void cStartScene::WndProc(UINT message)
 {
 	switch (message)
 	{

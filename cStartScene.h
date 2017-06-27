@@ -10,11 +10,11 @@ public:
 	cStartScene();
 	~cStartScene();
 private:
-	cUIObject*				m_pStartSceneRoot;
-	cUIImageView*			m_pStartSceneImage;
-	LPD3DXSPRITE			m_pSprite;
+	cUIObject*				m_pStartSceneRoot;				//부모
+	cUIImageView*			m_pStartSceneImage;				//스타트씬이미지
+	LPD3DXSPRITE			m_pSprite;						//스프라이트
 
-	cUITextView*			m_pStartText;
+	cUITextView*			m_pStartText;					//텍스트
 
 	SYNTHESIZE(bool,		m_IsStartSceneOpen, IsStartSceneOpen);
 public:
@@ -23,6 +23,6 @@ public:
 	void Render();
 
 
-	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void WndProc(UINT message);
 };
 
