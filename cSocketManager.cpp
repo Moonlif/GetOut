@@ -10,6 +10,7 @@
 
 CRITICAL_SECTION cs;
 CRITICAL_SECTION cs2;
+// << : 분리된 스레드 함수들
 unsigned int _stdcall SEND_CHAT(LPVOID lpParam);
 unsigned int _stdcall RECV_CHAT(LPVOID lpParam);
 unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam);
@@ -143,6 +144,7 @@ char * cSocketManager::GetIP()
 	return HostIP;
 }
 
+/* 서버에서 방에 접속 가능한지 얻어오는 함수 */
 char * cSocketManager::GetRoomName()
 {
 	return szRoomName;
@@ -218,6 +220,7 @@ void cSocketManager::RecvClientData(ST_ALL_DATA stData)
 	nBrickCount = stData.nBrickCount;
 }
 
+/* 서버로부터 맵정보를 수신하는 함수 */
 void cSocketManager::RecvObjectData(ST_OBJECT_DATA stData)
 {
 	for (int i = 0; i < SWITCH_LASTNUM; ++i)
@@ -272,6 +275,7 @@ void cSocketManager::SetIP(int First, int Second, int Third, int Fourth)
 	Setup_DATA();
 }
 
+/* IP를 설정하는 함수*/
 void cSocketManager::SetIP(string szIP)
 {
 	string szFullIP = szIP;
@@ -282,12 +286,14 @@ void cSocketManager::SetIP(string szIP)
 	Setup_DATA();
 }
 
+/* 자신의 이름을 설정하는 함수*/
 void cSocketManager::SetMyName(string szName)
 {
 	string Name = szName;
 	sprintf_s(name, "%s", Name.c_str(), sizeof(name));
 }
 
+/* 접속할 방 이름을 설정하는 함수*/
 void cSocketManager::SetRoomName(string szName)
 {
 	string Name = szName;
@@ -355,6 +361,7 @@ void cSocketManager::Setup_CHAT()
 	}
 }
 
+/* 요청을 수행한뒤 제거하는 함수 (플래그 제거)*/
 void cSocketManager::SubFlag(FLAG eFlag)
 {
 	if (nFlagNum & eFlag)
@@ -387,6 +394,7 @@ void cSocketManager::UpdateRotation(float Rotate)
 	nextRotation = Rotate;
 }
 
+/* 수신한 맵상태를 적용하는 함수 */
 void cSocketManager::UpdateObjectData()
 {
 	for (int i = 0; i < SWITCH_LASTNUM; ++i)
@@ -403,6 +411,7 @@ void cSocketManager::UpdateObjectData()
 	
 }
 
+/* 입력한 글자를 출력하는 함수 */
 void cSocketManager::UIRender()
 {
 	if (m_pTextBox)
@@ -449,7 +458,7 @@ unsigned int _stdcall RECV_CHAT(LPVOID lpParam)
 	return 0;
 }
 
-/* 클라이언트 (2P)와 상호작용하는 스레드 (미구현)*/
+/* 클라이언트 (2P)와 상호작용하는 스레드 (미구현) */
 unsigned int _stdcall INTERECT_CLIENT(LPVOID lpParam)
 {
 	return 0;
@@ -741,6 +750,7 @@ void ReceiveObjectData(SOCKET* pSocket)
 	g_pSocketmanager->UpdateObjectData();
 }
 
+/* 맵정보를 전송하는 함수 */
 void SendObjectData(SOCKET* pSocket)
 {
 	ST_OBJECT_DATA stData;
@@ -765,6 +775,7 @@ void SendObjectData(SOCKET* pSocket)
 	send(*pSocket, (char*)&stData, sizeof(ST_OBJECT_DATA), 0);
 }
 
+/* 인벤토리 정보를 전송하는 함수 */
 void SendInventoryData(SOCKET* pSocket)
 {
 	ST_INVENTORY_DATA stData;

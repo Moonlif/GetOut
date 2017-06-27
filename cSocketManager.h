@@ -72,6 +72,7 @@ private:
 	D3DXVECTOR3 m_vStuffPosition[SWITCH_LASTNUM];
 	D3DXVECTOR3 m_vStuffRotation[SWITCH_LASTNUM];
 
+	// << : 맵 상태를 저장하는 변수
 	bool bValve1;
 	bool bValve2;
 	int nFValve1Count;
@@ -114,6 +115,7 @@ public:
 	void UIRender();
 };
 
+// << : 요청을 변수 한개에 비트를 통해 여러개 삽입합니다.
 enum FLAG
 {
 	FLAG_NONE = 1 << 0,
@@ -126,6 +128,7 @@ enum FLAG
 	FLAG_INVENTORY = 1 << 7
 };
 
+// 플레이어의 좌표를 저장할 구조체
 struct ST_PLAYER_POSITION
 {
 	animationState eAnimState;		// << : Animation index
@@ -137,6 +140,7 @@ struct ST_PLAYER_POSITION
 	ST_PLAYER_POSITION(float x, float y, float z, float angle) { fX = x, fY = y, fZ = z, fAngle = angle; };
 };
 
+// 맵의 정보를 저장할 구조체
 struct ST_OBJECT_DATA
 {
 	float mapX[SWITCH_LASTNUM];
@@ -154,11 +158,13 @@ struct ST_OBJECT_DATA
 	int nBrickCount;
 };
 
+// 인벤토리의 정보를 저장할 구조체
 struct ST_INVENTORY_DATA
 {
 	StuffCode Stuff[INVENTORY_SIZE];
 };
 
+// 채팅의 정보를 저장할 구조체
 struct ST_CHAT
 {
 	char ROOM_NAME[ROOM_NAME_SIZE] = { 0, };
